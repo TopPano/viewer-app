@@ -1,0 +1,26 @@
+{
+  "name": "viewer-js-sdk",
+  "private": true,
+  "version": "0.0.0",
+  "description": "a Javascript sdk for viewing 3D models",
+  "keywords": [],
+  "engines": {
+    "node": "~4.2.1",
+    "npm": "~2.14.7"
+  },
+  "scripts": {
+    "start": "node serve.js"
+  },
+  "dependencies": {
+    "express": "~4.13.1",
+    "bower": "~1.3.1",
+    "grunt": "0.4.2",
+    "grunt-contrib-uglify": "~0.4.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/TopPano/viewer-js-sdk.git"
+  },
+  "author": "richchou",
+  "license": ""
+}
