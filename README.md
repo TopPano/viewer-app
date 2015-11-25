@@ -1,4 +1,4 @@
-# viewer-js-sdk
+# viewer-app
 
 ## Getting Start
 
