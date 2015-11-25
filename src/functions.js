@@ -514,6 +514,7 @@ TOPPANO.requestMeta = function(ID) {
     if (xhr.status === 200) {
         var userInfo = JSON.parse(xhr.responseText);
         TOPPANO.gv.transInfo = userInfo;
+        console.log('Request photo metadata success!');
     }
     else
         console.log('XMLHttpRequest failed. Status: ' + xhr.status);

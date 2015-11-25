@@ -37,7 +37,7 @@ TOPPANO.gv = {
     objScene: null,
     renderer: null,
     stats: null,
-    canvasID: 'container',
+    canvasID: 'pano-container',
     isFBShare: false,
     isState: false,
     isFullScreen: false,
@@ -129,7 +129,8 @@ TOPPANO.gv = {
     tilePath: './images/',
     //tilePath: 'http://localhost:3002',
     defaultMap: './image/tile/0-0.jpeg',
-    metaURL: 'http://localhost:6687'
+    metaURL: 'http://localhost:3001'
+    //metaURL: 'http://helios-api-0.cloudapp.net:6687'
 };
 
 
