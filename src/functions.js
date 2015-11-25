@@ -245,7 +245,8 @@ TOPPANO.addObject = function(LatLng, rotation, size, transID) {
 
             var geometryObj = new THREE.PlaneBufferGeometry(size, size, 32),
                 materialObj = new THREE.MeshBasicMaterial({
-                    map: THREE.ImageUtils.loadTexture('http://www.csie.ntu.edu.tw/~r03944021/PanoAPI/image/arrow1.png'),
+                    //map: THREE.ImageUtils.loadTexture('http://www.csie.ntu.edu.tw/~r03944021/PanoAPI/image/arrow1.png'),
+                    map: THREE.ImageUtils.loadTexture('./images/arrow1.png'),
                     side: THREE.DoubleSide,
                     opacity: 0.5,
                     transparent: true
