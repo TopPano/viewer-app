@@ -117,7 +117,6 @@ router.get('/photometa', function(req, res) {
     if (!panoid) {
         return res.status(400).send({error: 'Bad request'});
     }
-//    res.send({result: JSON.stringify(testPhotoMeta[panoid])});
     res.send(JSON.stringify(testPhotoMeta[panoid]));
 });
 app.use('/', router);
