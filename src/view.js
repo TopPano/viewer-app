@@ -62,15 +62,15 @@ TOPPANO.addFBShare = function() {
             + "&t=" + document.title, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');
         return false;
     };
-    fbShare.setAttribute('style','position: absolute;
-    bottom: 15px;
-    right: 15px;
-    background-image: url("http://www.csie.ntu.edu.tw/~r03944021/PanoAPI/image/share.png");
-    background-size: 60px 20px;
-    background-repeat: no-repeat;
-    margin: 0;
-    padding: 0;
-    height: 20px;
+    fbShare.setAttribute('style','position: absolute; \
+    bottom: 15px; \
+    right: 15px; \
+    background-image: url("./images/share.png"); \
+    background-size: 60px 20px; \
+    background-repeat: no-repeat; \
+    margin: 0; \
+    padding: 0; \
+    height: 20px; \
     width: 60px;');
     document.body.appendChild(fbShare);
 };

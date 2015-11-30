@@ -129,7 +129,7 @@ TOPPANO.gv = {
     tilePath: './images/',
     //tilePath: 'http://localhost:3002',
     defaultMap: './image/tile/0-0.jpeg',
-    metaURL: 'http://localhost:3001'
+    metaURL: 'http://toppanotest.cloudapp.net:3001'
     //metaURL: 'http://helios-api-0.cloudapp.net:6687'
 };
 

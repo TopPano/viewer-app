@@ -524,7 +524,7 @@ TOPPANO.requestMeta = function(ID) {
 // render scene
 TOPPANO.renderScene = function() {
     if (TOPPANO.gv.interact.isAnimate) {
-        var fadeInSpeed = 0.02;
+        var fadeInSpeed = 0.01;
 
         // if second scene fully shows up
         if (TOPPANO.gv.scene.children[60].material.opacity >= 1) {
@@ -551,6 +551,7 @@ TOPPANO.renderScene = function() {
         TOPPANO.gv.renderer.clearDepth();
         TOPPANO.gv.renderer.render(TOPPANO.gv.objScene, TOPPANO.gv.cam.camera);
     } else {
+        //first load
         requestAnimationFrame(TOPPANO.update);
         TOPPANO.gv.renderer.clear();
         TOPPANO.gv.renderer.render(TOPPANO.gv.scene, TOPPANO.gv.cam.camera);

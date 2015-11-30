@@ -32,8 +32,8 @@ var router = express.Router();
                     "lng": -60,
                     "size": 22,
                     "rotateX": 95,
-                    "rotateY": 0,
-                    "rotateZ": -100,
+                    "rotateY": 100,
+                    "rotateZ": 0,
                     "objSphereRadius": 90,
                     "nextID": "00000001"
                 }
@@ -49,8 +49,8 @@ var router = express.Router();
                     "lng": 32.7,
                     "size": 30,
                     "rotateX": 90,
-                    "rotateY": 0,
-                    "rotateZ": -65,
+                    "rotateY": 65,
+                    "rotateZ": 0,
                     "objSphereRadius": 90,
                     "nextID": "00000000"
                 },
@@ -59,8 +59,8 @@ var router = express.Router();
                     "lng": 274,
                     "size": 25,
                     "rotateX": 90,
-                    "rotateY": 0,
-                    "rotateZ": 189,
+                    "rotateY": -185,
+                    "rotateZ": 0,
                     "objSphereRadius": 90,
                     "nextID": "00000002"
                 }
@@ -76,8 +76,8 @@ var router = express.Router();
                     "lng": 78,
                     "size": 60,
                     "rotateX": 95,
-                    "rotateY": 1,
-                    "rotateZ": -25,
+                    "rotateY": 25,
+                    "rotateZ": 1,
                     "objSphereRadius": 90,
                     "nextID": "00000001"
                 },
@@ -86,8 +86,8 @@ var router = express.Router();
                     "lng": 268.9,
                     "size": 30,
                     "rotateX": 90,
-                    "rotateY": 0,
-                    "rotateZ": 180,
+                    "rotateY": -180,
+                    "rotateZ": 0,
                     "objSphereRadius": 90,
                     "nextID": "00000003"
                 }
@@ -103,8 +103,8 @@ var router = express.Router();
                     "lng": 85.7,
                     "size": 30,
                     "rotateX": 90,
-                    "rotateY": 1,
-                    "rotateZ": -10,
+                    "rotateY": 10,
+                    "rotateZ": 1,
                     "objSphereRadius": 90,
                     "nextID": "00000002"
                 }
@@ -117,9 +117,11 @@ router.get('/photometa', function(req, res) {
     if (!panoid) {
         return res.status(400).send({error: 'Bad request'});
     }
-    res.send({result: JSON.stringify(testPhotoMeta[panoid])});
+//    res.send({result: JSON.stringify(testPhotoMeta[panoid])});
+    res.send(JSON.stringify(testPhotoMeta[panoid]));
 });
 app.use('/', router);
+
 
 server.listen(3001);
 console.log('Server starting at port: '+3001);

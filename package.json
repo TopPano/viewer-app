@@ -23,5 +23,11 @@
     "url": "git://github.com/TopPano/viewer-js-sdk.git"
   },
   "author": "richchou",
-  "license": ""
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TopPano/viewer-js-sdk/issues"
+  },
+  "homepage": "https://github.com/TopPano/viewer-js-sdk",
+  "main": "Gruntfile.js",
+  "devDependencies": {}
 }

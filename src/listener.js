@@ -65,8 +65,8 @@ TOPPANO.onDocumentMouseUp = function(event) {
     // add objects if user wants
     var hitPos = TOPPANO.hitSphere(event);
     var ObjLatLng = xyz2LatLng(hitPos.x, hitPos.y, hitPos.z);
-    // console.log(ObjLatLng.lat, ObjLatLng.lng);
-    // TOPPANO.addRandObj2(ObjLatLng, 10);
+     console.log(ObjLatLng.lat, ObjLatLng.lng);
+    TOPPANO.addRandObj2(ObjLatLng, 10);
     // TOPPANO.addRandObj(hitPos.x, hitPos.y, hitPos.z, 10);
 
 	// check if hit something, and change the sphere
@@ -75,7 +75,8 @@ TOPPANO.onDocumentMouseUp = function(event) {
 
 TOPPANO.onDocumentMouseWheel = function(event) {
 	// check FoV range
-	if (TOPPANO.checkMouseInContainer()
+    
+	if (TOPPANO.checkMouseInContainer(event)
         && TOPPANO.gv.cam.camera.fov <= TOPPANO.gv.para.fov.max
 		&& TOPPANO.gv.cam.camera.fov >= TOPPANO.gv.para.fov.min) {
         // WebKit (Safari / Chrome)
