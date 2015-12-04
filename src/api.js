@@ -28,6 +28,7 @@ TOPPANO.initMap = function(map) {
 
         // draw snapshot canvas
         TOPPANO.snapshotCanvasInit();
+        TOPPANO.createUI();
     };
 };
 
