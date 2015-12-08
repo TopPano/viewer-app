@@ -1,15 +1,25 @@
+// The enter function for creating all ui components.
 TOPPANO.createUI = function() {
     TOPPANO.createContactInfo();
 };
 
+// Create a component for showing contact information of the model.
 TOPPANO.createContactInfo = function() {
-    $('#contact-info .ui-collapsible-heading-toggle').on('click', function(e) { 
-        var current = $(this).closest('.ui-collapsible');             
-        if (current.hasClass('ui-collapsible-collapsed')) {
-            $('.ui-collapsible-content', current).slideDown(150);
-        } else {
-            $('.ui-collapsible-content', current).slideUp(150);
-        }
+    $('#contact-info-main').collapsible({
+        iconpos: 'right',
+        collapsedIcon: 'arrow-d',
+        expandedIcon: 'arrow-u',
+        corners: false
     });
+
+    $('#contact-info-main .ui-collapsible-heading-toggle').on('click', TOPPANO.onCIMainClick);
+    $('#contact-info-btn').on('click', TOPPANO.onCIBtnClick);
+};
+
+// Global ui variables initialization.
+TOPPANO.ui = {
+    contactUI: {
+        animateDelay: 1500
+    }
 };
 

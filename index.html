@@ -20,6 +20,7 @@
         <script src="./src/listener.js"></script>
         <script src="./src/view.js"></script>
         <script src="./src/ui.js"></script>
+        <script src="./src/uiListener.js"></script>
         <script src="./src/lib/jquery-1.11.3.min.js"></script>
         <script src="./src/lib/jquery.mobile-1.4.5.min.js"></script>
 
@@ -29,7 +30,8 @@
         -->
     </head>
     <body>
-        <div data-role="collapsible" id="contact-info" style="position: absolute; top: 150px; left: 150px;">
+        <button id="contact-info-btn" class="ui-btn ui-icon-arrow-r ui-btn-icon-notext" style="position: absolute;"></button>
+        <div id="contact-info-main" data-role="collapsible" iconpos="right" collapsedIcon="arrow-d" expandedIcon="arrow-u" corners="false" style="position: absolute; left: 35px;">
             <h1>This is my model</h1>
             <p>The most beautiful house in the world.</p>
         </div>
