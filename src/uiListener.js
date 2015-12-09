@@ -6,7 +6,7 @@ TOPPANO.onCIBtnClick = function(event) {
     // When the main block is about to be closed, we should collapse
     // the main block if it is expanded.
     if(ciBtn.hasClass('ui-icon-arrow-r') && !ciMain.hasClass('ui-collapsible-collapsed')) {
-         $('#contact-info-main .ui-collapsible-heading-toggle').trigger('click');
+        $('#contact-info-main .ui-collapsible-heading-toggle').trigger('click');
         ciMain.delay(TOPPANO.ui.contactUI.animateDelay);
     }
     ciMain.animate({width: 'toggle' }, TOPPANO.ui.contactUI.animateDelay, function() {

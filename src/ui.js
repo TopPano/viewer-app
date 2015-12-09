@@ -5,13 +5,6 @@ TOPPANO.createUI = function() {
 
 // Create a component for showing contact information of the model.
 TOPPANO.createContactInfo = function() {
-    $('#contact-info-main').collapsible({
-        iconpos: 'right',
-        collapsedIcon: 'arrow-d',
-        expandedIcon: 'arrow-u',
-        corners: false
-    });
-
     $('#contact-info-main .ui-collapsible-heading-toggle').on('click', TOPPANO.onCIMainClick);
     $('#contact-info-btn').on('click', TOPPANO.onCIBtnClick);
 };
