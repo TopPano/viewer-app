@@ -20,3 +20,12 @@ TOPPANO.onCIMainClick = function(event) {
     $('.ui-collapsible-content', $('#contact-info-main')).slideToggle(TOPPANO.ui.contactUI.animateDelay);
 };
 
+// Listener for clicking fullscreen button.
+TOPPANO.onFullscreenBtnClick = function(event) {
+    if($.fullscreen.isFullScreen()) {
+        $.fullscreen.exit();
+    } else {
+        $('body').fullscreen();
+    }
+};
+
