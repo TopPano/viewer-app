@@ -29,3 +29,25 @@ TOPPANO.onFullscreenBtnClick = function(event) {
     }
 };
 
+// Listener for clicking compass button.
+TOPPANO.onCompassBtnClick = function(event) {
+    $('#compass-btn').prop('disabled', true);
+    if(TOPPANO.gv.cam.lng < 180) {
+        var intervalID = setInterval(function() {
+            TOPPANO.gv.cam.lng = TOPPANO.gv.cam.lng > 1 ? TOPPANO.gv.cam.lng - 1 : 0;
+            if(TOPPANO.gv.cam.lng == 0) {
+                clearInterval(intervalID);
+                $('#compass-btn').prop('disabled', false);
+            }
+        }, 1);
+    } else {
+        var intervalID = setInterval(function() {
+            TOPPANO.gv.cam.lng = TOPPANO.gv.cam.lng < 359 ? TOPPANO.gv.cam.lng + 1 : 0;
+            if(TOPPANO.gv.cam.lng == 0) {
+                clearInterval(intervalID);
+                $('#compass-btn').prop('disabled', false);
+            }
+        }, 1);
+    }
+};
+
