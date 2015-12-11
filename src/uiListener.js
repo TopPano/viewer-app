@@ -51,3 +51,27 @@ TOPPANO.onCompassBtnClick = function(event) {
     }
 };
 
+// Listener for clicking Facebook sharing button.
+TOPPANO.onFBShareBtnClick = function(event) {
+    FB.ui({
+        appId: '226223091041998',
+        method: 'feed',
+        display: 'popup',
+        link: 'https://www.google.com',
+        name: 'Jellyfish',
+        picture: 'https://i.imgur.com/PAdAP3F.jpg',
+        description: 'The most beautiful jellyfish!'
+    }, function(response){
+        // Show message when posting is completed.
+        if(response && response.post_id) {
+            var resultDialog = $('#fb-share-result-dialog').popup('open');
+            setTimeout(function() {
+                // Check whether it is closed by user before we close it.
+                if(resultDialog.parent().hasClass('ui-popup-active')) {
+                    resultDialog.popup('close');
+                }
+            }, 2000);
+        }
+    });
+};
+

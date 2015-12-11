@@ -2,9 +2,11 @@
 TOPPANO.createUI = function() {
     var rotateInterval = Math.round(1000 / TOPPANO.ui.compassUI.frames);
 
+    TOPPANO.initFB();
     TOPPANO.createContactInfo();
     TOPPANO.createFullscreenBtn()
     TOPPANO.createCompassBtn();
+    TOPPANO.createFBShareBtn();
     setInterval(function() {
         TOPPANO.rotateCompass(TOPPANO.gv.cam.lng);
     }, rotateInterval);
@@ -26,6 +28,11 @@ TOPPANO.createCompassBtn = function() {
     $('#compass-btn').on('click', TOPPANO.onCompassBtnClick);
 };
 
+// Create a Facebook share button.
+TOPPANO.createFBShareBtn = function() {
+    $('#fb-share-btn').on('click', TOPPANO.onFBShareBtnClick);
+};
+
 // Control the rotation of compass button.
 TOPPANO.rotateCompass = function(degrees) {
     var rotate = 'rotate(' + degrees + 'deg)';
@@ -38,6 +45,19 @@ TOPPANO.rotateCompass = function(degrees) {
         'transform' : rotate
     });
 };
+
+// Initialize Facebook SDK.
+TOPPANO.initFB = function() {
+    $.ajaxSetup({ cache: true });
+    $.getScript('//connect.facebook.net/en_US/sdk.js', function(){
+        FB.init({
+            appId: '226223091041998',
+            version: 'v2.5'
+        });
+        // Enable Facebook share button when sdk is loaded completely.
+        $('#fb-share-btn').removeAttr('disabled');
+    });
+}
 
 // Global ui variables initialization.
 TOPPANO.ui = {
