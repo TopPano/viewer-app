@@ -86,7 +86,13 @@ TOPPANO.addListener = function() {
     }, false);
     window.addEventListener('resize', TOPPANO.onWindowResize, false);
     
-    window.ondeviceorientation =  TOPPANO.onDeviceOrientation;
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        console.log("DeviceMotionEvent supported");
+        window.ondeviceorientation =  TOPPANO.onDeviceOrientation;
+    } 
+    else{
+        console.log("DeviceMotionEvent not supported");
+    }
     
 };
 
