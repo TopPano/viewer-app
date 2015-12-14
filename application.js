@@ -14,3 +14,4 @@ var map = {
 };
 
 test.initMap(map);
+

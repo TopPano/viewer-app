@@ -4,6 +4,7 @@
  */
 
 // threejs initialization
+
 TOPPANO.threeInit = function(map) {
     if (map) {
         TOPPANO.initGV(map);
@@ -84,6 +85,9 @@ TOPPANO.addListener = function() {
         TOPPANO.onDocumentKeyUp(key);
     }, false);
     window.addEventListener('resize', TOPPANO.onWindowResize, false);
+    
+    window.ondeviceorientation =  TOPPANO.onDeviceOrientation;
+    
 };
 
 // reading URL info
@@ -202,10 +206,15 @@ TOPPANO.menuInit = function() {
 // transfer to another scene
 TOPPANO.changeScene = function(nextInfo) {
     var nowHeading = TOPPANO.gv.transInfo.heading;
+    console.log("headingOffset"+ TOPPANO.gv.headingOffset.toString());
+    console.log("nowHeading"+nowHeading.toString());
     TOPPANO.requestMeta(nextInfo.name.nextID);
     var rotateDegree = TOPPANO.gv.transInfo.heading - nowHeading;
+    console.log("nextHeading"+ TOPPANO.gv.transInfo.heading.toString());
+    console.log("rotateDegree"+ rotateDegree.toString());
     TOPPANO.gv.headingOffset += rotateDegree;
-
+    console.log("headingOffset"+ TOPPANO.gv.headingOffset.toString());
+    
     TOPPANO.gv.scene1.nextInfo = nextInfo.name;
 
     for (var i = TOPPANO.gv.objScene.children.length - 1 ; i >= 0 ; i--) {
@@ -638,3 +647,5 @@ function sleep(ms) {
 function clamp(number, min, max) {
     return Math.min(Math.max(number, min), max);
 }
+
+
