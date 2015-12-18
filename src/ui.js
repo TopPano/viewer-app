@@ -7,6 +7,7 @@ TOPPANO.createUI = function() {
     TOPPANO.createFullscreenBtn()
     TOPPANO.createCompassBtn();
     TOPPANO.createFBShareBtn();
+    TOPPANO.createNodeGallery();
     setInterval(function() {
         TOPPANO.rotateCompass(TOPPANO.gv.cam.lng);
     }, rotateInterval);
@@ -31,6 +32,24 @@ TOPPANO.createCompassBtn = function() {
 // Create a Facebook share button.
 TOPPANO.createFBShareBtn = function() {
     $('#fb-share-btn').on('click', TOPPANO.onFBShareBtnClick);
+};
+
+// Create A node gallery.
+TOPPANO.createNodeGallery = function() {
+    var swiper = new Swiper('.swiper-container', {
+        scrollbar: '.swiper-scrollbar',
+        nextButton: '.swiper-button-next',
+        prevButton: '.swiper-button-prev',
+        scrollbarHide: true,
+        slidesPerView: 'auto',
+        keyboardControl: true,
+        mousewheelControl: true,
+        speed: 400,
+        spaceBetween: 10,
+        setWarpperSize: true,
+        scrollbarDraggable: true,
+        grabCursor: false
+    });
 };
 
 // Control the rotation of compass button.
