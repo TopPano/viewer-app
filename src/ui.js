@@ -50,6 +50,9 @@ TOPPANO.createNodeGallery = function() {
         scrollbarDraggable: true,
         grabCursor: false
     });
+    TOPPANO.ui.nodeGallery = swiper;
+
+    $('#node-gallery .swiper-slide button').on('click', TOPPANO.onNGDeleteBtnClick);
 };
 
 // Control the rotation of compass button.
@@ -87,6 +90,8 @@ TOPPANO.ui = {
     // Compass Button parameters
     compassUI: {
         frames: 60
-    }
+    },
+    // Node Gallery object (Swiper)
+    nodeGallery: null
 };
 

@@ -75,3 +75,9 @@ TOPPANO.onFBShareBtnClick = function(event) {
     });
 };
 
+// Listener for clicking Node Gallery delete button.
+TOPPANO.onNGDeleteBtnClick = function(event) {
+    var nodeGallery = TOPPANO.ui.nodeGallery;
+    nodeGallery.removeSlide(nodeGallery.clickedIndex);
+};
+
