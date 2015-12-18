@@ -482,3 +482,28 @@ button[disabled],
     right: 1px;
 }
 
+/* Waterdrop */
+.waterdrop {
+    width: 80px;
+    height: 80px;
+    background-image: url('../images/pin.png');
+    background-size: contain;
+}
+.waterdrop .ui-icon-action,
+.waterdrop .ui-icon-delete {
+    display: none;
+    position: absolute;
+}
+.waterdrop:hover .ui-icon-action,
+.waterdrop:hover .ui-icon-delete {
+    display: block;
+}
+.waterdrop .ui-icon-action {
+    top: 0;
+    left: 0;
+}
+.waterdrop .ui-icon-delete {
+    top: 0;
+    right: 0;
+}
+

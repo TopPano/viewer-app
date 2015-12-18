@@ -8,6 +8,7 @@ TOPPANO.createUI = function() {
     TOPPANO.createCompassBtn();
     TOPPANO.createFBShareBtn();
     TOPPANO.createNodeGallery();
+    TOPPANO.createWaterdrop();
     setInterval(function() {
         TOPPANO.rotateCompass(TOPPANO.gv.cam.lng);
     }, rotateInterval);
@@ -53,6 +54,17 @@ TOPPANO.createNodeGallery = function() {
     TOPPANO.ui.nodeGallery = swiper;
 
     $('#node-gallery .swiper-slide button').on('click', TOPPANO.onNGDeleteBtnClick);
+};
+
+TOPPANO.createWaterdrop = function() {
+    $('#waterdrop-0').draggable({
+        containment: '#container',
+        addClasses: false,
+        opacity: 0.75,
+        stack: '#node-gallery'
+    });
+
+    $('#waterdrop-0 .ui-icon-delete').on('click', TOPPANO.onWDDeleteBtnClick);
 };
 
 // Control the rotation of compass button.

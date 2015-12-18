@@ -81,3 +81,8 @@ TOPPANO.onNGDeleteBtnClick = function(event) {
     nodeGallery.removeSlide(nodeGallery.clickedIndex);
 };
 
+// Listener for clicking a waterdrop delete button.
+TOPPANO.onWDDeleteBtnClick = function(event) {
+    $('#waterdrop-0').remove();
+};
+
