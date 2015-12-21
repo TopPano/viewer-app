@@ -409,7 +409,6 @@ TOPPANO.rendererSetting = function() {
         TOPPANO.gv.renderer.autoClear = false;
         TOPPANO.gv.renderer.setPixelRatio(window.devicePixelRatio);
         var container = document.getElementById(TOPPANO.gv.canvasID);
-
         var canvasHeight = window.getComputedStyle(document.getElementById(TOPPANO.gv.canvasID), null).getPropertyValue('height'),
             canvasWidth = window.getComputedStyle(document.getElementById(TOPPANO.gv.canvasID), null).getPropertyValue('width');
             canvasHeight = parseInt(canvasHeight, 10),

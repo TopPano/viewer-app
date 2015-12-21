@@ -329,6 +329,10 @@ TOPPANO.onWindowResize = function() {
         TOPPANO.gv.cam.camera.aspect = window.innerWidth / window.innerHeight;
         TOPPANO.gv.cam.camera.updateProjectionMatrix();
         TOPPANO.gv.renderer.setSize(window.innerWidth, window.innerHeight);
+
+        TOPPANO.gv.container.bound.bottom = window.innerHeight;
+        TOPPANO.gv.container.bound.right = window.innerWidth;
+
         var canvas = document.getElementById('myCanvas');
         if (canvas.style.opacity > 0) {
             TOPPANO.drawCanvas();
