@@ -3,8 +3,6 @@
  * Panorama Function
  */
 
-// threejs initialization
-
 TOPPANO.threeInit = function(map) {
     if (map) {
         TOPPANO.initGV(map);
@@ -529,6 +527,7 @@ TOPPANO.requestMeta = function(ID) {
     xhr.send(null);
     if (xhr.status === 200) {
         var userInfo = JSON.parse(xhr.responseText);
+        console.log(userInfo)
         TOPPANO.gv.transInfo = userInfo;
         console.log('Request photo metadata success!');
     }
