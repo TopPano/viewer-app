@@ -3,7 +3,7 @@ TOPPANO.createUI = function() {
     var rotateInterval = Math.round(1000 / TOPPANO.ui.compassUI.frames);
 
     TOPPANO.initFB();
-    TOPPANO.createContactInfo();
+    TOPPANO.createSummary();
     TOPPANO.createFullscreenBtn()
     TOPPANO.createCompassBtn();
     TOPPANO.createFBShareBtn();
@@ -14,10 +14,10 @@ TOPPANO.createUI = function() {
     }, rotateInterval);
 };
 
-// Create a component for showing contact information of the model.
-TOPPANO.createContactInfo = function() {
-    $('#contact-info-main .ui-collapsible-heading-toggle').on('click', TOPPANO.onCIMainClick);
-    $('#contact-info-btn').on('click', TOPPANO.onCIBtnClick);
+// Create a component for showing summary of the model.
+TOPPANO.createSummary = function() {
+    $('#summary-main .ui-collapsible-heading-toggle').on('click', TOPPANO.onSummaryMainClick);
+    $('#summary-btn').on('click', TOPPANO.onSummaryBtnClick);
 };
 
 // Create a button for enter/exit fullscreen mode.
@@ -95,8 +95,8 @@ TOPPANO.initFB = function() {
 
 // Global ui variables initialization.
 TOPPANO.ui = {
-    // Contact Information block paramters
-    contactUI: {
+    // Summary block paramters
+    summaryUI: {
         animateDelay: 1500
     },
     // Compass Button parameters
