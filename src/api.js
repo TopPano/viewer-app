@@ -14,6 +14,8 @@ TOPPANO.initMap = function(map) {
     window.onload = function(){
         TOPPANO.threeInit(map);
 
+        TOPPANO.controlInit();
+
         // add listener
         TOPPANO.addListener();
 
@@ -44,6 +46,7 @@ TOPPANO.gv = {
     isFullScreen: false,
     headingOffset: 0,
     transInfo: {},
+    
     // camera parameter
     cam: {
         camera: null,
@@ -58,10 +61,19 @@ TOPPANO.gv = {
 
     // interative controls
     control: {
+        // they are not used
         onMouseDownMouseX: 0,
         onMouseDownMouseY: 0,
         onMouseDownLon: 0,
-        onMouseDownLat: 0
+        onMouseDownLat: 0,
+        
+        // they are initialized in TOPPANO.controlInit()
+        bound:{
+            top:0,
+            bottom:0,
+            left:0,
+            right:0
+        }
     },
 
     // scene1 for showing to users

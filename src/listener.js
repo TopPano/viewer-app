@@ -7,8 +7,8 @@
 TOPPANO.checkMouseInContainer = function(event) {
     var mouseX = event.clientX,
         mouseY = event.clientY;
-        return between(mouseX, TOPPANO.gv.container.bound.left, TOPPANO.gv.container.bound.right)
-        && between(mouseY, TOPPANO.gv.container.bound.top, TOPPANO.gv.container.bound.bottom);
+        return between(mouseX, TOPPANO.gv.control.bound.left, TOPPANO.gv.control.bound.right)
+        && between(mouseY, TOPPANO.gv.control.bound.top, TOPPANO.gv.control.bound.bottom);
 };
 
 
@@ -62,6 +62,8 @@ TOPPANO.onDocumentMouseUp = function(event) {
                 TOPPANO.changeScene(hitObj);
             }
 
+    if (TOPPANO.checkMouseInContainer(event)) {
+
             // add objects if user wants
             var hitPos = TOPPANO.hitSphere(event);
             var ObjLatLng = xyz2LatLng(hitPos.x, hitPos.y, hitPos.z);
@@ -71,6 +73,7 @@ TOPPANO.onDocumentMouseUp = function(event) {
 
             // check if hit something, and change the sphere
             TOPPANO.updateURL();
+    }
 };
 
 TOPPANO.onDocumentMouseWheel = function(event) {
@@ -332,6 +335,8 @@ TOPPANO.onWindowResize = function() {
 
         TOPPANO.gv.container.bound.bottom = window.innerHeight;
         TOPPANO.gv.container.bound.right = window.innerWidth;
+        TOPPANO.gv.control.bound.bottom = TOPPANO.gv.container.bound.bottom-$("#node-gallery").height();
+        TOPPANO.gv.control.bound.right = TOPPANO.gv.container.bound.right;
 
         var canvas = document.getElementById('myCanvas');
         if (canvas.style.opacity > 0) {

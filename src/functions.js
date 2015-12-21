@@ -53,6 +53,14 @@ TOPPANO.threeInit = function(map) {
     // console.log(TOPPANO.gv.transInfo['00000001'].transition[0].nextID);
 };
 
+
+TOPPANO.controlInit = function(){
+    TOPPANO.gv.control.bound.top = TOPPANO.gv.container.bound.top;
+    TOPPANO.gv.control.bound.bottom = TOPPANO.gv.container.bound.bottom-$("#node-gallery").height();
+    TOPPANO.gv.control.bound.left = TOPPANO.gv.container.bound.left;
+    TOPPANO.gv.control.bound.right = TOPPANO.gv.container.bound.right;
+}
+
 // add listeners
 TOPPANO.addListener = function() {
     document.addEventListener('mousedown', TOPPANO.onDocumentMouseDown, false);
@@ -139,6 +147,7 @@ TOPPANO.initGV = function(para) {
     if (para.showObj === false) {
         TOPPANO.gv.objects.showObj = para.showObj;
     }
+
 };
 
 // loading tiles images
