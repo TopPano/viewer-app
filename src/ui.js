@@ -53,7 +53,10 @@ TOPPANO.createNodeGallery = function() {
     });
     TOPPANO.ui.nodeGallery = swiper;
 
-    $('#node-gallery .swiper-slide button').on('click', TOPPANO.onNGDeleteBtnClick);
+    $('#node-gallery .swiper-slide .ui-icon-delete').on('click', TOPPANO.onNGDeleteBtnClick);
+    $('#node-gallery .swiper-slide .ui-icon-edit').on('click', TOPPANO.onNGEditBtnClick);
+    $('#node-gallery .swiper-slide input[type=text]').on('focusout', TOPPANO.onNGNameInputFocusout);
+    $('#node-gallery .swiper-slide input[type=text]').on('keypress', TOPPANO.onNGNameInputKeypress);
 };
 
 TOPPANO.createWaterdrop = function() {

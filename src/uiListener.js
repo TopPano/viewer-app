@@ -75,10 +75,35 @@ TOPPANO.onFBShareBtnClick = function(event) {
     });
 };
 
-// Listener for clicking Node Gallery delete button.
+// Listener for clicking a Node Gallery delete button.
 TOPPANO.onNGDeleteBtnClick = function(event) {
     var nodeGallery = TOPPANO.ui.nodeGallery;
     nodeGallery.removeSlide(nodeGallery.clickedIndex);
+};
+
+// Listener for clicking a Node Gallery edit button.
+TOPPANO.onNGEditBtnClick = function(event) {
+    var nameInput = $('input[type=text]', $(this).parent());
+    // Opera sometimes sees return character as 2 characters,
+    // so we should multiply by 2 to ensure the cursor
+    // always ends up in the end.
+    var len = nameInput.val().length * 2;
+
+    nameInput.textinput('enable').focus();
+    nameInput[0].setSelectionRange(len, len);
+};
+
+// Listener when a Node Gallery name input loses focus.
+TOPPANO.onNGNameInputFocusout = function(event) {
+    $(this).textinput('disable');
+};
+
+// Listener for keyboard pressing on a Node Gallery name input.
+TOPPANO.onNGNameInputKeypress = function(event) {
+    // Detect pressing Enter key.
+    if(event.which == 13) {
+        $(this).textinput('disable');
+    }
 };
 
 // Listener for clicking a waterdrop delete button.
