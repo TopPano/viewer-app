@@ -53,7 +53,7 @@ TOPPANO.createNodeGallery = function() {
     });
     TOPPANO.ui.nodeGallery = swiper;
 
-    $('#node-gallery div.swiper-slide').on('mousedown', function(){console.log("slide is mouse down");$('#container').css('cursor', 'url(images/pin.png), auto');});
+    $('#node-gallery .swiper-slide img').on('mousedown', function(){console.log("slide is mouse down");$('#container').css('cursor', 'url(images/pin.png), auto');});
     $('#container').on('mouseup', function(){
                                                 console.log("slide is mouse up");
                                                 var cursor_css = $("#container").css('cursor').toString();
