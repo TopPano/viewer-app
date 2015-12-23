@@ -107,6 +107,27 @@ TOPPANO.ui = {
         frames: 60
     },
     // Node Gallery object (Swiper)
-    nodeGallery: null
+    nodeGallery: null,
+    /**
+     * Describe the model state sice last modified.
+     * It's a list of key-value pairs which key is an object's html id,
+     * value is the object's properties represented by JSON.
+     */
+    currentState: {},
+    /**
+     * Describe the difference between current and modified state.
+     * It's a list of key-value pairs which key is an object's html id,
+     * value is formatted as: {
+     *     'meta': { 'isNew': boolean, 'type': 'object type', 'action': ACTION_TYPE },
+     *     'prop': // object's properties represented by JSON
+     * }
+     */
+    diffState: {},
+    // Action type for modifying an object.
+    Action: {
+        CREATE: 0,
+        UPDATE: 1,
+        DELETE: 2
+    }
 };
 
