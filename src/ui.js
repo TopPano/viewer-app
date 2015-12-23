@@ -3,7 +3,7 @@ TOPPANO.createUI = function() {
     var rotateInterval = Math.round(1000 / TOPPANO.ui.compassUI.frames);
 
     TOPPANO.initFB();
-    TOPPANO.createContactInfo();
+    TOPPANO.createSummary();
     TOPPANO.createFullscreenBtn()
     TOPPANO.createCompassBtn();
     TOPPANO.createFBShareBtn();
@@ -14,10 +14,10 @@ TOPPANO.createUI = function() {
     }, rotateInterval);
 };
 
-// Create a component for showing contact information of the model.
-TOPPANO.createContactInfo = function() {
-    $('#contact-info-main .ui-collapsible-heading-toggle').on('click', TOPPANO.onCIMainClick);
-    $('#contact-info-btn').on('click', TOPPANO.onCIBtnClick);
+// Create a component for showing summary of the model.
+TOPPANO.createSummary = function() {
+    $('#summary-main .ui-collapsible-heading-toggle').on('click', TOPPANO.onSummaryMainClick);
+    $('#summary-btn').on('click', TOPPANO.onSummaryBtnClick);
 };
 
 // Create a button for enter/exit fullscreen mode.
@@ -53,7 +53,6 @@ TOPPANO.createNodeGallery = function() {
     });
     TOPPANO.ui.nodeGallery = swiper;
 
-    $('#node-gallery .swiper-slide button').on('click', TOPPANO.onNGDeleteBtnClick);
     $('#node-gallery div.swiper-slide').on('mousedown', function(){console.log("slide is mouse down");$('#container').css('cursor', 'url(images/pin.png), auto');});
     $('#container').on('mouseup', function(){
                                                 console.log("slide is mouse up");
@@ -62,6 +61,10 @@ TOPPANO.createNodeGallery = function() {
                                                     $('#container').css('cursor', 'pointer');
                                                 }
                                             });
+    $('#node-gallery .swiper-slide .ui-icon-delete').on('click', TOPPANO.onNGDeleteBtnClick);
+    $('#node-gallery .swiper-slide .ui-icon-edit').on('click', TOPPANO.onNGEditBtnClick);
+    $('#node-gallery .swiper-slide input[type=text]').on('focusout', TOPPANO.onNGNameInputFocusout);
+    $('#node-gallery .swiper-slide input[type=text]').on('keypress', TOPPANO.onNGNameInputKeypress);
 };
 
 TOPPANO.createWaterdrop = function() {
@@ -103,8 +106,8 @@ TOPPANO.initFB = function() {
 
 // Global ui variables initialization.
 TOPPANO.ui = {
-    // Contact Information block paramters
-    contactUI: {
+    // Summary block paramters
+    summaryUI: {
         animateDelay: 1500
     },
     // Compass Button parameters
@@ -112,6 +115,27 @@ TOPPANO.ui = {
         frames: 60
     },
     // Node Gallery object (Swiper)
-    nodeGallery: null
+    nodeGallery: null,
+    /**
+     * Describe the model state sice last modified.
+     * It's a list of key-value pairs which key is an object's html id,
+     * value is the object's properties represented by JSON.
+     */
+    currentState: {},
+    /**
+     * Describe the difference between current and modified state.
+     * It's a list of key-value pairs which key is an object's html id,
+     * value is formatted as: {
+     *     'meta': { 'isNew': boolean, 'type': 'object type', 'action': ACTION_TYPE },
+     *     'prop': // object's properties represented by JSON
+     * }
+     */
+    diffState: {},
+    // Action type for modifying an object.
+    Action: {
+        CREATE: 0,
+        UPDATE: 1,
+        DELETE: 2
+    }
 };
 
