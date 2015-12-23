@@ -99,7 +99,8 @@ TOPPANO.addListener = function() {
     else{
         console.log("DeviceMotionEvent not supported");
     }
-    
+
+
 };
 
 // reading URL info

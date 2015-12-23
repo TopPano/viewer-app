@@ -54,6 +54,14 @@ TOPPANO.createNodeGallery = function() {
     TOPPANO.ui.nodeGallery = swiper;
 
     $('#node-gallery .swiper-slide button').on('click', TOPPANO.onNGDeleteBtnClick);
+    $('#node-gallery div.swiper-slide').on('mousedown', function(){console.log("slide is mouse down");$('#container').css('cursor', 'url(images/pin.png), auto');});
+    $('#container').on('mouseup', function(){
+                                                console.log("slide is mouse up");
+                                                var cursor_css = $("#container").css('cursor').toString();
+                                                if (cursor_css.search('pin.png')){
+                                                    $('#container').css('cursor', 'pointer');
+                                                }
+                                            });
 };
 
 TOPPANO.createWaterdrop = function() {
