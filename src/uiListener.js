@@ -75,6 +75,14 @@ TOPPANO.onFBShareBtnClick = function(event) {
     });
 };
 
+// Listener for clicking a Node Gallery thumbnail.
+TOPPANO.onNGThumbnailClick = function(event, nodeID) {
+    // Check whether the current node ID equals to target node ID.
+    if(TOPPANO.gv.scene1.panoID !== nodeID) {
+        TOPPANO.changeView(nodeID);
+    }
+};
+
 // Listener for clicking a Node Gallery delete button.
 TOPPANO.onNGDeleteBtnClick = function(event) {
     $(this).parent().remove();
@@ -108,5 +116,13 @@ TOPPANO.onNGNameInputKeypress = function(event) {
 // Listener for clicking a waterdrop delete button.
 TOPPANO.onWDDeleteBtnClick = function(event) {
     $('#waterdrop-0').remove();
+};
+
+// Listener for clicking a waterdrop goto button.
+TOPPANO.onWDGotoBtnClick = function(event, nodeID) {
+    // Check whether the current node ID equals to target node ID.
+    if(TOPPANO.gv.scene1.panoID !== nodeID) {
+        TOPPANO.changeView(nodeID);
+    }
 };
 

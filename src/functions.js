@@ -229,6 +229,7 @@ TOPPANO.changeScene = function(nextInfo) {
 
     TOPPANO.loadTiles(true, nextInfo.name.nextID);
     TOPPANO.gv.interact.isAnimate = true;
+    TOPPANO.gv.scene1.panoID = nextInfo.name.nextID;
 };
 
 // it's a cooperation function for Su Jia-Kuan
@@ -253,6 +254,7 @@ TOPPANO.changeView = function(node_ID, lng, lat, fov) {
 
     TOPPANO.loadTiles(true, node_ID);
     TOPPANO.gv.interact.isAnimate = true;
+    TOPPANO.gv.scene1.panoID = node_ID;
 };
 
 
