@@ -77,8 +77,7 @@ TOPPANO.onFBShareBtnClick = function(event) {
 
 // Listener for clicking a Node Gallery delete button.
 TOPPANO.onNGDeleteBtnClick = function(event) {
-    var nodeGallery = TOPPANO.ui.nodeGallery;
-    nodeGallery.removeSlide(nodeGallery.clickedIndex);
+    $(this).parent().remove();
 };
 
 // Listener for clicking a Node Gallery edit button.

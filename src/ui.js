@@ -2,12 +2,17 @@
 TOPPANO.createUI = function() {
     var rotateInterval = Math.round(1000 / TOPPANO.ui.compassUI.frames);
 
+    TOPPANO.ui.modelState = new TOPPANO.ModelState();
+
     TOPPANO.initFB();
     TOPPANO.createSummary();
     TOPPANO.createFullscreenBtn()
     TOPPANO.createCompassBtn();
     TOPPANO.createFBShareBtn();
-    TOPPANO.createNodeGallery();
+    TOPPANO.createNodeGallery({
+        'node-0': { 'name': 'Bath Room', 'url': 'images/00000000/1-5.jpeg' },
+        'node-1': { 'name': 'Living Room', 'url': 'images/00000001/1-5.jpeg' }
+    });
     TOPPANO.createWaterdrop();
     setInterval(function() {
         TOPPANO.rotateCompass(TOPPANO.gv.cam.lng);
@@ -36,8 +41,22 @@ TOPPANO.createFBShareBtn = function() {
 };
 
 // Create A node gallery.
-TOPPANO.createNodeGallery = function() {
-    var swiper = new Swiper('.swiper-container', {
+TOPPANO.createNodeGallery = function(nodes) {
+    var content = '';
+
+    $.each(nodes, function(id, prop) {
+        content +=
+            '<div class="swiper-slide">' +
+            '  <img src="' + prop['url'] + '"></img>' +
+            '  <input type="text" data-mini="true" data-corners="false" disabled="disabled" value="' + prop['name'] + '">' +
+            '  <button class="ui-btn ui-icon-edit ui-btn-icon-notext"></button>' +
+            '  <button class="ui-btn ui-icon-delete ui-btn-icon-notext"></button>' +
+            '</div>';
+    });
+    $('#node-gallery .swiper-wrapper').append(content);
+    $('#node-gallery').enhanceWithin();
+
+    TOPPANO.ui.nodeGallery = new Swiper('#node-gallery', {
         scrollbar: '.swiper-scrollbar',
         nextButton: '.swiper-button-next',
         prevButton: '.swiper-button-prev',
@@ -51,10 +70,9 @@ TOPPANO.createNodeGallery = function() {
         scrollbarDraggable: true,
         grabCursor: false
     });
-    TOPPANO.ui.nodeGallery = swiper;
 
-    $('#node-gallery div.swiper-slide').on('mousedown', function(){console.log("slide is mouse down");$('#container').css('cursor', 'url(images/pin.png), auto');});
-    $('#node-gallery div.swiper-slide').on('mouseup', 
+    $('#node-gallery .swiper-slide img').on('mousedown', function(){console.log("slide is mouse down");$('#container').css('cursor', 'url(images/pin.png), auto');});
+    $('#node-gallery .swiper-slide img').on('mouseup', 
                                            function(){ 
                                                 var cursor_css = $("#container").css('cursor').toString();
                                                 if (cursor_css.search('pin.png')){
@@ -122,28 +140,10 @@ TOPPANO.ui = {
     compassUI: {
         frames: 60
     },
-    // Node Gallery object (Swiper)
-    nodeGallery: null,
-    /**
-     * Describe the model state sice last modified.
-     * It's a list of key-value pairs which key is an object's html id,
-     * value is the object's properties represented by JSON.
-     */
-    currentState: {},
-    /**
-     * Describe the difference between current and modified state.
-     * It's a list of key-value pairs which key is an object's html id,
-     * value is formatted as: {
-     *     'meta': { 'isNew': boolean, 'type': 'object type', 'action': ACTION_TYPE },
-     *     'prop': // object's properties represented by JSON
-     * }
-     */
-    diffState: {},
-    // Action type for modifying an object.
-    Action: {
-        CREATE: 0,
-        UPDATE: 1,
-        DELETE: 2
-    }
+    // Node Gallery parameters
+    nodeGalleryUI: {
+        swiper: null
+    },
+    modelState: null
 };
 
