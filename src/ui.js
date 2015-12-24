@@ -64,7 +64,7 @@ TOPPANO.createNodeGallery = function(nodes) {
     $('#node-gallery .swiper-wrapper').append(content);
     $('#node-gallery').enhanceWithin();
 
-    TOPPANO.ui.nodeGallery = new Swiper('#node-gallery', {
+    TOPPANO.ui.nodeGalleryUI.swiper = new Swiper('#node-gallery', {
         scrollbar: '.swiper-scrollbar',
         nextButton: '.swiper-button-next',
         prevButton: '.swiper-button-prev',
@@ -128,6 +128,11 @@ TOPPANO.createWaterdrop = function(id, prop) {
         stack: '#node-gallery'
     });
 
+    $('#' + id).hover(function(event) {
+        TOPPANO.onWaterdropHoverIn(event, toNodeHtmlId);
+    }, function(event) {
+        TOPPANO.onWaterdropHoverOut(event, toNodeHtmlId);
+    });
     $('#' + id + ' .ui-icon-delete').on('click', function(event) {
         TOPPANO.onWDDeleteBtnClick(event, id);
     });

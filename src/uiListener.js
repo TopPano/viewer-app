@@ -113,16 +113,31 @@ TOPPANO.onNGNameInputKeypress = function(event) {
     }
 };
 
+// Listener when mouse hovering in a waterdrop
+TOPPANO.onWaterdropHoverIn = function(event, toNodeHtmlId) {
+    $('#node-gallery .swiper-slide').each(function(index, slide) {
+        if(slide.id === toNodeHtmlId) {
+            TOPPANO.ui.nodeGalleryUI.swiper.slideTo(index);
+            return false;
+        }
+    });
+
+    $('#' + toNodeHtmlId).addClass('waterdrop-hover');
+};
+
+// Listener when mouse hovering out a waterdrop
+TOPPANO.onWaterdropHoverOut = function(event, toNodeHtmlId) {
+    $('#' + toNodeHtmlId).removeClass('waterdrop-hover');
+};
+
 // Listener for clicking a waterdrop delete button.
 TOPPANO.onWDDeleteBtnClick = function(event, waterdropHtmlId) {
-    $('#' + waterdropHtmlId).remove();
+    $('#' + waterdropHtmlId).trigger('mouseleave').remove();
 };
 
 // Listener for clicking a waterdrop goto button.
 TOPPANO.onWDGotoBtnClick = function(event, nodeID) {
-    // Check whether the current node ID equals to target node ID.
-    if(TOPPANO.gv.scene1.panoID !== nodeID) {
-        TOPPANO.changeView(nodeID);
-    }
+    $(event.target).parent().trigger('mouseleave');
+    TOPPANO.changeView(nodeID);
 };
 
