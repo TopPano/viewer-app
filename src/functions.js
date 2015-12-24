@@ -511,16 +511,6 @@ TOPPANO.hitSphere = function(event) {
                                     return intersects[0].point;
 };
 
-TOPPANO.hitWhichSphere = function(event) {
-    var mouse2D = new THREE.Vector2((event.clientX / window.innerWidth) * 2 - 1, //x
-                                    -(event.clientY / window.innerHeight) * 2 + 1); // y
-
-                                    var raycaster = new THREE.Raycaster();
-                                    raycaster.setFromCamera(mouse2D, TOPPANO.gv.cam.camera);
-                                    var intersects = raycaster.intersectObjects(TOPPANO.gv.scene.children);
-                                    intersects[0].object.material.color.set( 0xff0000 ); // change to red
-                                     console.log(intersects[0].point);
-};
 
 // snapshot function
 TOPPANO.saveImage = function() {
