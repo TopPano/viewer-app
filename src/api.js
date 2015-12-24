@@ -86,15 +86,6 @@ TOPPANO.gv = {
         nextInfo: null
     },
 
-    // scene2 for buffer
-    scene2: {
-        geometry: null,
-        texture: null,
-        material: null,
-        mesh:1,
-        panoID: '00000001'
-    },
-
     // objects in the scene
     objects: {
         showObj: true,

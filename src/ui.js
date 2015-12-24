@@ -54,6 +54,13 @@ TOPPANO.createNodeGallery = function() {
     TOPPANO.ui.nodeGallery = swiper;
 
     $('#node-gallery div.swiper-slide').on('mousedown', function(){console.log("slide is mouse down");$('#container').css('cursor', 'url(images/pin.png), auto');});
+    $('#node-gallery div.swiper-slide').on('mouseup', 
+                                           function(){ 
+                                                var cursor_css = $("#container").css('cursor').toString();
+                                                if (cursor_css.search('pin.png')){
+                                                    $('#container').css('cursor', 'default');}
+                                           });
+
     $('#container').on('mouseup', function(){
                                                 console.log("slide is mouse up");
                                                 var cursor_css = $("#container").css('cursor').toString();
@@ -61,6 +68,7 @@ TOPPANO.createNodeGallery = function() {
                                                     $('#container').css('cursor', 'pointer');
                                                 }
                                             });
+    
     $('#node-gallery .swiper-slide .ui-icon-delete').on('click', TOPPANO.onNGDeleteBtnClick);
     $('#node-gallery .swiper-slide .ui-icon-edit').on('click', TOPPANO.onNGEditBtnClick);
     $('#node-gallery .swiper-slide input[type=text]').on('focusout', TOPPANO.onNGNameInputFocusout);

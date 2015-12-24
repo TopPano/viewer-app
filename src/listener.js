@@ -58,7 +58,8 @@ TOPPANO.onDocumentMouseUp = function(event) {
         isHit = hit[0],
             hitObj = hit[1];
             if (isHit) {
-                TOPPANO.gv.scene1.nextInfo = hit[1].name;
+                
+                //TOPPANO.gv.scene1.nextInfo = hit[1].name; the code maybe useless
                 TOPPANO.changeScene(hitObj);
             }
 
@@ -66,6 +67,7 @@ TOPPANO.onDocumentMouseUp = function(event) {
 
             // add objects if user wants
             var hitPos = TOPPANO.hitSphere(event);
+            
             var ObjLatLng = xyz2LatLng(hitPos.x, hitPos.y, hitPos.z);
             console.log(ObjLatLng.lat, ObjLatLng.lng);
             TOPPANO.addRandObj2(ObjLatLng, 10);

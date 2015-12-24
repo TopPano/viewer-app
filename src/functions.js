@@ -189,7 +189,7 @@ TOPPANO.loadTiles = function(isTrans, ID) {
     if (isTrans) {
         sleep(500);
     }
-    console.log(TOPPANO.gv.scene.children.length);  // 32
+    //console.log(TOPPANO.gv.scene.children.length);  // 32
 };
 
 // jump to another scene
@@ -219,17 +219,9 @@ TOPPANO.menuInit = function() {
 
 // transfer to another scene
 TOPPANO.changeScene = function(nextInfo) {
-    var nowHeading = TOPPANO.gv.transInfo.heading;
-    console.log("headingOffset"+ TOPPANO.gv.headingOffset.toString());
-    console.log("nowHeading"+nowHeading.toString());
+    // request node metadata and update to TOPPANO.gv.transInfo
     TOPPANO.requestMeta(nextInfo.name.nextID);
-    var rotateDegree = TOPPANO.gv.transInfo.heading - nowHeading;
-    console.log("nextHeading"+ TOPPANO.gv.transInfo.heading.toString());
-    console.log("rotateDegree"+ rotateDegree.toString());
-    TOPPANO.gv.headingOffset += rotateDegree;
-    console.log("headingOffset"+ TOPPANO.gv.headingOffset.toString());
-    
-    TOPPANO.gv.scene1.nextInfo = nextInfo.name;
+    TOPPANO.gv.headingOffset =  TOPPANO.gv.transInfo.heading;
 
     for (var i = TOPPANO.gv.objScene.children.length - 1 ; i >= 0 ; i--) {
         TOPPANO.gv.objScene.remove(TOPPANO.gv.objScene.children[i]);
@@ -239,6 +231,31 @@ TOPPANO.changeScene = function(nextInfo) {
     TOPPANO.gv.interact.isAnimate = true;
 };
 
+// it's a cooperation function for Su Jia-Kuan
+// it's a copy of TOPPANO.changeScene()
+TOPPANO.changeView = function(node_ID, lng, lat, fov) {
+    // request node metadata and update to TOPPANO.gv.transInfo
+    TOPPANO.requestMeta(node_ID);
+    TOPPANO.gv.headingOffset =  TOPPANO.gv.transInfo.heading;
+
+    if(lng)
+    {TOPPANO.gv.cam.lng = lng;}
+
+    if(lat)
+    {TOPPANO.gv.cam.lat = lat;}
+    
+    if(fov)
+    {TOPPANO.gv.cam.camera.fov = fov;}
+    
+    for (var i = TOPPANO.gv.objScene.children.length - 1 ; i >= 0 ; i--) {
+        TOPPANO.gv.objScene.remove(TOPPANO.gv.objScene.children[i]);
+    }
+
+    TOPPANO.loadTiles(true, node_ID);
+    TOPPANO.gv.interact.isAnimate = true;
+};
+
+
 // pre-load all scene images
 TOPPANO.preLoadImages = function() {
     // console.log('Pre-loading...');
@@ -246,6 +263,7 @@ TOPPANO.preLoadImages = function() {
 };
 
 // add all transition objects
+// the argument "panoID" is useless
 TOPPANO.addTransition = function(panoID) {
     var transLength = TOPPANO.gv.transInfo.transition.length;
     for (var i = 0 ; i < transLength ; i++) {
@@ -493,7 +511,6 @@ TOPPANO.hitSphere = function(event) {
                                     return intersects[0].point;
 };
 
-// change the mesh color which is hit by user
 TOPPANO.hitWhichSphere = function(event) {
     var mouse2D = new THREE.Vector2((event.clientX / window.innerWidth) * 2 - 1, //x
                                     -(event.clientY / window.innerHeight) * 2 + 1); // y
@@ -502,7 +519,7 @@ TOPPANO.hitWhichSphere = function(event) {
                                     raycaster.setFromCamera(mouse2D, TOPPANO.gv.cam.camera);
                                     var intersects = raycaster.intersectObjects(TOPPANO.gv.scene.children);
                                     intersects[0].object.material.color.set( 0xff0000 ); // change to red
-                                    // console.log(intersects[0].object.position);
+                                     console.log(intersects[0].point);
 };
 
 // snapshot function
@@ -536,7 +553,6 @@ TOPPANO.requestMeta = function(ID) {
     xhr.send(null);
     if (xhr.status === 200) {
         var userInfo = JSON.parse(xhr.responseText);
-        console.log(userInfo)
         TOPPANO.gv.transInfo = userInfo;
         console.log('Request photo metadata success!');
     }
@@ -548,17 +564,14 @@ TOPPANO.requestMeta = function(ID) {
 TOPPANO.renderScene = function() {
     if (TOPPANO.gv.interact.isAnimate) {
         var fadeInSpeed = 0.01;
-
         // if second scene fully shows up
         if (TOPPANO.gv.scene.children[60].material.opacity >= 1) {
             TOPPANO.gv.interact.isAnimate = false;
             for (var i = 31 ; i >= 0 ; i--) {
                 TOPPANO.gv.scene.remove(TOPPANO.gv.scene.children[i]);
             }
-            var nextID = TOPPANO.gv.scene1.nextInfo.nextID;
-            TOPPANO.gv.scene1.panoID = nextID;
             TOPPANO.gv.objects.transitionObj = [];
-            TOPPANO.addTransition(nextID);
+            TOPPANO.addTransition();
             TOPPANO.updateURL();
             requestAnimationFrame(TOPPANO.update);
             return 0;
@@ -598,6 +611,9 @@ TOPPANO.update = function() {
     if (TOPPANO.gv.isState) {
         TOPPANO.gv.stats.update();
     }
+
+    // mainly for changing TOPPANO.gv.cam.camera.fov
+    TOPPANO.gv.cam.camera.updateProjectionMatrix();
     TOPPANO.renderScene();
 };
 
