@@ -1,11 +1,10 @@
 TOPPANO.ModelState = function() {
-// Private members:
     /**
      * Describe the model state sice last modified.
      * It's a list of key-value pairs which key is an object's html id,
      * value is the object's properties represented by JSON.
      */
-    var currentState = {};
+    this.currentState = {};
 
     /**
      * Describe the difference between current and modified state.
@@ -15,9 +14,8 @@ TOPPANO.ModelState = function() {
      *     'prop': // object's properties represented by JSON
      * }
      */
-    var diffState = {};
+    this.diffState = {};
 
-// Public members:
     /* Action type for modifying an object. */
     this.Action = {
         CREATE: 0,

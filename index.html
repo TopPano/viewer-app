@@ -52,6 +52,7 @@
                 </div>
             </div>
         </div>
+
         <a href="#help-menu" data-rel="popup" class="ui-btn ui-icon-info ui-btn-icon-notext" style="position: absolute; top: 150px;"></a>
         <div id="help-menu" data-role="popup" data-corners="false" data-position-to="window" data-transition="fade">
             <div data-role="header">
@@ -64,37 +65,29 @@
                 <h3>Click outside the menu to continue</h3>
             </div>
         </div>
+
         <button id="fullscreen-btn" class="ui-btn ui-icon-eye ui-btn-icon-notext" style="position: absolute; bottom: 0; right: 0;"></button>
+
         <button id="compass-btn" class="ui-btn ui-icon-compass ui-btn-icon-notext" style="position: absolute; bottom: 0; left: 0;">
             <div id="compass-body-btn" class="ui-icon-compass-body"></div>
             <div id="compass-arrow-btn" class="ui-icon-compass-arrow"></div>
         </button>
+
         <button id="fb-share-btn" disabled="true" class="ui-btn ui-icon-heart ui-btn-icon-notext" style="position: absolute; bottom: 0; right: 50px"></button>
+
         <div id="fb-share-result-dialog" data-role="popup" data-corners="false" data-position-to="window" data-transition="fade">
             <div data-role="main" class="ui-content">
                 <p>Successfully share to your Facebook Timeline!</p>
             </div>
         </div>
 
-        <div id="node-gallery" data-role="footer" class="swiper-container" style="position: absolute; bottom: 0; left: 0;">
-            <div class="swiper-wrapper">
-                <div class="swiper-slide">
-                    <img src="images/00000000/1-5.jpeg"></img>
-                    <input type="text" data-mini="true" data-corners="false" disabled="disabled" value="Bath Room">
-                    <button class="ui-btn ui-icon-edit ui-btn-icon-notext"></button>
-                    <button class="ui-btn ui-icon-delete ui-btn-icon-notext"></button>
-                </div>
-                <div class="swiper-slide">
-                    <img src="images/00000001/1-5.jpeg"></img>
-                    <input type="text" data-mini="true" data-corners="false" disabled="disabled" value="Living Room">
-                    <button class="ui-btn ui-icon-edit ui-btn-icon-notext"></button>
-                    <button class="ui-btn ui-icon-delete ui-btn-icon-notext"></button>
-                </div>
-            </div>
+        <div id="node-gallery" data-role="footer" class="swiper-container">
+            <div class="swiper-wrapper"><!-- Add slides here dynamically--></div>
             <div class="swiper-button-prev"></div>
             <div class="swiper-button-next"></div>
             <div class="swiper-scrollbar"></div>
         </div>
+
         <div id="waterdrop-0" class="waterdrop" style="position: absolute; top: 150px; left: 150px;">
             <button class="ui-btn ui-icon-action ui-btn-icon-notext"></button>
             <button class="ui-btn ui-icon-delete ui-btn-icon-notext"></button>
