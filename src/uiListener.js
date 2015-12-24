@@ -114,8 +114,8 @@ TOPPANO.onNGNameInputKeypress = function(event) {
 };
 
 // Listener for clicking a waterdrop delete button.
-TOPPANO.onWDDeleteBtnClick = function(event) {
-    $('#waterdrop-0').remove();
+TOPPANO.onWDDeleteBtnClick = function(event, waterdropHtmlId) {
+    $('#' + waterdropHtmlId).remove();
 };
 
 // Listener for clicking a waterdrop goto button.
