@@ -11,17 +11,17 @@ TOPPANO.createUI = function() {
     TOPPANO.createFBShareBtn();
     TOPPANO.createNodeGallery({
         'node-00000000': {
-            'nodeID': '00000000', 'name': 'Bath Room', 'url': 'images/00000000/1-5.jpeg', 
+            'nodeId': '00000000', 'name': 'Bath Room', 'url': 'images/00000000/1-5.jpeg',
             'transitions': ['00000002', '00000003'] },
         'node-00000001': {
-            'nodeID': '00000001', 'name': 'Living Room', 'url': 'images/00000001/1-5.jpeg',
+            'nodeId': '00000001', 'name': 'Living Room', 'url': 'images/00000001/1-5.jpeg',
             'transitions': ['00000000'] },
         'node-00000002': {
-            'nodeID': '00000002', 'name': 'Dining Room', 'url': 'images/00000002/1-5.jpeg',
+            'nodeId': '00000002', 'name': 'Dining Room', 'url': 'images/00000002/1-5.jpeg',
             'transitions': [] },
         'node-00000003': {
-            'nodeID': '00000003', 'name': 'Kitchen', 'url': 'images/00000003/1-5.jpeg',
-            'transitions': [] }
+            'nodeId': '00000003', 'name': 'Kitchen', 'url': 'images/00000003/1-5.jpeg',
+            'transitions': ['00000002'] }
     });
     TOPPANO.createWaterdrops({
         'waterdrop-00000000-00000002': {
@@ -41,7 +41,14 @@ TOPPANO.createUI = function() {
             'toNodeId': '00000000',
             'lng': 200,
             'lat': 200
+        },
+        'waterdrop-00000003-00000002': {
+            'fromNodeId': '00000003',
+            'toNodeId': '00000002',
+            'lng': 250,
+            'lat': 200
         }
+
     });
     setInterval(function() {
         TOPPANO.rotateCompass(TOPPANO.gv.cam.lng);
@@ -118,12 +125,14 @@ TOPPANO.createNodeGallery = function(nodes) {
                                             });
     
     $('#node-gallery .swiper-slide .ui-icon-delete').on('click', TOPPANO.onNGDeleteBtnClick);
-    $('#node-gallery .swiper-slide .ui-icon-edit').on('click', TOPPANO.onNGEditBtnClick);
     $('#node-gallery .swiper-slide input[type=text]').on('focusout', TOPPANO.onNGNameInputFocusout);
-    $('#node-gallery .swiper-slide input[type=text]').on('keypress', TOPPANO.onNGNameInputKeypress);
+    $('#node-gallery .swiper-slide input[type=text]').on('keyup', TOPPANO.onNGNameInputKeyup);
     $.each(nodes, function(id, prop) {
         $('#' + id +' img').on('click', function(event) {
-            TOPPANO.onNGThumbnailClick(event, prop['nodeID']);
+            TOPPANO.onNGThumbnailClick(event, prop['nodeId']);
+        });
+        $('#' + id + ' .ui-icon-edit').on('click', function(event) {
+            TOPPANO.onNGEditBtnClick(event, prop['nodeId']);
         });
     });
 };
@@ -214,7 +223,8 @@ TOPPANO.ui = {
     },
     // Node Gallery parameters
     nodeGalleryUI: {
-        swiper: null
+        swiper: null,
+        currentEditNameInputs: []
     },
     modelState: null
 };
