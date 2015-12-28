@@ -37,6 +37,11 @@ TOPPANO.ModelState.prototype = {
         return this.currentState[id];
     },
 
+    // Delete an object's property.
+    delObjProp: function(id) {
+        delete this.currentState[id];
+    },
+
     // Modify the state. (Create/update/delete an object)
     modifyState: function(id, type, action, prop) {
         // TODO: modify diffState.

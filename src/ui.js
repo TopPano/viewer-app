@@ -10,16 +10,38 @@ TOPPANO.createUI = function() {
     TOPPANO.createCompassBtn();
     TOPPANO.createFBShareBtn();
     TOPPANO.createNodeGallery({
-        'node-00000000': { 'nodeID': '00000000', 'name': 'Bath Room', 'url': 'images/00000000/1-5.jpeg' },
-        'node-00000001': { 'nodeID': '00000001', 'name': 'Living Room', 'url': 'images/00000001/1-5.jpeg' },
-        'node-00000002': { 'nodeID': '00000002', 'name': 'Dining Room', 'url': 'images/00000002/1-5.jpeg' },
-        'node-00000003': { 'nodeID': '00000003', 'name': 'Kitchen', 'url': 'images/00000003/1-5.jpeg' }
+        'node-00000000': {
+            'nodeID': '00000000', 'name': 'Bath Room', 'url': 'images/00000000/1-5.jpeg', 
+            'transitions': ['00000002', '00000003'] },
+        'node-00000001': {
+            'nodeID': '00000001', 'name': 'Living Room', 'url': 'images/00000001/1-5.jpeg',
+            'transitions': ['00000000'] },
+        'node-00000002': {
+            'nodeID': '00000002', 'name': 'Dining Room', 'url': 'images/00000002/1-5.jpeg',
+            'transitions': [] },
+        'node-00000003': {
+            'nodeID': '00000003', 'name': 'Kitchen', 'url': 'images/00000003/1-5.jpeg',
+            'transitions': [] }
     });
-    TOPPANO.createWaterdrop('waterdrop-00000000-00000002', {
-        'fromNodeId': '00000000',
-        'toNodeId': '00000002',
-        'lng': 150,
-        'lat': 50
+    TOPPANO.createWaterdrops({
+        'waterdrop-00000000-00000002': {
+            'fromNodeId': '00000000',
+            'toNodeId': '00000002',
+            'lng': 150,
+            'lat': 50
+        },
+        'waterdrop-00000000-00000003': {
+            'fromNodeId': '00000000',
+            'toNodeId': '00000003',
+            'lng': 150,
+            'lat': 150
+        },
+        'waterdrop-00000001-00000000': {
+            'fromNodeId': '00000001',
+            'toNodeId': '00000000',
+            'lng': 200,
+            'lat': 200
+        }
     });
     setInterval(function() {
         TOPPANO.rotateCompass(TOPPANO.gv.cam.lng);
@@ -106,6 +128,12 @@ TOPPANO.createNodeGallery = function(nodes) {
     });
 };
 
+TOPPANO.createWaterdrops = function(waterdrops) {
+    $.each(waterdrops, function(id, prop) {
+        TOPPANO.createWaterdrop(id, prop);
+    });
+};
+
 TOPPANO.createWaterdrop = function(id, prop) {
     var toNodeHtmlId = 'node-' + prop['toNodeId'];
     var name = TOPPANO.ui.modelState.getObjProp(toNodeHtmlId)['name'];
@@ -139,6 +167,13 @@ TOPPANO.createWaterdrop = function(id, prop) {
     $('#' + id + ' .ui-icon-action').on('click', function(event) {
         TOPPANO.onWDGotoBtnClick(event, prop['toNodeId']);
     });
+
+    TOPPANO.ui.modelState.addObjProp(id, prop);
+    if(TOPPANO.gv.scene1.panoID == prop['fromNodeId']) {
+        $('#' + toNodeHtmlId).addClass('has-waterdrop');
+    } else {
+        $('#' + id).hide();
+    }
 };
 
 // Control the rotation of compass button.

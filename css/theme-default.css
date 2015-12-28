@@ -470,6 +470,12 @@ button[disabled],
     left: 0;
     width: 100%;
     height: 100%;
+    filter: Alpha(Opacity=30);
+    opacity: .30;
+}
+#node-gallery .swiper-slide.has-waterdrop img {
+    filter: Alpha(Opacity=100);
+    opacity: 1;
 }
 #node-gallery .swiper-slide input[type=text] {
     position: absolute;
