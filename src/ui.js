@@ -50,6 +50,7 @@ TOPPANO.createUI = function() {
         }
 
     });
+    TOPPANO.createSnapshotGallery();
     setInterval(function() {
         TOPPANO.rotateCompass(TOPPANO.gv.cam.lng);
     }, rotateInterval);
@@ -76,6 +77,30 @@ TOPPANO.createFBShareBtn = function() {
     $('#fb-share-btn').on('click', TOPPANO.onFBShareBtnClick);
 };
 
+TOPPANO.createSnapshotGallery = function() {
+    var height = $(window).height() - $('#node-gallery').height();
+
+    TOPPANO.ui.snapshotGalleryUI.swiper = new Swiper('.swiper-container-snapshot', {
+        scrollbar: '.swiper-scrollbar-snapshot',
+        nextButton: '.swiper-button-next-snapshot',
+        prevButton: '.swiper-button-prev-snapshot',
+        direction: 'vertical',
+        scrollbarHide: true,
+        slidesPerView: 'auto',
+        keyboardControl: true,
+        mousewheelControl: true,
+        speed: 400,
+        spaceBetween: 5,
+        setWarpperSize: true,
+        scrollbarDraggable: true,
+        grabCursor: false
+    });
+
+    $('#snapshot-gallery .swiper-container').height(height);
+    $('#snapshot-gallery').height(height).panel('open');
+    TOPPANO.ui.snapshotGalleryUI.swiper.update(true);
+};
+
 // Create A node gallery.
 TOPPANO.createNodeGallery = function(nodes) {
     var content = '';
@@ -93,10 +118,10 @@ TOPPANO.createNodeGallery = function(nodes) {
     $('#node-gallery .swiper-wrapper').append(content);
     $('#node-gallery').enhanceWithin();
 
-    TOPPANO.ui.nodeGalleryUI.swiper = new Swiper('#node-gallery', {
-        scrollbar: '.swiper-scrollbar',
-        nextButton: '.swiper-button-next',
-        prevButton: '.swiper-button-prev',
+    TOPPANO.ui.nodeGalleryUI.swiper = new Swiper('.swiper-container-node', {
+        scrollbar: '.swiper-scrollbar-node',
+        nextButton: '.swiper-button-next-node',
+        prevButton: '.swiper-button-prev-node',
         scrollbarHide: true,
         slidesPerView: 'auto',
         keyboardControl: true,
@@ -225,6 +250,10 @@ TOPPANO.ui = {
     nodeGalleryUI: {
         swiper: null,
         currentEditNameInputs: []
+    },
+    // Snapshot Gallery parameters
+    snapshotGalleryUI: {
+        swiper: null
     },
     modelState: null
 };

@@ -86,6 +86,7 @@ TOPPANO.onNGThumbnailClick = function(event, nodeId) {
 // Listener for clicking a Node Gallery delete button.
 TOPPANO.onNGDeleteBtnClick = function(event) {
     $(this).parent().remove();
+    TOPPANO.ui.nodeGalleryUI.swiper.update(true);
 };
 
 // Listener for clicking a Node Gallery edit button.
