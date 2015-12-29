@@ -24,6 +24,8 @@ TOPPANO.threeInit = function(map) {
         1, // near plane
         1100 // far plane
     );
+
+
     // change position of the cam
     var sphereSize = TOPPANO.gv.para.sphereSize;
     TOPPANO.gv.cam.camera.target = new THREE.Vector3(sphereSize, sphereSize, sphereSize);
@@ -31,6 +33,7 @@ TOPPANO.threeInit = function(map) {
     // scene for bg, objScene for transition objects
     TOPPANO.gv.scene = new THREE.Scene();
     TOPPANO.gv.objScene = new THREE.Scene();
+    TOPPANO.gv.CssScene = new THREE.Scene();
 
     // renderer setting
     TOPPANO.rendererSetting();
@@ -327,7 +330,7 @@ TOPPANO.addRandObj = function(x, y, z, size) {
         materialObj = new THREE.MeshBasicMaterial({
             map: THREE.ImageUtils.loadTexture('./images/pin.png'),
             side: THREE.DoubleSide,
-            opacity: 0.5,
+            opacity: 1,
             transparent: true
         }),
         transitionObj = new THREE.Mesh(geometryObj, materialObj);
@@ -349,7 +352,7 @@ TOPPANO.addRandObj2 = function(LatLng, size) {
                 materialObj = new THREE.MeshBasicMaterial({
                     map: THREE.ImageUtils.loadTexture('./images/pin.png'),
                     side: THREE.DoubleSide,
-                    opacity: 0.5,
+                    opacity: 1,
                     transparent: true
                 }),
                 transitionObj = new THREE.Mesh(geometryObj, materialObj);
@@ -429,44 +432,55 @@ TOPPANO.rendererSetting = function() {
     // WebGLRenderer for better quality if having webgl
     var webglRendererPara = {
         preserveDrawingBuffer: true,
-        autoClearColor: false
+        autoClearColor: false,
+        alpha: true
     };
-    TOPPANO.gv.renderer = Detector.webgl ? new THREE.WebGLRenderer(webglRendererPara)
-        : new THREE.CanvasRenderer(); // with no WebGL supported
-        TOPPANO.gv.renderer.sortObjects = false;
-        TOPPANO.gv.renderer.autoClear = false;
-        TOPPANO.gv.renderer.setPixelRatio(window.devicePixelRatio);
-        var container = document.getElementById(TOPPANO.gv.canvasID);
-        var canvasHeight = window.getComputedStyle(document.getElementById(TOPPANO.gv.canvasID), null).getPropertyValue('height'),
-            canvasWidth = window.getComputedStyle(document.getElementById(TOPPANO.gv.canvasID), null).getPropertyValue('width');
-            canvasHeight = parseInt(canvasHeight, 10),
-                canvasWidth = parseInt(canvasWidth, 10);
+    TOPPANO.gv.renderer = new THREE.WebGLRenderer(webglRendererPara);
+//    : new THREE.CanvasRenderer(); // with no WebGL supported
+    TOPPANO.gv.renderer.setClearColor( 0x000000, 0 );
 
-                if (canvasWidth * canvasHeight > 0) {
-                    TOPPANO.gv.renderer.setSize(canvasWidth, canvasHeight);
+    TOPPANO.gv.renderer.sortObjects = false;
+    TOPPANO.gv.renderer.autoClear = false;
+    TOPPANO.gv.renderer.setPixelRatio(window.devicePixelRatio);
+    var container = document.getElementById(TOPPANO.gv.canvasID);
+    var canvasHeight = window.getComputedStyle(document.getElementById(TOPPANO.gv.canvasID), null).getPropertyValue('height'),
+    canvasWidth = window.getComputedStyle(document.getElementById(TOPPANO.gv.canvasID), null).getPropertyValue('width');
+    canvasHeight = parseInt(canvasHeight, 10),
+    canvasWidth = parseInt(canvasWidth, 10);
 
-                }
-                else {
-                    TOPPANO.gv.isFullScreen = true;
-                    TOPPANO.gv.renderer.setSize(window.innerWidth, window.innerHeight);
-                }
-                container.appendChild(TOPPANO.gv.renderer.domElement);
+    if (canvasWidth * canvasHeight > 0) {
+        TOPPANO.gv.renderer.setSize(canvasWidth, canvasHeight);
 
-                // set some global variables about container styles
-                var bodyRect = document.body.getBoundingClientRect(),
-                    containerRect = container.getBoundingClientRect();
-                    TOPPANO.gv.container.offsetTop = containerRect.top - bodyRect.top,
-                        TOPPANO.gv.container.offsetLeft = containerRect.left - bodyRect.left,
-                            TOPPANO.gv.container.Height = containerRect.bottom - containerRect.top,
-                                TOPPANO.gv.container.Width = containerRect.right - containerRect.left;
-                                TOPPANO.gv.container.bound.top = TOPPANO.gv.container.offsetTop,
-                                    TOPPANO.gv.container.bound.bottom = TOPPANO.gv.container.offsetTop + TOPPANO.gv.container.Height,
-                                        TOPPANO.gv.container.bound.left = TOPPANO.gv.container.offsetLeft,
-                                            TOPPANO.gv.container.bound.right = TOPPANO.gv.container.offsetLeft + TOPPANO.gv.container.Width
+    }
+    else {
+        TOPPANO.gv.isFullScreen = true;
+        TOPPANO.gv.renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+    //TOPPANO.gv.renderer.domElement.style.zIndex = -1;
+
+    container.appendChild(TOPPANO.gv.renderer.domElement);
+    // set some global variables about container styles
+    var bodyRect = document.body.getBoundingClientRect(),
+        containerRect = container.getBoundingClientRect();
+        TOPPANO.gv.container.offsetTop = containerRect.top - bodyRect.top,
+        TOPPANO.gv.container.offsetLeft = containerRect.left - bodyRect.left,
+        TOPPANO.gv.container.Height = containerRect.bottom - containerRect.top,
+        TOPPANO.gv.container.Width = containerRect.right - containerRect.left;
+        TOPPANO.gv.container.bound.top = TOPPANO.gv.container.offsetTop,
+        TOPPANO.gv.container.bound.bottom = TOPPANO.gv.container.offsetTop + TOPPANO.gv.container.Height,
+        TOPPANO.gv.container.bound.left = TOPPANO.gv.container.offsetLeft,
+        TOPPANO.gv.container.bound.right = TOPPANO.gv.container.offsetLeft + TOPPANO.gv.container.Width;
+    /*    
+    TOPPANO.gv.CssRenderer = new THREE.CSS3DRenderer();
+    TOPPANO.gv.CssRenderer.setSize(window.innerWidth, window.innerHeight);
+    TOPPANO.gv.CssRenderer.domElement.style.position = 'absolute';
+    TOPPANO.gv.CssRenderer.domElement.style.top = 0;
+    container.appendChild(TOPPANO.gv.CssRenderer.domElement);
+   */
 };
 
 // if hit the objects(and the objects are visible), return: (isHit, hitObj)
-TOPPANO.hitSomething = function(event) {
+TOPPANO.hitSomething = function(event, targetObjs) {
     if (TOPPANO.gv.isFullScreen) {
         var mouse3D = new THREE.Vector3(((event.clientX - TOPPANO.gv.container.offsetLeft) / window.innerWidth) * 2 - 1, //x
                                         -((event.clientY - TOPPANO.gv.container.offsetTop) / window.innerHeight) * 2 + 1, //y
@@ -486,12 +500,12 @@ TOPPANO.hitSomething = function(event) {
     mouse3D.sub(TOPPANO.gv.cam.camera.position);
     mouse3D.normalize();
     var raycaster = new THREE.Raycaster(TOPPANO.gv.cam.camera.position, mouse3D);
-    var intersects = raycaster.intersectObjects(TOPPANO.gv.objects.transitionObj);
+    var intersects = raycaster.intersectObjects(targetObjs);
     if (intersects.length > 0) {
         // return which object is hit
-        for (var i = 0; i < TOPPANO.gv.objects.transitionObj.length; i++) {
-            if (intersects[0].object.position.distanceTo(TOPPANO.gv.objects.transitionObj[i].position) < 10) {
-                return [true, TOPPANO.gv.objects.transitionObj[i]];
+        for (var i = 0; i < targetObjs.length; i++) {
+            if (intersects[0].object.position.distanceTo(targetObjs[i].position) < 10) {
+                return [true, targetObjs[i]];
             }
         }
     } else
@@ -576,6 +590,7 @@ TOPPANO.renderScene = function() {
         TOPPANO.gv.renderer.render(TOPPANO.gv.scene, TOPPANO.gv.cam.camera);
         TOPPANO.gv.renderer.clearDepth();
         TOPPANO.gv.renderer.render(TOPPANO.gv.objScene, TOPPANO.gv.cam.camera);
+        TOPPANO.gv.CssRenderer.render(TOPPANO.gv.CssScene, TOPPANO.gv.cam.camera);
     } else {
         //first load
         requestAnimationFrame(TOPPANO.update);
@@ -583,6 +598,7 @@ TOPPANO.renderScene = function() {
         TOPPANO.gv.renderer.render(TOPPANO.gv.scene, TOPPANO.gv.cam.camera);
         TOPPANO.gv.renderer.clearDepth();
         TOPPANO.gv.renderer.render(TOPPANO.gv.objScene, TOPPANO.gv.cam.camera);
+        //TOPPANO.gv.CssRenderer.render(TOPPANO.gv.CssScene, TOPPANO.gv.cam.camera);
     }
 };
 
@@ -604,6 +620,24 @@ TOPPANO.update = function() {
 
     // mainly for changing TOPPANO.gv.cam.camera.fov
     TOPPANO.gv.cam.camera.updateProjectionMatrix();
+
+    // if the cursor is rotating rotating the sphere (actually is rotating the camera)
+    // update the waterdrop's style in its' html tag
+    // if TOPPANO.gv.cursor.state == "holding-swiper.. or waterdrop", do not update
+    if(TOPPANO.gv.cursor.state == "default"){
+    TOPPANO.gv.objects.waterdropObj.forEach(
+                            function(element, index, array)
+                            {
+                                var position_3D = new THREE.Vector3(element.position_3D.x, element.position_3D.y, element.position_3D.z );
+                                position_3D.project(TOPPANO.gv.cam.camera);
+                                var x = (position_3D.x+1)*window.innerWidth/2;
+                                var y = -(position_3D.y-1)*window.innerHeight/2;
+                                if(position_3D.z<1){
+                                    element.obj.css({"left":x-35, "top":y-30});
+                                }
+                            });
+    }
+
     TOPPANO.renderScene();
 };
 

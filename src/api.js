@@ -38,7 +38,9 @@ TOPPANO.initMap = function(map) {
 TOPPANO.gv = {
     scene: null,
     objScene: null,
+    CssScene: null,
     renderer: null,
+    CssRenderer: null,
     stats: null,
     canvasID: 'pano-container',
     isFBShare: false,
@@ -46,7 +48,10 @@ TOPPANO.gv = {
     isFullScreen: false,
     headingOffset: 0,
     transInfo: {},
-    
+    cursor:{
+        state: "default",
+        element: null
+    },
     // camera parameter
     cam: {
         camera: null,
@@ -90,6 +95,7 @@ TOPPANO.gv = {
     objects: {
         showObj: true,
         transitionObj: [],
+        waterdropObj: [], //TODO it needs  to be cleared when transition
         objSphereRadius: 90
     },
 

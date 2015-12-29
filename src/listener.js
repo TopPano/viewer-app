@@ -28,7 +28,6 @@ TOPPANO.onDocumentMouseDown = function(event) {
 };
 
 TOPPANO.onDocumentMouseMove = function(event) {
-    // console.log('MouseMove');
 
     if (TOPPANO.gv.interact.isUserInteracting) {
         var deltaX = TOPPANO.gv.interact.onPointerDownPointerX - event.clientX,
@@ -39,7 +38,7 @@ TOPPANO.onDocumentMouseMove = function(event) {
     }
 
     // check if hover something, change the icon color
-    var hit = TOPPANO.hitSomething(event),
+    var hit = TOPPANO.hitSomething(event, TOPPANO.gv.objects.transitionObj),
         isHit = hit[0],
             hitObj = hit[1];
             if (isHit) {
@@ -54,7 +53,7 @@ TOPPANO.onDocumentMouseMove = function(event) {
 TOPPANO.onDocumentMouseUp = function(event) {
     TOPPANO.gv.interact.isUserInteracting = false;
 
-    var hit = TOPPANO.hitSomething(event),
+    var hit = TOPPANO.hitSomething(event, TOPPANO.gv.objects.transitionObj),
         isHit = hit[0],
             hitObj = hit[1];
             if (isHit) {
@@ -63,6 +62,7 @@ TOPPANO.onDocumentMouseUp = function(event) {
                 TOPPANO.changeScene(hitObj);
             }
 
+    /* disable by uniray        
     if (TOPPANO.checkMouseInContainer(event)) {
 
             // add objects if user wants
@@ -76,6 +76,7 @@ TOPPANO.onDocumentMouseUp = function(event) {
             // check if hit something, and change the sphere
             TOPPANO.updateURL();
     }
+   */
 };
 
 TOPPANO.onDocumentMouseWheel = function(event) {
@@ -147,7 +148,7 @@ TOPPANO.onDocumentTouchEnd = function(event) {
     // console.log('TouchEnd');
     console.log("TouchEnd event.clientX = ",event.changedTouches[0].clientX);
     console.log("TouchEnd event.clientY = ",event.changedTouches[0].clientY);
-    var hit = TOPPANO.hitSomething(Math.abs(event.changedTouches[0])),
+    var hit = TOPPANO.hitSomething(Math.abs(event.changedTouches[0]), TOPPANO.gv.objects.transitionObj),
         isHit = hit[0],
             hitObj = hit[1];
             if (isHit) {
@@ -334,6 +335,7 @@ TOPPANO.onWindowResize = function() {
         TOPPANO.gv.cam.camera.aspect = window.innerWidth / window.innerHeight;
         TOPPANO.gv.cam.camera.updateProjectionMatrix();
         TOPPANO.gv.renderer.setSize(window.innerWidth, window.innerHeight);
+        //TOPPANO.gv.CssRenderer.setSize(window.innerWidth, window.innerHeight);
 
         TOPPANO.gv.container.bound.bottom = window.innerHeight;
         TOPPANO.gv.container.bound.right = window.innerWidth;
