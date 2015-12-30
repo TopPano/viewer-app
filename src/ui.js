@@ -219,8 +219,9 @@ TOPPANO.setCursorHandler = function(){
     $('#node-gallery div.swiper-slide ').on('mousedown', 
                                             function(event){
                                                 TOPPANO.gv.cursor.state = "holding-swiper-slide";
+                                                var targetName = TOPPANO.ui.modelState.getObjProp(event.currentTarget.id)['name'];
                                                 var waterdrop = $("#waterdrop-0").clone();
-                                                waterdrop.css({display:'none'});
+                                                $('input[type=text]', waterdrop).val(targetName);
 
                                                 // generate waterdrop id
                                                 var length = TOPPANO.gv.objects.waterdropObj.length;
