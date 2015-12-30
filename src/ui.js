@@ -107,8 +107,7 @@ TOPPANO.setCursorHandler = function(){
                                                 var id = event.currentTarget.id.toString()+"-waterdrop-"+length.toString();
 
                                                 $('#container').append(waterdrop);
-                                                var waterdrop_obj = {"id": id, "obj": waterdrop, "position_3D": null};
-                                                console.log(waterdrop_obj);
+                                                var waterdrop_obj = {"id": id, "obj": waterdrop, "position_3D": null, "node_ID":event.currentTarget.id.toString()};
                                                 TOPPANO.gv.cursor.element = waterdrop_obj;
                                             });
 
@@ -116,7 +115,7 @@ TOPPANO.setCursorHandler = function(){
                                             function(event){
                                                 if(TOPPANO.gv.cursor.state == "holding-swiper-slide")
                                                 {
-                                                    $('#'+TOPPANO.gv.cursor.elementID).animate({ 
+                                                    $('#'+TOPPANO.gv.cursor.element.node_ID).animate({ 
                                                             opacity: 0.5               
                                                     }, 5, function() { });
                                                 }
@@ -143,7 +142,7 @@ TOPPANO.setCursorHandler = function(){
     });
 
     $('#node-gallery').on('mouseup',function(){ 
-                                                $('#'+TOPPANO.gv.cursor.elementID).animate({ 
+                                                $('#'+TOPPANO.gv.cursor.element.node_ID).animate({ 
                                                             opacity: 1 
                                                     }, 1, function() { });
 
@@ -185,7 +184,7 @@ TOPPANO.setCursorHandler = function(){
                        {
                                  if(TOPPANO.gv.cursor.state == "holding-swiper-slide")
                             {       
-                                 $('#'+TOPPANO.gv.cursor.elementID).animate({ 
+                                 $('#'+TOPPANO.gv.cursor.element.node_ID).animate({ 
                                             opacity: 1 
                                     }, 1, function() { });
                                 // push the waterdrop element in waterdropObj[]
