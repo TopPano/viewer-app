@@ -33,7 +33,6 @@ TOPPANO.threeInit = function(map) {
     // scene for bg, objScene for transition objects
     TOPPANO.gv.scene = new THREE.Scene();
     TOPPANO.gv.objScene = new THREE.Scene();
-    TOPPANO.gv.CssScene = new THREE.Scene();
 
     // renderer setting
     TOPPANO.rendererSetting();
@@ -470,13 +469,6 @@ TOPPANO.rendererSetting = function() {
         TOPPANO.gv.container.bound.bottom = TOPPANO.gv.container.offsetTop + TOPPANO.gv.container.Height,
         TOPPANO.gv.container.bound.left = TOPPANO.gv.container.offsetLeft,
         TOPPANO.gv.container.bound.right = TOPPANO.gv.container.offsetLeft + TOPPANO.gv.container.Width;
-    /*    
-    TOPPANO.gv.CssRenderer = new THREE.CSS3DRenderer();
-    TOPPANO.gv.CssRenderer.setSize(window.innerWidth, window.innerHeight);
-    TOPPANO.gv.CssRenderer.domElement.style.position = 'absolute';
-    TOPPANO.gv.CssRenderer.domElement.style.top = 0;
-    container.appendChild(TOPPANO.gv.CssRenderer.domElement);
-   */
 };
 
 // if hit the objects(and the objects are visible), return: (isHit, hitObj)
@@ -590,7 +582,6 @@ TOPPANO.renderScene = function() {
         TOPPANO.gv.renderer.render(TOPPANO.gv.scene, TOPPANO.gv.cam.camera);
         TOPPANO.gv.renderer.clearDepth();
         TOPPANO.gv.renderer.render(TOPPANO.gv.objScene, TOPPANO.gv.cam.camera);
-        TOPPANO.gv.CssRenderer.render(TOPPANO.gv.CssScene, TOPPANO.gv.cam.camera);
     } else {
         //first load
         requestAnimationFrame(TOPPANO.update);
@@ -598,7 +589,6 @@ TOPPANO.renderScene = function() {
         TOPPANO.gv.renderer.render(TOPPANO.gv.scene, TOPPANO.gv.cam.camera);
         TOPPANO.gv.renderer.clearDepth();
         TOPPANO.gv.renderer.render(TOPPANO.gv.objScene, TOPPANO.gv.cam.camera);
-        //TOPPANO.gv.CssRenderer.render(TOPPANO.gv.CssScene, TOPPANO.gv.cam.camera);
     }
 };
 

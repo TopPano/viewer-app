@@ -38,9 +38,7 @@ TOPPANO.initMap = function(map) {
 TOPPANO.gv = {
     scene: null,
     objScene: null,
-    CssScene: null,
     renderer: null,
-    CssRenderer: null,
     stats: null,
     canvasID: 'pano-container',
     isFBShare: false,
