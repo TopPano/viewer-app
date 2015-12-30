@@ -82,17 +82,33 @@
             </div>
         </div>
 
-        <div id="node-gallery" data-role="footer" class="swiper-container">
-            <div class="swiper-wrapper"><!-- Add slides here dynamically--></div>
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-button-next"></div>
-            <div class="swiper-scrollbar"></div>
+        <div id="snapshot-gallery" data-role="panel" data-display="overlay" data-position="left" data-dismissible="false">
+            <div class="swiper-container swiper-container-snapshot">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <img src="images/00000000/2-3.jpeg"></img>
+                        <input type="text" data-mini="true" data-corners="false" disabled="disabled" value="A">
+                        <button class="ui-btn ui-icon-edit ui-btn-icon-notext"></button>
+                        <button class="ui-btn ui-icon-delete ui-btn-icon-notext"></button>
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="images/00000000/2-3.jpeg"></img>
+                        <input type="text" data-mini="true" data-corners="false" disabled="disabled" value="A">
+                        <button class="ui-btn ui-icon-edit ui-btn-icon-notext"></button>
+                        <button class="ui-btn ui-icon-delete ui-btn-icon-notext"></button>
+                    </div>
+                </div>
+                <div class="swiper-button-prev swiper-button-prev-snapshot"></div>
+                <div class="swiper-button-next swiper-button-next-snapshot"></div>
+                <div class="swiper-scrollbar  swiper-scrollbar-snapshot"></div>
+            </div>
         </div>
 
-        <div id="waterdrop-0" class="waterdrop" style="position: absolute; top: 150px; left: 150px;">
-            <button class="ui-btn ui-icon-action ui-btn-icon-notext"></button>
-            <button class="ui-btn ui-icon-delete ui-btn-icon-notext"></button>
-            <input type="text" data-mini="true" data-corners="false" disabled="true" value="Bath Room">
+        <div id="node-gallery" data-role="footer" class="swiper-container swiper-container-node">
+            <div class="swiper-wrapper"><!-- Add nodes here dynamically--></div>
+            <div class="swiper-button-prev swiper-button-prev-node"></div>
+            <div class="swiper-button-next swiper-button-next-node"></div>
+            <div class="swiper-scrollbar swiper-scrollbar-node"></div>
         </div>
 
         <div id="container"></div>

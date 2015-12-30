@@ -37,6 +37,23 @@ TOPPANO.ModelState.prototype = {
         return this.currentState[id];
     },
 
+    // Get an list of object properties whose ids have common pattern.
+    getObjPropList: function(pattern) {
+        var list = {};
+
+        $.each(this.currentState, function(id, prop) {
+            if(id.indexOf(pattern) > -1) {
+                list[id] = prop;
+            }
+        });
+        return list;
+    },
+
+    // Delete an object's property.
+    delObjProp: function(id) {
+        delete this.currentState[id];
+    },
+
     // Modify the state. (Create/update/delete an object)
     modifyState: function(id, type, action, prop) {
         // TODO: modify diffState.

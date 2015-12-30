@@ -461,12 +461,21 @@ button[disabled],
     height: 120px;
     top: 15px;
 }
+#node-gallery .swiper-slide.waterdrop-hover {
+    border: 3px solid #b3b3ff;
+}
 #node-gallery .swiper-slide img {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    filter: Alpha(Opacity=30);
+    opacity: .30;
+}
+#node-gallery .swiper-slide.has-waterdrop img {
+    filter: Alpha(Opacity=100);
+    opacity: 1;
 }
 #node-gallery .swiper-slide input[type=text] {
     position: absolute;
@@ -494,6 +503,7 @@ button[disabled],
 
 /* Waterdrop */
 .waterdrop {
+    position: absolute;
     width: 80px;
     height: 80px;
     background-image: url('../images/pin.png');
@@ -503,6 +513,10 @@ button[disabled],
 .waterdrop .ui-icon-delete {
     display: none;
     position: absolute;
+}
+.waterdrop:hover {
+    background-image: url('../images/download.png');
+    cursor: pointer;
 }
 .waterdrop:hover .ui-icon-action,
 .waterdrop:hover .ui-icon-delete {
@@ -523,5 +537,85 @@ button[disabled],
     width: 60%;
     text-align: left;
     //background-color: transparent;
+}
+
+/* Snapshot Gallery */
+#snapshot-gallery {
+    min-height: 0px !important;
+    width: 150px;
+}
+#snapshot-gallery .ui-panel-inner {
+    padding: 0 !important;
+}
+#snapshot-gallery .swiper-button-prev,
+#snapshot-gallery .swiper-button-next {
+    -moz-transform:rotate(90deg);
+    -webkit-transform:rotate(90deg);
+    -o-transform:rotate(90deg);
+    -ms-transform:rotate(90deg);
+    transform: rotate(90deg);
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+}
+#snapshot-gallery .swiper-button-prev {
+    top: 5%;
+}
+#snapshot-gallery .swiper-button-next {
+    top: 95%;
+}
+#snapshot-gallery .take-snapshot {
+    background: url(../images/snapshot.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: yellow;
+    width: 120px;
+    height: 80px;
+    left: 15px;
+}
+#snapshot-gallery .take-snapshot.take-snapshot-empty {
+    background: none;
+    background-color: none;
+}
+#snapshot-gallery .take-snapshot.take-snapshot-fixed {
+    position: absolute;
+    bottom: 0;
+}
+#snapshot-gallery .swiper-slide {
+    width: 120px;
+    height: 80px;
+    left: 15px;
+}
+#snapshot-gallery .swiper-slide img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+#snapshot-gallery .swiper-slide input[type=text] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: transparent;
+    text-align: center;
+}
+#snapshot-gallery .swiper-slide button {
+    display: none;
+}
+#snapshot-gallery .swiper-slide:hover button {
+    display: block;
+}
+#snapshot-gallery .swiper-slide .ui-icon-edit {
+    position: absolute;
+    top: -5px;
+    right: 1px;
+}
+#snapshot-gallery .swiper-slide .ui-icon-delete {
+    position: absolute;
+    bottom: -5px;
+    right: 1px;
 }
 
