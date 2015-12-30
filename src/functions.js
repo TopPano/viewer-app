@@ -46,7 +46,6 @@ TOPPANO.threeInit = function(map) {
     TOPPANO.preLoadImages();
 
     // adding icon objects on scene
-    console.log(TOPPANO.gv.objects.showObj);
     if (TOPPANO.gv.objects.showObj) {
         TOPPANO.addTransition(TOPPANO.gv.scene1.panoID);
     }
@@ -207,16 +206,6 @@ TOPPANO.snapshotCanvasInit = function() {
     TOPPANO.drawCanvas();
     var canvas = document.getElementById('myCanvas');
     hide(canvas);
-};
-
-// main menu initialization
-TOPPANO.menuInit = function() {
-    var downloadLink = document.getElementById('downLink');
-    hide(downloadLink);
-
-    var snapshot = document.getElementById('snapshot');
-    var canvas = document.getElementById('myCanvas');
-    // TODO: saveImage trigger function by js click event
 };
 
 // transfer to another scene
@@ -521,21 +510,24 @@ TOPPANO.hitSphere = function(event) {
 
 
 // snapshot function
-TOPPANO.saveImage = function() {
-    var fov_now = TOPPANO.gv.cam.camera.fov,
-        theta = THREE.Math.degToRad(fov_now / 2),
-            img_width = 0.8 * Math.tan(theta);
+TOPPANO.getSnapshot = function() {
+    var fov = TOPPANO.gv.cam.camera.fov,
+    theta = THREE.Math.degToRad(fov / 2),
+    img_width = 0.8 * Math.tan(theta);
+    TOPPANO.gv.cam.camera.fov = Math.atan(img_width) * 180 / Math.PI * 2;
 
-            TOPPANO.gv.cam.camera.fov = Math.atan(img_width) * 180 / Math.PI * 2;
-            TOPPANO.gv.cam.camera.updateProjectionMatrix();
-            TOPPANO.gv.renderer.render(TOPPANO.gv.scene, TOPPANO.gv.cam.camera);
+    TOPPANO.gv.cam.camera.updateProjectionMatrix();
+    TOPPANO.gv.renderer.render(TOPPANO.gv.scene, TOPPANO.gv.cam.camera);
 
-            // TODO: download link
-            var cap_img = TOPPANO.gv.renderer.domElement.toDataURL('images/jpeg'),
-                new_win = window.open(cap_img, '_blank');
-                TOPPANO.gv.cam.camera.fov = fov_now;
-                TOPPANO.gv.cam.camera.updateProjectionMatrix();
+    var cap_img = TOPPANO.gv.renderer.domElement.toDataURL('images/jpeg');
+    var $tmp = $("<a>", {href:cap_img.toString(), download:"xx.png"});
+    $tmp[0].click();
+    TOPPANO.gv.cam.camera.fov = fov;
+    TOPPANO.gv.cam.camera.updateProjectionMatrix();
 };
+
+
+
 
 // update the URL query
 TOPPANO.updateURL = function() {

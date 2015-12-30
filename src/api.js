@@ -19,9 +19,6 @@ TOPPANO.initMap = function(map) {
         // add listener
         TOPPANO.addListener();
 
-        // some functions (download link, snapshot...)
-        // TOPPANO.menuInit();
-
         TOPPANO.update();
         // add fb-share
         if (TOPPANO.gv.isFBShare) {

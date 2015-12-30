@@ -281,21 +281,21 @@ TOPPANO.onDocumentDrop = function(event) {
 };
 
 TOPPANO.onDocumentKeyUp = function(key) {
-    // var downloadLink = document.getElementById('downLink');
     var canvas = document.getElementById('myCanvas');
 
     if (canvas.style.opacity > 0) {
         // press 's': snapshot function
         if (key.which === 83) {
-            // fadeOut(downloadLink, 600);
             fadeOut(canvas, 600);
         }
-    } else
+    }
+    else{    
         // press 's': snapshot function
         if (key.which === 83) {
-            // fadeIn(downloadLink, 600);
             fadeIn(canvas, 600);
-        } else
+            TOPPANO.getSnapshot();
+        } 
+        else{
             // press 'q': snapshot function (for testing ajax func now.)
             if (key.which === 81) {
                 var xhr = new XMLHttpRequest();
@@ -313,21 +313,9 @@ TOPPANO.onDocumentKeyUp = function(key) {
 
                 // press 'p': snapshot save image
                 if (key.which === 80) {
-                    console.log('hihi~!');
                     TOPPANO.change2Scene('00000002');
-                    // TOPPANO.saveImage();
-                    // if (showObj) {
-                    //     objects.forEach(function(item) {
-                    //         item.visible = false;
-                    //     });
-                    //     showObj = false;
-                    // } else {
-                    //     objects.forEach(function(item) {
-                    //         item.visible = true;
-                    //     });
-                    //     showObj = true;
-                    // }
                 }
+        }}
 };
 
 TOPPANO.onWindowResize = function() {
