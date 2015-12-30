@@ -78,7 +78,7 @@ TOPPANO.createFBShareBtn = function() {
 };
 
 TOPPANO.createSnapshotGallery = function() {
-    var height = $(window).height() - $('#node-gallery').height();
+    var galleryHeight = $(window).height() - $('#node-gallery').height();
 
     TOPPANO.ui.snapshotGalleryUI.swiper = new Swiper('.swiper-container-snapshot', {
         scrollbar: '.swiper-scrollbar-snapshot',
@@ -96,9 +96,24 @@ TOPPANO.createSnapshotGallery = function() {
         grabCursor: false
     });
 
-    $('#snapshot-gallery .swiper-container').height(height);
-    $('#snapshot-gallery').height(height).panel('open');
+    TOPPANO.ui.snapshotGalleryUI.swiper.appendSlide('<div class="swiper-slide take-snapshot"></div>');
+    $('#snapshot-gallery .swiper-container').height(galleryHeight);
+    $('#snapshot-gallery').height(galleryHeight);
+
+    var slideHeight = $('#snapshot-gallery .swiper-slide').height();
+    var numSlides = TOPPANO.ui.snapshotGalleryUI.swiper.slides.length;
+    var slidesHeight = slideHeight * numSlides + 5 * (numSlides - 1);
+
+    if(slidesHeight > galleryHeight) {
+        $('#snapshot-gallery .take-snapshot').addClass('take-snapshot-empty');
+        $('<div class="take-snapshot take-snapshot-fixed"></div>')
+            .appendTo('#snapshot-gallery .swiper-container')
+            .zIndex($('#snapshot-gallery .take-snapshot').zIndex() + 1);
+    }
+
     TOPPANO.ui.snapshotGalleryUI.swiper.update(true);
+    TOPPANO.ui.snapshotGalleryUI.swiper.slideTo(0);
+    $('#snapshot-gallery').panel('open');
 };
 
 // Create A node gallery.

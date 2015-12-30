@@ -565,11 +565,23 @@ button[disabled],
 #snapshot-gallery .swiper-button-next {
     top: 95%;
 }
-#snapshot-gallery .swiper-slide.take-snapshot {
+#snapshot-gallery .take-snapshot {
     background: url(../images/snapshot.png);
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+    background-color: yellow;
+    width: 120px;
+    height: 80px;
+    left: 15px;
+}
+#snapshot-gallery .take-snapshot.take-snapshot-empty {
+    background: none;
+    background-color: none;
+}
+#snapshot-gallery .take-snapshot.take-snapshot-fixed {
+    position: absolute;
+    bottom: 0;
 }
 #snapshot-gallery .swiper-slide {
     width: 120px;
