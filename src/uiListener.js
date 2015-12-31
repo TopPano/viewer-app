@@ -167,6 +167,13 @@ TOPPANO.onWDGotoBtnClick = function(event, nodeId) {
     TOPPANO.transitNode(nodeId);
 };
 
+// Listener for clicking the snapshot gallery switch button.
+TOPPANO.onSGSwitchClick = function(event) {
+    $(this).toggleClass('ui-icon-arrow-r').toggleClass('ui-icon-arrow-l');
+    $('#snapshot-gallery').toggleClass('snapshot-gallery-closed')
+            .toggleClass('snapshot-gallery-opened')
+}
+
 // Transit current node to another node.
 TOPPANO.transitNode = function(targetNodeId, lng, lat, fov) {
     var currentNodeId = TOPPANO.gv.scene1.panoID;

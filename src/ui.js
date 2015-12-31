@@ -105,7 +105,6 @@ TOPPANO.createSnapshotGallery = function() {
     var slideHeight = $('#snapshot-gallery .swiper-slide').height();
     var numSlides = TOPPANO.ui.snapshotGalleryUI.swiper.slides.length;
     var slidesHeight = slideHeight * numSlides + 5 * (numSlides - 1);
-
     if(slidesHeight > galleryHeight) {
         $('#snapshot-gallery .take-snapshot').addClass('take-snapshot-empty');
         $('<div class="take-snapshot take-snapshot-fixed"></div>')
@@ -113,9 +112,11 @@ TOPPANO.createSnapshotGallery = function() {
             .zIndex($('#snapshot-gallery .take-snapshot').zIndex() + 1);
     }
 
+    $('#snapshot-gallery-switch').on('click', TOPPANO.onSGSwitchClick);
+
     TOPPANO.ui.snapshotGalleryUI.swiper.update(true);
     TOPPANO.ui.snapshotGalleryUI.swiper.slideTo(0);
-    $('#snapshot-gallery').panel('open');
+    //$('#snapshot-gallery-switch').trigger('click');
 };
 
 // Create A node gallery.
@@ -150,9 +151,6 @@ TOPPANO.createNodeGallery = function(nodes) {
         grabCursor: false
     });
 
-
-
-    
     $('#node-gallery .swiper-slide .ui-icon-delete').on('click', TOPPANO.onNGDeleteBtnClick);
     $('#node-gallery .swiper-slide input[type=text]').on('focusout', TOPPANO.onNGNameInputFocusout);
     $('#node-gallery .swiper-slide input[type=text]').on('keyup', TOPPANO.onNGNameInputKeyup);
