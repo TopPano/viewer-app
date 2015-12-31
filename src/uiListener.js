@@ -174,6 +174,37 @@ TOPPANO.onSGSwitchClick = function(event) {
             .toggleClass('snapshot-gallery-opened')
 }
 
+// Listener for clicking a Snapshot Gallery delete button.
+TOPPANO.onSGDeleteBtnClick = function(event) {
+    $(this).parent().remove();
+    TOPPANO.ui.snapshotGalleryUI.swiper.update(true);
+};
+
+// Listener for clicking a Snapshot Gallery edit button.
+TOPPANO.onSGEditBtnClick = function(event) {
+    var nameInput = $('input[type=text]', $(this).parent());
+    // Opera sometimes sees return character as 2 characters,
+    // so we should multiply by 2 to ensure the cursor
+    // always ends up in the end.
+    var len = nameInput.val().length * 2;
+
+    nameInput.textinput('enable').focus();
+    nameInput[0].setSelectionRange(len, len);
+};
+
+// Listener when a Snapshot Gallery name input loses focus.
+TOPPANO.onSGNameInputFocusout = function(event) {
+    $(this).textinput('disable');
+};
+
+// Listener for keyboard pressing up on a Sode Gallery name input.
+TOPPANO.onSGNameInputKeyup= function(event) {
+    // Detect pressing up Enter key.
+    if(event.which == 13) {
+        $(this).textinput('disable');
+    }
+};
+
 // Transit current node to another node.
 TOPPANO.transitNode = function(targetNodeId, lng, lat, fov) {
     var currentNodeId = TOPPANO.gv.scene1.panoID;

@@ -112,6 +112,11 @@ TOPPANO.createSnapshotGallery = function() {
             .zIndex($('#snapshot-gallery .take-snapshot').zIndex() + 1);
     }
 
+    $('#snapshot-gallery .swiper-slide .ui-icon-delete').on('click', TOPPANO.onSGDeleteBtnClick);
+    $('#snapshot-gallery .swiper-slide .ui-icon-edit').on('click', TOPPANO.onSGEditBtnClick);
+    $('#snapshot-gallery .swiper-slide input[type=text]')
+            .on('focusout', TOPPANO.onSGNameInputFocusout)
+            .on('keyup', TOPPANO.onSGNameInputKeyup);
     $('#snapshot-gallery-switch').on('click', TOPPANO.onSGSwitchClick);
 
     TOPPANO.ui.snapshotGalleryUI.swiper.update(true);
@@ -330,8 +335,6 @@ TOPPANO.setCursorHandler = function(){
 
 
 };
-
-
 
 // Control the rotation of compass button.
 TOPPANO.rotateCompass = function(degrees) {
