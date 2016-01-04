@@ -167,6 +167,65 @@ TOPPANO.onWDGotoBtnClick = function(event, nodeId) {
     TOPPANO.transitNode(nodeId);
 };
 
+// Listener for clicking the snapshot gallery switch button.
+TOPPANO.onSGSwitchClick = function(event) {
+    $(this).toggleClass('ui-icon-arrow-r').toggleClass('ui-icon-arrow-l');
+    $('#snapshot-gallery').toggleClass('snapshot-gallery-closed')
+            .toggleClass('snapshot-gallery-opened')
+}
+
+// Listener for clicking a Snapshot Gallery delete button.
+TOPPANO.onSGDeleteBtnClick = function(event) {
+    $(this).parent().remove();
+    TOPPANO.ui.snapshotGalleryUI.swiper.update(true);
+    TOPPANO.adjustSnapshotGallery();
+};
+
+// Listener for clicking a Snapshot Gallery edit button.
+TOPPANO.onSGEditBtnClick = function(event) {
+    var nameInput = $('input[type=text]', $(this).parent());
+    // Opera sometimes sees return character as 2 characters,
+    // so we should multiply by 2 to ensure the cursor
+    // always ends up in the end.
+    var len = nameInput.val().length * 2;
+
+    nameInput.textinput('enable').focus();
+    nameInput[0].setSelectionRange(len, len);
+};
+
+// Listener when a Snapshot Gallery name input loses focus.
+TOPPANO.onSGNameInputFocusout = function(event) {
+    $(this).textinput('disable');
+};
+
+// Listener for keyboard pressing up on a Sode Gallery name input.
+TOPPANO.onSGNameInputKeyup= function(event) {
+    // Detect pressing up Enter key.
+    if(event.which == 13) {
+        $(this).textinput('disable');
+    }
+};
+
+//  adjust the take-snapshot icon position in Snapshot Gallery.
+TOPPANO.adjustSnapshotGallery = function(event) {
+    var galleryHeight = $('#snapshot-gallery').height();
+    var slideHeight = $('#snapshot-gallery .swiper-slide').height();
+    var numSlides = TOPPANO.ui.snapshotGalleryUI.swiper.slides.length;
+    var slidesHeight = slideHeight * numSlides + 5 * (numSlides - 1);
+
+    if(slidesHeight > galleryHeight) {
+        $('#snapshot-gallery .take-snapshot-short')
+            .addClass('take-snapshot-empty')
+            .removeClass('take-snapshot-short');
+        $('#snapshot-gallery .take-snapshot-long').show();
+    } else {
+        $('#snapshot-gallery .take-snapshot-empty')
+            .addClass('take-snapshot-short')
+            .removeClass('take-snapshot-empty');
+        $('#snapshot-gallery .take-snapshot-long').hide();
+    }
+}
+
 // Transit current node to another node.
 TOPPANO.transitNode = function(targetNodeId, lng, lat, fov) {
     var currentNodeId = TOPPANO.gv.scene1.panoID;

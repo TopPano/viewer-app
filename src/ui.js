@@ -1,11 +1,11 @@
 // The enter function for creating all ui components.
-TOPPANO.createUI = function() {
+TOPPANO.createUI = function(model) {
     var rotateInterval = Math.round(1000 / TOPPANO.ui.compassUI.frames);
 
     TOPPANO.ui.modelState = new TOPPANO.ModelState();
 
     TOPPANO.initFB();
-    TOPPANO.createSummary();
+    TOPPANO.createSummary(model['summary']);
     TOPPANO.createFullscreenBtn()
     TOPPANO.createCompassBtn();
     TOPPANO.createFBShareBtn();
@@ -58,7 +58,14 @@ TOPPANO.createUI = function() {
 };
 
 // Create a component for showing summary of the model.
-TOPPANO.createSummary = function() {
+TOPPANO.createSummary = function(summary) {
+    TOPPANO.ui.modelState.addObjProp('summary', summary);
+
+    $('#summary-name').val(summary['name']);
+    $('#summary-presentedBy').val(summary['presentedBy']);
+    $('#summary-description').val(summary['description']);
+    $('#summary-address').val(summary['address']);
+
     $('#summary-main .ui-collapsible-heading-toggle').on('click', TOPPANO.onSummaryMainClick);
     $('#summary-btn').on('click', TOPPANO.onSummaryBtnClick);
 };
@@ -94,27 +101,30 @@ TOPPANO.createSnapshotGallery = function() {
         spaceBetween: 5,
         setWarpperSize: true,
         scrollbarDraggable: true,
-        grabCursor: false
+        grabCursor: false,
+        resistanceRatio: 0
     });
 
-    TOPPANO.ui.snapshotGalleryUI.swiper.appendSlide('<div class="swiper-slide take-snapshot"></div>');
+    TOPPANO.ui.snapshotGalleryUI.swiper
+        .appendSlide('<div class="swiper-slide take-snapshot take-snapshot-short"></div>');
+    $('<div class="take-snapshot take-snapshot-long"></div>')
+        .appendTo('#snapshot-gallery .swiper-container')
+        .zIndex($('#snapshot-gallery .take-snapshot.take-snapshot-short').zIndex() + 1);
+
     $('#snapshot-gallery .swiper-container').height(galleryHeight);
     $('#snapshot-gallery').height(galleryHeight);
-
-    var slideHeight = $('#snapshot-gallery .swiper-slide').height();
-    var numSlides = TOPPANO.ui.snapshotGalleryUI.swiper.slides.length;
-    var slidesHeight = slideHeight * numSlides + 5 * (numSlides - 1);
-
-    if(slidesHeight > galleryHeight) {
-        $('#snapshot-gallery .take-snapshot').addClass('take-snapshot-empty');
-        $('<div class="take-snapshot take-snapshot-fixed"></div>')
-            .appendTo('#snapshot-gallery .swiper-container')
-            .zIndex($('#snapshot-gallery .take-snapshot').zIndex() + 1);
-    }
-
     TOPPANO.ui.snapshotGalleryUI.swiper.update(true);
+    TOPPANO.adjustSnapshotGallery();
+
+    $('#snapshot-gallery .swiper-slide .ui-icon-delete').on('click', TOPPANO.onSGDeleteBtnClick);
+    $('#snapshot-gallery .swiper-slide .ui-icon-edit').on('click', TOPPANO.onSGEditBtnClick);
+    $('#snapshot-gallery .swiper-slide input[type=text]')
+            .on('focusout', TOPPANO.onSGNameInputFocusout)
+            .on('keyup', TOPPANO.onSGNameInputKeyup);
+    $('#snapshot-gallery-switch').on('click', TOPPANO.onSGSwitchClick);
+
     TOPPANO.ui.snapshotGalleryUI.swiper.slideTo(0);
-    $('#snapshot-gallery').panel('open');
+    $('#snapshot-gallery-switch').trigger('click');
 };
 
 // Create A node gallery.
@@ -149,9 +159,6 @@ TOPPANO.createNodeGallery = function(nodes) {
         grabCursor: false
     });
 
-
-
-    
     $('#node-gallery .swiper-slide .ui-icon-delete').on('click', TOPPANO.onNGDeleteBtnClick);
     $('#node-gallery .swiper-slide input[type=text]').on('focusout', TOPPANO.onNGNameInputFocusout);
     $('#node-gallery .swiper-slide input[type=text]').on('keyup', TOPPANO.onNGNameInputKeyup);
@@ -212,8 +219,6 @@ TOPPANO.createWaterdrop = function(id, prop) {
         $('#' + id).hide();
     }
 };
-
-
 
 
 

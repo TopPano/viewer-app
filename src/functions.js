@@ -3,6 +3,26 @@
  * Panorama Function
  */
 
+TOPPANO.modelInit = function() {
+    var modelId = getUrlParam('model');
+    var model = {};
+
+    $.get(TOPPANO.gv.apiUrl + '/modelmeta/' + modelId).done(function(modelMeta) {
+        model['summary'] = {
+            'name': modelMeta['name'],
+            'presentedBy': modelMeta['presentedBy'],
+            'description': modelMeta['description'],
+            'address': modelMeta['address']
+        };
+    }).then(function() {
+        return $.get(TOPPANO.gv.apiUrl + '/modelmeta/' + modelId + '/files');
+    }).done(function(files) {
+        TOPPANO.createUI(model);
+        // add listener
+        TOPPANO.addListener();
+    });
+}
+
 TOPPANO.threeInit = function(map) {
     if (map) {
         TOPPANO.initGV(map);
@@ -636,4 +656,12 @@ function clamp(number, min, max) {
     return Math.min(Math.max(number, min), max);
 }
 
+// Get a URL parameter's value by name.
+function getUrlParam(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
 
