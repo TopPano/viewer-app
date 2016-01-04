@@ -95,22 +95,20 @@ TOPPANO.createSnapshotGallery = function() {
         spaceBetween: 5,
         setWarpperSize: true,
         scrollbarDraggable: true,
-        grabCursor: false
+        grabCursor: false,
+        resistanceRatio: 0
     });
 
-    TOPPANO.ui.snapshotGalleryUI.swiper.appendSlide('<div class="swiper-slide take-snapshot"></div>');
+    TOPPANO.ui.snapshotGalleryUI.swiper
+        .appendSlide('<div class="swiper-slide take-snapshot take-snapshot-short"></div>');
+    $('<div class="take-snapshot take-snapshot-long"></div>')
+        .appendTo('#snapshot-gallery .swiper-container')
+        .zIndex($('#snapshot-gallery .take-snapshot.take-snapshot-short').zIndex() + 1);
+
     $('#snapshot-gallery .swiper-container').height(galleryHeight);
     $('#snapshot-gallery').height(galleryHeight);
-
-    var slideHeight = $('#snapshot-gallery .swiper-slide').height();
-    var numSlides = TOPPANO.ui.snapshotGalleryUI.swiper.slides.length;
-    var slidesHeight = slideHeight * numSlides + 5 * (numSlides - 1);
-    if(slidesHeight > galleryHeight) {
-        $('#snapshot-gallery .take-snapshot').addClass('take-snapshot-empty');
-        $('<div class="take-snapshot take-snapshot-fixed"></div>')
-            .appendTo('#snapshot-gallery .swiper-container')
-            .zIndex($('#snapshot-gallery .take-snapshot').zIndex() + 1);
-    }
+    TOPPANO.ui.snapshotGalleryUI.swiper.update(true);
+    TOPPANO.adjustSnapshotGallery();
 
     $('#snapshot-gallery .swiper-slide .ui-icon-delete').on('click', TOPPANO.onSGDeleteBtnClick);
     $('#snapshot-gallery .swiper-slide .ui-icon-edit').on('click', TOPPANO.onSGEditBtnClick);
@@ -119,9 +117,8 @@ TOPPANO.createSnapshotGallery = function() {
             .on('keyup', TOPPANO.onSGNameInputKeyup);
     $('#snapshot-gallery-switch').on('click', TOPPANO.onSGSwitchClick);
 
-    TOPPANO.ui.snapshotGalleryUI.swiper.update(true);
     TOPPANO.ui.snapshotGalleryUI.swiper.slideTo(0);
-    //$('#snapshot-gallery-switch').trigger('click');
+    $('#snapshot-gallery-switch').trigger('click');
 };
 
 // Create A node gallery.

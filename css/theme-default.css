@@ -595,11 +595,14 @@ button[disabled],
     height: 80px;
     left: 15px;
 }
+#snapshot-gallery .take-snapshot.take-snapshot-short {
+    // Same as above
+}
 #snapshot-gallery .take-snapshot.take-snapshot-empty {
     background: none;
     background-color: none;
 }
-#snapshot-gallery .take-snapshot.take-snapshot-fixed {
+#snapshot-gallery .take-snapshot.take-snapshot-long {
     position: absolute;
     bottom: 0;
 }

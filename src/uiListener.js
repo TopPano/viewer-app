@@ -178,6 +178,7 @@ TOPPANO.onSGSwitchClick = function(event) {
 TOPPANO.onSGDeleteBtnClick = function(event) {
     $(this).parent().remove();
     TOPPANO.ui.snapshotGalleryUI.swiper.update(true);
+    TOPPANO.adjustSnapshotGallery();
 };
 
 // Listener for clicking a Snapshot Gallery edit button.
@@ -204,6 +205,26 @@ TOPPANO.onSGNameInputKeyup= function(event) {
         $(this).textinput('disable');
     }
 };
+
+//  adjust the take-snapshot icon position in Snapshot Gallery.
+TOPPANO.adjustSnapshotGallery = function(event) {
+    var galleryHeight = $('#snapshot-gallery').height();
+    var slideHeight = $('#snapshot-gallery .swiper-slide').height();
+    var numSlides = TOPPANO.ui.snapshotGalleryUI.swiper.slides.length;
+    var slidesHeight = slideHeight * numSlides + 5 * (numSlides - 1);
+
+    if(slidesHeight > galleryHeight) {
+        $('#snapshot-gallery .take-snapshot-short')
+            .addClass('take-snapshot-empty')
+            .removeClass('take-snapshot-short');
+        $('#snapshot-gallery .take-snapshot-long').show();
+    } else {
+        $('#snapshot-gallery .take-snapshot-empty')
+            .addClass('take-snapshot-short')
+            .removeClass('take-snapshot-empty');
+        $('#snapshot-gallery .take-snapshot-long').hide();
+    }
+}
 
 // Transit current node to another node.
 TOPPANO.transitNode = function(targetNodeId, lng, lat, fov) {
