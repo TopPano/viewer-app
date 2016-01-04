@@ -12,6 +12,8 @@ TOPPANO.initMap = function(map) {
     TOPPANO.requestMeta(map.PanoID);
 
     window.onload = function(){
+        TOPPANO.modelInit();
+
         TOPPANO.threeInit(map);
 
         TOPPANO.controlInit();
@@ -30,7 +32,6 @@ TOPPANO.initMap = function(map) {
 
         // draw snapshot canvas
         TOPPANO.snapshotCanvasInit();
-        TOPPANO.createUI();
     };
 };
 
@@ -137,6 +138,7 @@ TOPPANO.gv = {
     tilePath: './images/',
     //tilePath: 'http://localhost:3002',
     defaultMap: './image/tile/0-0.jpeg',
+    apiUrl: 'http://localhost:3000/api',
     metaURL: 'http://52.34.253.117:3001'
     //metaURL: 'http://helios-api-0.cloudapp.net:6687'
 };

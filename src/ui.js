@@ -1,11 +1,11 @@
 // The enter function for creating all ui components.
-TOPPANO.createUI = function() {
+TOPPANO.createUI = function(model) {
     var rotateInterval = Math.round(1000 / TOPPANO.ui.compassUI.frames);
 
     TOPPANO.ui.modelState = new TOPPANO.ModelState();
 
     TOPPANO.initFB();
-    TOPPANO.createSummary();
+    TOPPANO.createSummary(model['summary']);
     TOPPANO.createFullscreenBtn()
     TOPPANO.createCompassBtn();
     TOPPANO.createFBShareBtn();
@@ -59,7 +59,14 @@ TOPPANO.createUI = function() {
 };
 
 // Create a component for showing summary of the model.
-TOPPANO.createSummary = function() {
+TOPPANO.createSummary = function(summary) {
+    TOPPANO.ui.modelState.addObjProp('summary', summary);
+
+    $('#summary-name').val(summary['name']);
+    $('#summary-presentedBy').val(summary['presentedBy']);
+    $('#summary-description').val(summary['description']);
+    $('#summary-address').val(summary['address']);
+
     $('#summary-main .ui-collapsible-heading-toggle').on('click', TOPPANO.onSummaryMainClick);
     $('#summary-btn').on('click', TOPPANO.onSummaryBtnClick);
 };
