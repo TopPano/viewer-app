@@ -16,8 +16,6 @@ TOPPANO.initMap = function(map) {
 
         TOPPANO.controlInit();
 
-        // add listener
-        TOPPANO.addListener();
 
         TOPPANO.update();
         // add fb-share
@@ -28,6 +26,10 @@ TOPPANO.initMap = function(map) {
         // draw snapshot canvas
         TOPPANO.snapshotCanvasInit();
         TOPPANO.createUI();
+
+        // add listener
+        TOPPANO.addListener();
+
     };
 };
 

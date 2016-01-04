@@ -3,124 +3,265 @@
  * Listener Function
  */
 
-// check whether in the container
-TOPPANO.checkMouseInContainer = function(event) {
-    var mouseX = event.clientX,
-        mouseY = event.clientY;
-        return between(mouseX, TOPPANO.gv.control.bound.left, TOPPANO.gv.control.bound.right)
-        && between(mouseY, TOPPANO.gv.control.bound.top, TOPPANO.gv.control.bound.bottom);
-};
+function set_WD_Listener(waterdrop_obj){
+    waterdrop_obj.obj.on('mousedown',
+                    function(event){
+                        // whenever the cursor select a waterdrop
+                        TOPPANO.gv.cursor.state = "holding-waterdrop";
+                        TOPPANO.gv.cursor.element = waterdrop_obj;
+                    });
+    
+  waterdrop_obj.obj.children('.ui-icon-delete').on('click', 
+                                             function(){
+                                                $(this).parent().remove();
+                                                //console.log($(this).parent()[0].id);
+                                                //TOPPANO.gv.objects.waterdropObj
+                                                // TODO: remove in  TOPPANO.gv.objects.waterdropObj (it's an array)
+                                             }); 
+}
+
+// 2dimension to 3 dimension (transform the onscreen (x,y) to (x,y,z) on paranorma sphere)
+function dimen2_to_dimen3(event){
+    var hitPos = TOPPANO.hitSphere(event);
+    var ObjLatLng = xyz2LatLng(hitPos.x, hitPos.y, hitPos.z);
+    var radiusObj = TOPPANO.gv.objects.objSphereRadius,
+        phiObj = THREE.Math.degToRad(90 - ObjLatLng.lat),
+        thetaObj = THREE.Math.degToRad(ObjLatLng.lng);
+    
+    radiusObj = 1000; 
+    var xObj = radiusObj * Math.sin(phiObj) * Math.cos(thetaObj),
+        yObj = radiusObj * Math.cos(phiObj),
+        zObj = radiusObj * Math.sin(phiObj) * Math.sin(thetaObj);
+    return {'x':xObj, 'y':yObj, 'z':zObj};
+}
+
+function set_on_holding_swiper_slide(){
+    // whenever the cursor holding-swiper-slide
+    $('#node-gallery div.swiper-slide ').on('mousedown', 
+                                            function(event){
+                                                if(TOPPANO.gv.cursor.state == "default"){
+                                                    TOPPANO.gv.cursor.state = "holding-swiper-slide";
+                                                    var targetName = TOPPANO.ui.modelState.getObjProp(event.currentTarget.id)['name'];
+                                                    var waterdrop = $("#waterdrop-0").clone();
+                                                    $('input[type=text]', waterdrop).val(targetName);
+                                                    // generate waterdrop id
+                                                    var length = TOPPANO.gv.objects.waterdropObj.length;
+                                                    // TODO: id generating must be unique
+                                                    var id = event.currentTarget.id.toString()+"-waterdrop-"+length.toString();
+                                                    waterdrop.id = id;
+                                                    $('#container').append(waterdrop);
+                                                    var waterdrop_obj = {"id": id, "obj": waterdrop, "position_3D": null, "node_ID":event.currentTarget.id.toString()};
+                                                    TOPPANO.gv.cursor.element = waterdrop_obj;
+                                                }
+                                            });
+    $('#container').on('mousemove', 
+                       function(event){
+                           if(TOPPANO.gv.cursor.state == "holding-swiper-slide")
+                            {   
+                                var waterdrop = TOPPANO.gv.cursor.element.obj;                           
+                                waterdrop.css({top: event.clientY-30, left: event.clientX-35, position:'absolute', display:'block'});
+                                // TODO: "y-30" and "x-35" need to be adjust
+                            }
+                       });
+    
+    $('#node-gallery div.swiper-slide').on('mousemove', 
+                                            function(event){
+                                                if(TOPPANO.gv.cursor.state == "holding-swiper-slide")
+                                                {
+                                                    $('#'+TOPPANO.gv.cursor.element.node_ID).animate({ 
+                                                            opacity: 0.5               
+                                                    }, 5, function() { });
+                                                }
+                                            });
+    
+    $('#node-gallery').on('mouseup',function(){ 
+                                                $('#'+TOPPANO.gv.cursor.element.node_ID).animate({ 
+                                                            opacity: 1 
+                                                    }, 1, function() { });
+
+                                                TOPPANO.gv.cursor.state = "default";
+                                                TOPPANO.gv.cursor.element = null; // TODO:TOPPANO.gv.cursor.element must be free
+                                           });
 
 
-TOPPANO.onDocumentMouseDown = function(event) {
-    // console.log('MouseDown');
+    $('#container').on('mouseup', function(event)
+                       {
+                            if(TOPPANO.gv.cursor.state == "holding-swiper-slide")
+                            {       
+                                 $('#'+TOPPANO.gv.cursor.element.node_ID).animate({ 
+                                            opacity: 1 
+                                    }, 1, function() { });
+                                // push the waterdrop element in waterdropObj[]
+                                var waterdrop_obj = TOPPANO.gv.cursor.element;
+                                var waterdrop = waterdrop_obj.obj;
+                                waterdrop.attr('id', waterdrop_obj.id);
+                                waterdrop_obj.position_3D = dimen2_to_dimen3(event);
+                                
+                                set_WD_Listener(waterdrop_obj);
+                                TOPPANO.gv.objects.waterdropObj.push(waterdrop_obj);
+                                TOPPANO.gv.cursor.state = "default";
+                                TOPPANO.gv.cursor.element = null;
+                            }
+                       });
+}
 
-    // check mouse in the container first (if not, isUserInteracting = false by default)
-    if (TOPPANO.checkMouseInContainer(event)) {
-        TOPPANO.gv.interact.isUserInteracting = true;
-    }
 
-    TOPPANO.gv.interact.onPointerDownPointerX = event.clientX;
-    TOPPANO.gv.interact.onPointerDownPointerY = event.clientY;
+function set_on_holding_waterdrop(){
+    // for holding-waterdrop
+    $('#container').on('mousemove', 
+                       function(event){
+                           if(TOPPANO.gv.cursor.state == "holding-waterdrop")
+                            {
+                                var waterdrop = TOPPANO.gv.cursor.element.obj;                           
+                                waterdrop.css({top: event.clientY-30, left: event.clientX-35, position:'absolute', display:'block'});
+                                // TODO: "y-30" and "x-35" need to be adjust
+                            }
+                       });
+    $('#container').on('mouseup', function(event)
+                       {
+                            if(TOPPANO.gv.cursor.state == "holding-waterdrop")
+                            {   
+                                var waterdrop_obj = TOPPANO.gv.cursor.element;
+                                waterdrop_obj.position_3D = dimen2_to_dimen3(event);
+                                console.log(TOPPANO.gv.cursor.element);
+                                TOPPANO.gv.cursor.state = "default";
+                                TOPPANO.gv.cursor.element = null;
+                            }
+                        });
+}
 
-    TOPPANO.gv.interact.onPointerDownLon = TOPPANO.gv.cam.lng;
-    TOPPANO.gv.interact.onPointerDownLat = TOPPANO.gv.cam.lat;
-};
 
-TOPPANO.onDocumentMouseMove = function(event) {
+function set_on_rotating_scene(){
+    // rotating-scene
+    $('#container').on('mousedown',
+                      function(event){
+                            if(TOPPANO.gv.cursor.state == "default"){
+                                TOPPANO.gv.interact.onPointerDownPointerX = event.clientX;
+                                TOPPANO.gv.interact.onPointerDownPointerY = event.clientY;
+                                TOPPANO.gv.interact.onPointerDownLon = TOPPANO.gv.cam.lng;
+                                TOPPANO.gv.interact.onPointerDownLat = TOPPANO.gv.cam.lat;
+                                TOPPANO.gv.cursor.state = 'mouse-down-container';
+                            }
+                      });
 
-    if (TOPPANO.gv.interact.isUserInteracting) {
-        var deltaX = TOPPANO.gv.interact.onPointerDownPointerX - event.clientX,
-            deltaY = event.clientY - TOPPANO.gv.interact.onPointerDownPointerY;
+    $('#container').on('mousemove', 
+                       function(event){
+                           if(TOPPANO.gv.cursor.state == "mouse-down-container"){
+                                TOPPANO.gv.cursor.state = "rotating-scene";
+                            }
+                            else if(TOPPANO.gv.cursor.state == "rotating-scene")
+                            {
+                                var deltaX = TOPPANO.gv.interact.onPointerDownPointerX - event.clientX,
+                                    deltaY = event.clientY - TOPPANO.gv.interact.onPointerDownPointerY;
 
-            TOPPANO.gv.cam.lng = deltaX * 0.1 + TOPPANO.gv.interact.onPointerDownLon;
-            TOPPANO.gv.cam.lat = deltaY * 0.1 + TOPPANO.gv.interact.onPointerDownLat;
-    }
+                                    TOPPANO.gv.cam.lng = deltaX * 0.1 + TOPPANO.gv.interact.onPointerDownLon;
+                                    TOPPANO.gv.cam.lat = deltaY * 0.1 + TOPPANO.gv.interact.onPointerDownLat;
+                            }
+    });
+    
+    $('#container').on('mouseup', 
+                       function(event){
+                           if(TOPPANO.gv.cursor.state == "rotating-scene"){
+                                TOPPANO.gv.cursor.state = "default";
+                                TOPPANO.gv.cursor.element = null;
+                            }
+                       });
+}
 
-    // check if hover something, change the icon color
-    var hit = TOPPANO.hitSomething(event, TOPPANO.gv.objects.transitionObj),
-        isHit = hit[0],
-            hitObj = hit[1];
-            if (isHit) {
-                hitObj.material.color.set('orange');
-            } else {
-                TOPPANO.gv.objects.transitionObj.forEach(function(item) {
-                    item.material.color.set('white');
-                });
+function set_on_hovering_scene(){
+    // hovering-on-scene
+    $('#container').on('mousemove', 
+                       function(event){
+                            if(TOPPANO.gv.cursor.state == "default")
+                            {
+                                // check if hover something, change the icon color
+                                var hit = TOPPANO.hitSomething(event, TOPPANO.gv.objects.transitionObj),
+                                    isHit = hit[0],
+                                    hitObj = hit[1];
+                                if (isHit) {
+                                    hitObj.material.color.set('orange');
+                                } 
+                                else {
+                                    TOPPANO.gv.objects.transitionObj.forEach(function(item) {
+                                                                                item.material.color.set('white');
+                                                                             });
+                               }
+                            }
+    });
+}
+
+
+function set_on_changing_scene(){
+    // change scene
+    $('#container').on('mouseup', function(event)
+                       {
+                            if(TOPPANO.gv.cursor.state == "mouse-down-container")
+                            {
+                                var hit = TOPPANO.hitSomething(event, TOPPANO.gv.objects.transitionObj),
+                                    isHit = hit[0],
+                                    hitObj = hit[1];
+                                if (isHit) {
+                                    //TOPPANO.gv.scene1.nextInfo = hit[1].name; the code maybe useless
+                                    TOPPANO.changeScene(hitObj);
+                                }
+                                TOPPANO.gv.cursor.state = "default";
+                                TOPPANO.gv.cursor.element = null;
+                            }
+                       });
+
+}
+
+function set_on_scrolling_scene(){
+    function onMouseWheel(event) {
+        // check FoV range
+        if (TOPPANO.gv.cam.camera.fov <= TOPPANO.gv.para.fov.max
+            && TOPPANO.gv.cam.camera.fov >= TOPPANO.gv.para.fov.min) {
+            // WebKit (Safari / Chrome)
+            if (event.wheelDeltaY) {
+                TOPPANO.gv.cam.camera.fov -= event.wheelDeltaY * 0.05;
             }
-};
-
-TOPPANO.onDocumentMouseUp = function(event) {
-    TOPPANO.gv.interact.isUserInteracting = false;
-
-    var hit = TOPPANO.hitSomething(event, TOPPANO.gv.objects.transitionObj),
-        isHit = hit[0],
-            hitObj = hit[1];
-            if (isHit) {
-                
-                //TOPPANO.gv.scene1.nextInfo = hit[1].name; the code maybe useless
-                TOPPANO.changeScene(hitObj);
+            // Opera / IE 9
+            else if (event.wheelDelta) {
+                TOPPANO.gv.cam.camera.fov -= event.wheelDelta * 0.05;
             }
+            // Firefox
+            else if (event.detail) {
+                TOPPANO.gv.cam.camera.fov += event.detail * 1.0;
+            }
+        }
 
-    /* disable by uniray        
-    if (TOPPANO.checkMouseInContainer(event)) {
+        if (TOPPANO.gv.cam.camera.fov > TOPPANO.gv.para.fov.max) {
+            TOPPANO.gv.cam.camera.fov = TOPPANO.gv.para.fov.max;
+        }
+        if (TOPPANO.gv.cam.camera.fov < TOPPANO.gv.para.fov.min) {
+            TOPPANO.gv.cam.camera.fov = TOPPANO.gv.para.fov.min;
+        }
 
-            // add objects if user wants
-            var hitPos = TOPPANO.hitSphere(event);
-            
-            var ObjLatLng = xyz2LatLng(hitPos.x, hitPos.y, hitPos.z);
-            console.log(ObjLatLng.lat, ObjLatLng.lng);
-            TOPPANO.addRandObj2(ObjLatLng, 10);
-            // TOPPANO.addRandObj(hitPos.x, hitPos.y, hitPos.z, 10);
-
-            // check if hit something, and change the sphere
+        TOPPANO.gv.cam.camera.updateProjectionMatrix();
+        // update URL after scroll stops for 0.1 second
+        if (TOPPANO.gv.interact.timer !== null) {
+            clearTimeout(TOPPANO.gv.interact.timer);
+        }
+        TOPPANO.gv.interact.timer = setTimeout(function() {
             TOPPANO.updateURL();
-    }
-   */
+        }, 50);
+    };
+    
+    // for IE & chrome
+    $('#container').on('mousewheel', function(event){onMouseWheel(event.originalEvent);});
+    // for firefox
+    $('#container').on('DOMMouseScroll', function(event){onMouseWheel(event.originalEvent);});
+}
+
+TOPPANO.setCursorHandler = function(){
+    set_on_holding_swiper_slide();
+    set_on_holding_waterdrop();
+    set_on_rotating_scene();
+    set_on_hovering_scene();
+    set_on_changing_scene();
+    set_on_scrolling_scene();
 };
 
-TOPPANO.onDocumentMouseWheel = function(event) {
-    // check FoV range
-
-    if (TOPPANO.checkMouseInContainer(event)
-        && TOPPANO.gv.cam.camera.fov <= TOPPANO.gv.para.fov.max
-    && TOPPANO.gv.cam.camera.fov >= TOPPANO.gv.para.fov.min) {
-        // WebKit (Safari / Chrome)
-        if (event.wheelDeltaY) {
-            TOPPANO.gv.cam.camera.fov -= event.wheelDeltaY * 0.05;
-        }
-        // Opera / IE 9
-        else if (event.wheelDelta) {
-            TOPPANO.gv.cam.camera.fov -= event.wheelDelta * 0.05;
-        }
-        // Firefox
-        else if (event.detail) {
-            TOPPANO.gv.cam.camera.fov += event.detail * 1.0;
-        }
-    }
-
-    if (TOPPANO.gv.cam.camera.fov > TOPPANO.gv.para.fov.max) {
-        TOPPANO.gv.cam.camera.fov = TOPPANO.gv.para.fov.max;
-    }
-    if (TOPPANO.gv.cam.camera.fov < TOPPANO.gv.para.fov.min) {
-        TOPPANO.gv.cam.camera.fov = TOPPANO.gv.para.fov.min;
-    }
-
-    // var cameraFov = TOPPANO.gv.cam.camera.fov,
-    // cameraAspect = TOPPANO.gv.cam.camera.aspect;
-    // var hFOV = 2 * Math.atan( Math.tan( cameraFov * Math.PI / 180 / 2 ) * cameraAspect ) * 180 / Math.PI; // degrees
-    // console.log(hFOV);
-
-    TOPPANO.gv.cam.camera.updateProjectionMatrix();
-
-    // update URL after scroll stops for 0.1 second
-    if (TOPPANO.gv.interact.timer !== null) {
-        clearTimeout(TOPPANO.gv.interact.timer);
-    }
-    TOPPANO.gv.interact.timer = setTimeout(function() {
-        TOPPANO.updateURL();
-    }, 50);
-};
 
 
 

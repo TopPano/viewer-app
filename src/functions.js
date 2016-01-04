@@ -64,22 +64,10 @@ TOPPANO.controlInit = function(){
 
 // add listeners
 TOPPANO.addListener = function() {
-    document.addEventListener('mousedown', TOPPANO.onDocumentMouseDown, false);
-    document.addEventListener('mousemove', function(event) {
-        TOPPANO.onDocumentMouseMove(event);
-    }, false);
-    document.addEventListener('mouseup', function(event) {
-        TOPPANO.onDocumentMouseUp(event);
-    }, false);
-    document.addEventListener('mousewheel', function(event) {
-        TOPPANO.onDocumentMouseWheel(event);
-    }, false);
+    TOPPANO.setCursorHandler();
     document.addEventListener('touchstart', TOPPANO.onDocumentTouchStart, false);
     document.addEventListener('touchmove', TOPPANO.onDocumentTouchMove, false);
     document.addEventListener('touchend', TOPPANO.onDocumentTouchEnd, false);
-    document.addEventListener('DOMMouseScroll', function(event) {
-        TOPPANO.onDocumentMouseWheel(event);
-    }, false);
     document.addEventListener('dragover', function(event) {
         TOPPANO.onDocumentDragOver(event);
     }, false);
@@ -314,47 +302,6 @@ TOPPANO.addObject = function(LatLng, rotation, size, transID) {
 
 };
 
-// add a random object for test!
-TOPPANO.addRandObj = function(x, y, z, size) {
-    var geometryObj = new THREE.PlaneBufferGeometry(size, size, 32),
-        materialObj = new THREE.MeshBasicMaterial({
-            map: THREE.ImageUtils.loadTexture('./images/pin.png'),
-            side: THREE.DoubleSide,
-            opacity: 1,
-            transparent: true
-        }),
-        transitionObj = new THREE.Mesh(geometryObj, materialObj);
-
-        transitionObj.position.set(x, y ,z);
-        transitionObj.lookAt(TOPPANO.gv.cam.camera.position);
-        TOPPANO.gv.objScene.add(transitionObj);
-
-        var ObjLatLng = xyz2LatLng(x, y, z, TOPPANO.gv.objects.objSphereRadius);
-};
-
-// add a random object for test!
-TOPPANO.addRandObj2 = function(LatLng, size) {
-    var radiusObj = TOPPANO.gv.objects.objSphereRadius,
-        phiObj = THREE.Math.degToRad(90 - LatLng.lat),
-            thetaObj = THREE.Math.degToRad(LatLng.lng);
-
-            var geometryObj = new THREE.PlaneBufferGeometry(size, size, 32),
-                materialObj = new THREE.MeshBasicMaterial({
-                    map: THREE.ImageUtils.loadTexture('./images/pin.png'),
-                    side: THREE.DoubleSide,
-                    opacity: 1,
-                    transparent: true
-                }),
-                transitionObj = new THREE.Mesh(geometryObj, materialObj);
-
-                var xObj = radiusObj * Math.sin(phiObj) * Math.cos(thetaObj),
-                    yObj = radiusObj * Math.cos(phiObj),
-                        zObj = radiusObj * Math.sin(phiObj) * Math.sin(thetaObj);
-
-                        transitionObj.position.set(xObj, yObj ,zObj);
-                        transitionObj.lookAt(TOPPANO.gv.cam.camera.position);
-                        TOPPANO.gv.objScene.add(transitionObj);
-};
 
 // add plane for testing GLSL
 TOPPANO.addPlane = function() {
@@ -608,7 +555,10 @@ TOPPANO.update = function() {
     // if the cursor is rotating rotating the sphere (actually is rotating the camera)
     // update the waterdrop's style in its' html tag
     // if TOPPANO.gv.cursor.state == "holding-swiper.. or waterdrop", do not update
-    if(TOPPANO.gv.cursor.state == "default"){
+    
+    // whenever holding-waterdrop, the position of each waterdrop will be update.
+    // so do not modify the waterdrop css position
+    if(TOPPANO.gv.cursor.state != "holding-waterdrop"){
     TOPPANO.gv.objects.waterdropObj.forEach(
                             function(element, index, array)
                             {

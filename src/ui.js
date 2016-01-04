@@ -55,7 +55,6 @@ TOPPANO.createUI = function() {
         TOPPANO.rotateCompass(TOPPANO.gv.cam.lng);
     }, rotateInterval);
 
-    TOPPANO.setCursorHandler();
 };
 
 // Create a component for showing summary of the model.
@@ -214,125 +213,7 @@ TOPPANO.createWaterdrop = function(id, prop) {
     }
 };
 
-TOPPANO.setCursorHandler = function(){
-    // whenever the cursor select a node
-    $('#node-gallery div.swiper-slide ').on('mousedown', 
-                                            function(event){
-                                                TOPPANO.gv.cursor.state = "holding-swiper-slide";
-                                                var targetName = TOPPANO.ui.modelState.getObjProp(event.currentTarget.id)['name'];
-                                                var waterdrop = $("#waterdrop-0").clone();
-                                                $('input[type=text]', waterdrop).val(targetName);
 
-                                                // generate waterdrop id
-                                                var length = TOPPANO.gv.objects.waterdropObj.length;
-                                                // TODO: id generating must be unique
-                                                var id = event.currentTarget.id.toString()+"-waterdrop-"+length.toString();
-
-                                                $('#container').append(waterdrop);
-                                                var waterdrop_obj = {"id": id, "obj": waterdrop, "position_3D": null, "node_ID":event.currentTarget.id.toString()};
-                                                TOPPANO.gv.cursor.element = waterdrop_obj;
-                                            });
-
-    $('#node-gallery div.swiper-slide').on('mousemove', 
-                                            function(event){
-                                                if(TOPPANO.gv.cursor.state == "holding-swiper-slide")
-                                                {
-                                                    $('#'+TOPPANO.gv.cursor.element.node_ID).animate({ 
-                                                            opacity: 0.5               
-                                                    }, 5, function() { });
-                                                }
-                                            });
-
-    $('#container').on('mousemove', 
-                       function(event){
-                           if(TOPPANO.gv.cursor.state == "holding-swiper-slide")
-                            {   
-                                var waterdrop = TOPPANO.gv.cursor.element.obj;                           
-                                waterdrop.css({top: event.clientY-30, left: event.clientX-35, position:'absolute', display:'block'});
-                                // TODO: "y-30" and "x-35" need to be adjust
-                            }
-                            else if(TOPPANO.gv.cursor.state == "holding-waterdrop")
-                            {
-                                TOPPANO.gv.interact.isUserInteracting = false; // TODO: it may be a better method
-                                var waterdrop = TOPPANO.gv.cursor.element.obj;                           
-                                waterdrop.css({top: event.clientY-30, left: event.clientX-35, position:'absolute', display:'block'});
-                                // TODO: "y-30" and "x-35" need to be adjust
-                            }
-                            else if(TOPPANO.gv.cursor.state == "default")
-                            {
-                            }
-    });
-
-    $('#node-gallery').on('mouseup',function(){ 
-                                                $('#'+TOPPANO.gv.cursor.element.node_ID).animate({ 
-                                                            opacity: 1 
-                                                    }, 1, function() { });
-
-                                                TOPPANO.gv.cursor.state = "default";
-                                                TOPPANO.gv.cursor.element = null; // TODO:TOPPANO.gv.cursor.element must be free
-                                           });
-
-    function set_WD_Listener(waterdrop_obj){
-        waterdrop_obj.obj.on('mousedown',
-                        function(event){
-                            // whenever the cursor select a waterdrop
-                            TOPPANO.gv.cursor.state = "holding-waterdrop";
-                            TOPPANO.gv.cursor.element = waterdrop_obj;
-                        });
-        
-      waterdrop_obj.obj.children('.ui-icon-delete').on('click', 
-                                                 function(){
-                                                    $(this).parent().remove();
-                                                    // TODO: remove in  TOPPANO.gv.objects.waterdropObj (it's an array)
-                                                 }); 
-    }
-
-    // 2dimension to 3 dimension (transform the onscreen (x,y) to (x,y,z) on paranorma sphere)
-    function dimen2_to_dimen3(event){
-        var hitPos = TOPPANO.hitSphere(event);
-        var ObjLatLng = xyz2LatLng(hitPos.x, hitPos.y, hitPos.z);
-        var radiusObj = TOPPANO.gv.objects.objSphereRadius,
-            phiObj = THREE.Math.degToRad(90 - ObjLatLng.lat),
-            thetaObj = THREE.Math.degToRad(ObjLatLng.lng);
-        
-        radiusObj = 1000; 
-        var xObj = radiusObj * Math.sin(phiObj) * Math.cos(thetaObj),
-            yObj = radiusObj * Math.cos(phiObj),
-            zObj = radiusObj * Math.sin(phiObj) * Math.sin(thetaObj);
-        return {'x':xObj, 'y':yObj, 'z':zObj};
-    }
-
-    $('#container').on('mouseup', function()
-                       {
-                                 if(TOPPANO.gv.cursor.state == "holding-swiper-slide")
-                            {       
-                                 $('#'+TOPPANO.gv.cursor.element.node_ID).animate({ 
-                                            opacity: 1 
-                                    }, 1, function() { });
-                                // push the waterdrop element in waterdropObj[]
-                                var waterdrop_obj = TOPPANO.gv.cursor.element;
-                                var waterdrop = waterdrop_obj.obj;
-                                waterdrop.attr('id', waterdrop_obj.id);
-                                waterdrop_obj.position_3D = dimen2_to_dimen3(event);
-                                
-                                set_WD_Listener(waterdrop_obj);
-                            
-                                TOPPANO.gv.objects.waterdropObj.push(waterdrop_obj);
-                                TOPPANO.gv.cursor.state = "default";
-                                TOPPANO.gv.cursor.element = null;
-                            }
-                            else if(TOPPANO.gv.cursor.state == "holding-waterdrop")
-                            {   
-                                var waterdrop_obj = TOPPANO.gv.cursor.element;
-                                waterdrop_obj.position_3D = dimen2_to_dimen3(event);
-                                TOPPANO.gv.cursor.state = "default";
-                                TOPPANO.gv.cursor.elementID = null;
-                                TOPPANO.gv.cursor.element = null;
-                            }
-                       });
-
-
-};
 
 
 
