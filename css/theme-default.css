@@ -642,3 +642,13 @@ button[disabled],
     right: 1px;
 }
 
+/* Snapshot Dialog */
+#snapshot-dialog-confirm:disabled {
+    color: #ffffff;
+    background-color: #4f4f4f;
+}
+#snapshot-dialog-confirm {
+    color: black;
+    background-color: yellow;
+}
+

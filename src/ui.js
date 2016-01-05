@@ -85,6 +85,7 @@ TOPPANO.createFBShareBtn = function() {
     $('#fb-share-btn').on('click', TOPPANO.onFBShareBtnClick);
 };
 
+// Create the Snapshot Gallery.
 TOPPANO.createSnapshotGallery = function() {
     var galleryHeight = $(window).height() - $('#node-gallery').height();
 
@@ -122,10 +123,45 @@ TOPPANO.createSnapshotGallery = function() {
             .on('focusout', TOPPANO.onSGNameInputFocusout)
             .on('keyup', TOPPANO.onSGNameInputKeyup);
     $('#snapshot-gallery-switch').on('click', TOPPANO.onSGSwitchClick);
+    $('#snapshot-gallery .take-snapshot').on('click', TOPPANO.onSGSnapshotBtnClick);
+
+    TOPPANO.createSnapshotDialog();
 
     TOPPANO.ui.snapshotGalleryUI.swiper.slideTo(0);
     $('#snapshot-gallery-switch').trigger('click');
 };
+
+// Create a snapshot.
+TOPPANO.createSnapshot = function(id, prop) {
+    var content =
+        '<div class="swiper-slide">' +
+        '  <img src="' + prop['url'] + '"></img>' +
+        '  <input type="text" data-mini="true" data-corners="false" disabled="disabled" value="' + prop['name'] + '">' +
+        '  <button class="ui-btn ui-icon-edit ui-btn-icon-notext"></button>' +
+        '  <button class="ui-btn ui-icon-delete ui-btn-icon-notext"></button>' +
+        '</div>';
+    var snapshot = $(content);
+    var swiper = TOPPANO.ui.snapshotGalleryUI.swiper;
+
+    $('#snapshot-gallery .take-snapshot').not('.take-snapshot-long').before(snapshot);
+    $('.ui-icon-delete', snapshot).on('click', TOPPANO.onSGDeleteBtnClick);
+    $('.ui-icon-edit', snapshot).on('click', TOPPANO.onSGEditBtnClick);
+    $('input[type=text]', snapshot)
+            .on('focusout', TOPPANO.onSGNameInputFocusout)
+            .on('keyup', TOPPANO.onSGNameInputKeyup);
+
+    snapshot.enhanceWithin();
+    swiper.update(true);
+    TOPPANO.adjustSnapshotGallery();
+    swiper.slideTo(swiper.slides.length);
+}
+
+// Create the popup dialog for taking a snapshot.
+TOPPANO.createSnapshotDialog = function() {
+    $('#snapshot-dialog-cancel').on('click', TOPPANO.onSDCancelBtnClick);
+    $('#snapshot-dialog input[type=text]').on('keyup', TOPPANO.onSDInputKeyup);
+    $('#snapshot-dialog-confirm').on('click', TOPPANO.onSDConfirmBtnClick);
+}
 
 // Create A node gallery.
 TOPPANO.createNodeGallery = function(nodes) {
@@ -220,8 +256,6 @@ TOPPANO.createWaterdrop = function(id, prop) {
     }
 };
 
-
-
 // Control the rotation of compass button.
 TOPPANO.rotateCompass = function(degrees) {
     var rotate = 'rotate(' + degrees + 'deg)';
@@ -265,7 +299,8 @@ TOPPANO.ui = {
     },
     // Snapshot Gallery parameters
     snapshotGalleryUI: {
-        swiper: null
+        swiper: null,
+        currentSnapshot: {}
     },
     modelState: null
 };

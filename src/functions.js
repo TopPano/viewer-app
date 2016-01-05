@@ -486,11 +486,12 @@ TOPPANO.getSnapshot = function() {
     TOPPANO.gv.cam.camera.updateProjectionMatrix();
     TOPPANO.gv.renderer.render(TOPPANO.gv.scene, TOPPANO.gv.cam.camera);
 
-    var cap_img = TOPPANO.gv.renderer.domElement.toDataURL('images/jpeg');
-    var $tmp = $("<a>", {href:cap_img.toString(), download:"xx.png"});
-    $tmp[0].click();
+    var cap_img = TOPPANO.gv.renderer.domElement.toDataURL('image/jpeg', 0.8);
+
     TOPPANO.gv.cam.camera.fov = fov;
     TOPPANO.gv.cam.camera.updateProjectionMatrix();
+
+    return cap_img;
 };
 
 

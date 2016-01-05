@@ -107,6 +107,14 @@
             <button id="snapshot-gallery-switch" class="ui-btn ui-icon-arrow-r ui-btn-icon-notext snapshot-gallery-switch-off"></button>
         </div>
 
+        <div id="snapshot-dialog" data-role="popup" data-corners="false" data-dismissible="false" data-position-to="window" data-transition="fade">
+            <img style="width: 240px; height: 160px;"></img>
+            <input type="text" data-corners="false" value="" placeholder="Give it a name!">
+            <button id="snapshot-dialog-cancel" type="submit" class="ui-btn ui-btn-inline">Cancel</button>
+            <button id="snapshot-dialog-confirm" type="submit" class="ui-btn ui-btn-inline" disabled="disabled">Confirm</button>
+        </div>
+        </div>
+
         <div id="node-gallery" data-role="footer" class="swiper-container swiper-container-node">
             <div class="swiper-wrapper"><!-- Add nodes here dynamically--></div>
             <div class="swiper-button-prev swiper-button-prev-node"></div>
