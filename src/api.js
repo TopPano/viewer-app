@@ -16,9 +16,6 @@ TOPPANO.initMap = function(map) {
 
         TOPPANO.threeInit(map);
 
-        TOPPANO.controlInit();
-
-
         TOPPANO.update();
         // add fb-share
         if (TOPPANO.gv.isFBShare) {
@@ -42,10 +39,14 @@ TOPPANO.gv = {
     isFullScreen: false,
     headingOffset: 0,
     transInfo: {},
+    
     cursor:{
         state: "default",
         element: null
     },
+
+    img_files: null,
+
     // camera parameter
     cam: {
         camera: null,
@@ -133,8 +134,8 @@ TOPPANO.gv = {
     tilePath: './images/',
     //tilePath: 'http://localhost:3002',
     defaultMap: './image/tile/0-0.jpeg',
-    apiUrl: 'http://localhost:3000/api',
-    metaURL: 'http://52.34.253.117:3001'
+    apiUrl: 'http://52.11.28.251:3000/api',
+    metaURL: 'http://52.11.28.251:3001'
     //metaURL: 'http://helios-api-0.cloudapp.net:6687'
 };
 

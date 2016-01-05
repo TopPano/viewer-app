@@ -15,8 +15,9 @@ TOPPANO.modelInit = function() {
             'address': modelMeta['address']
         };
     }).then(function() {
-        return $.get(TOPPANO.gv.apiUrl + '/modelmeta/' + modelId + '/files');
+        return $.get(TOPPANO.gv.apiUrl + '/modelmeta/' + modelId + '/files').done(function(files){ TOPPANO.gv.img_files = files;});
     }).done(function(files) {
+        
         TOPPANO.createUI(model);
         // add listener
         TOPPANO.addListener();
@@ -74,13 +75,6 @@ TOPPANO.threeInit = function(map) {
     // console.log(TOPPANO.gv.transInfo['00000001'].transition[0].nextID);
 };
 
-
-TOPPANO.controlInit = function(){
-    TOPPANO.gv.control.bound.top = TOPPANO.gv.container.bound.top;
-    TOPPANO.gv.control.bound.bottom = TOPPANO.gv.container.bound.bottom-$("#node-gallery").height();
-    TOPPANO.gv.control.bound.left = TOPPANO.gv.container.bound.left;
-    TOPPANO.gv.control.bound.right = TOPPANO.gv.container.bound.right;
-}
 
 // add listeners
 TOPPANO.addListener = function() {
@@ -164,11 +158,7 @@ TOPPANO.initGV = function(para) {
 TOPPANO.loadTiles = function(isTrans, ID) {
     var sphereSize = TOPPANO.gv.para.sphereSize;
     THREE.ImageUtils.crossOrigin = '';
-
-    // loading image server (TODO: multiple image severs case)
-    //if (TOPPANO.gv.transInfo.imageServer.length > 0) {
-    //    TOPPANO.gv.tilePath = TOPPANO.gv.transInfo.imageServer[0];
-    //}
+    console.log(TOPPANO.gv.img_files);
 
     for (var i = 0 ; i < 4 ; i++) {
         for (var j = 0 ; j < 8 ; j++) {
