@@ -1,4 +1,4 @@
-// Listener for clicking summary button.
+// Listener for clicking Summary button.
 TOPPANO.onSummaryBtnClick = function(event) {
     var summaryBtn = $('#summary-btn');
     var summaryMain = $('#summary-main');
@@ -15,9 +15,22 @@ TOPPANO.onSummaryBtnClick = function(event) {
     });
 };
 
-// Listener for clicking summary head block.
+// Listener for clicking Summary head block.
 TOPPANO.onSummaryMainClick = function(event) {
     $('.ui-collapsible-content', $('#summary-main')).slideToggle(TOPPANO.ui.summaryUI.animateDelay);
+};
+
+// Listener for value of a Summary input changes.
+TOPPANO.onSummaryInputChange = function(event, input) {
+    var prop = {};
+
+    prop[input] = $('#summary-' + input).val();
+    TOPPANO.ui.modelState.modifyState(
+        'summary',
+        'summary',
+        TOPPANO.ui.modelState.Action.UPDATE,
+        prop
+    );
 };
 
 // Listener for clicking fullscreen button.
@@ -254,6 +267,11 @@ TOPPANO.onSDInputKeyup = function(event) {
             confirmBtn.trigger('click');
         }
     }
+};
+
+// Listener for clicking the Main Toolbar save button.
+TOPPANO.onTMSaveClick = function(event) {
+    TOPPANO.ui.modelState.commit();
 };
 
 //  adjust the take-snapshot button position in Snapshot Gallery.

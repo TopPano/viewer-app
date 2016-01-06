@@ -4,7 +4,7 @@
  */
 
 TOPPANO.modelInit = function() {
-    var modelId = getUrlParam('model');
+    var modelId = TOPPANO.gv.modelID = getUrlParam('model');
     var model = {};
 
     $.get(TOPPANO.gv.apiUrl + '/modelmeta/' + modelId).done(function(modelMeta) {

@@ -56,7 +56,44 @@ TOPPANO.ModelState.prototype = {
 
     // Modify the state. (Create/update/delete an object)
     modifyState: function(id, type, action, prop) {
-        // TODO: modify diffState.
+        var diffState = this.diffState;
+
+        if(type === 'summary' && action === this.Action.UPDATE) {
+            if(!(id in diffState)) {
+                diffState[id] = {
+                    'meta': {'isNew': false, 'type': type, 'action': action },
+                    'prop': {}
+                };
+            }
+            $.each(prop, function(key, value) {
+                diffState[id]['prop'][key] = value;
+            });
+        }
+
+        if($('#toolbar-main-save').is(':disabled')) {
+            $('#toolbar-main-save').prop('disabled', false);
+        }
+    },
+
+    // Upload the state difference to server and merge into current state.
+    commit: function() {
+        var baseUrl = TOPPANO.gv.apiUrl;
+        var modelId = TOPPANO.gv.modelID;
+
+        $.each(this.diffState, function(id, value) {
+            if(value['meta']['type'] === 'summary') {
+                $.ajax({
+                    url: baseUrl + '/modelmeta/' + modelId,
+                    type: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify(value['prop']),
+                    success: function(response) {
+                        $('#toolbar-main-save').prop('disabled', true);
+                    }
+                });
+            }
+        });
+
     }
 };
 

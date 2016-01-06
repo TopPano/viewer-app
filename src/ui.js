@@ -51,6 +51,7 @@ TOPPANO.createUI = function(model) {
 
     });
     TOPPANO.createSnapshotGallery();
+    TOPPANO.createToolbarMain();
     setInterval(function() {
         TOPPANO.rotateCompass(TOPPANO.gv.cam.lng);
     }, rotateInterval);
@@ -61,11 +62,11 @@ TOPPANO.createUI = function(model) {
 TOPPANO.createSummary = function(summary) {
     TOPPANO.ui.modelState.addObjProp('summary', summary);
 
-    $('#summary-name').val(summary['name']);
-    $('#summary-presentedBy').val(summary['presentedBy']);
-    $('#summary-description').val(summary['description']);
-    $('#summary-address').val(summary['address']);
-
+    $.each(summary, function(input, value) {
+        $('#summary-' + input).val(value).on('input', function(event) {
+            TOPPANO.onSummaryInputChange(event, input);
+        });
+    });
     $('#summary-main .ui-collapsible-heading-toggle').on('click', TOPPANO.onSummaryMainClick);
     $('#summary-btn').on('click', TOPPANO.onSummaryBtnClick);
 };
@@ -254,6 +255,11 @@ TOPPANO.createWaterdrop = function(id, prop) {
     } else {
         $('#' + id).hide();
     }
+};
+
+// Create the main toolbar which contains save, cancel and mode switching buttons.
+TOPPANO.createToolbarMain = function() {
+    $('#toolbar-main-save').on('click', TOPPANO.onTMSaveClick);
 };
 
 // Control the rotation of compass button.

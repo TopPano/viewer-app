@@ -652,3 +652,19 @@ button[disabled],
     background-color: yellow;
 }
 
+/* Main Toolbar (save/cancel/mode-switch) */
+#toolbar-main {
+    position: absolute;
+    bottom: 150px;
+    right: 50px;
+}
+
+#toolbar-main-save:disabled {
+    color: #ffffff;
+    background-color: #4f4f4f;
+}
+#toolbar-main-save {
+    color: black;
+    background-color: yellow;
+}
+
