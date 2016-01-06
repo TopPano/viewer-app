@@ -176,7 +176,8 @@ TOPPANO.onSGSwitchClick = function(event) {
 
 // Listener for clicking the snapshot gallery take-snapshot button.
 TOPPANO.onSGSnapshotBtnClick = function(event) {
-    var img = TOPPANO.getSnapshot();
+    var img = TOPPANO.getSnapshot(TOPPANO.ui.snapshotGalleryUI.snapshotWidth,
+                                TOPPANO.ui.snapshotGalleryUI.snapshotHeight);
 
     TOPPANO.ui.snapshotGalleryUI.currentSnapshot = {
         'url': img,

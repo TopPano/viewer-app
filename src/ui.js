@@ -300,7 +300,9 @@ TOPPANO.ui = {
     // Snapshot Gallery parameters
     snapshotGalleryUI: {
         swiper: null,
-        currentSnapshot: {}
+        currentSnapshot: {},
+        snapshotWidth: 120,
+        snapshotHeight: 80
     },
     modelState: null
 };
