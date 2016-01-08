@@ -153,22 +153,11 @@ TOPPANO.createSnapshotDialog = function() {
     $('#snapshot-dialog-confirm').on('click', TOPPANO.onSDConfirmBtnClick);
 }
 
-// Create A node gallery.
+// Create the Node Gallery.
 TOPPANO.createNodeGallery = function(nodes) {
-    var content = '';
-
     $.each(nodes, function(id, prop) {
-        content +=
-            '<div id="' + id + '" class="swiper-slide">' +
-            '  <img src="' + prop['url'] + '"></img>' +
-            '  <input type="text" data-mini="true" data-corners="false" disabled="disabled" value="' + prop['tag'] + '">' +
-            '  <button class="ui-btn ui-icon-edit ui-btn-icon-notext"></button>' +
-            '  <button class="ui-btn ui-icon-delete ui-btn-icon-notext"></button>' +
-            '</div>';
-        TOPPANO.ui.modelState.addObjProp(id, prop);
+        TOPPANO.createNode(id, prop);
     });
-    $('#node-gallery .swiper-wrapper').append(content);
-    $('#node-gallery').enhanceWithin();
 
     TOPPANO.ui.nodeGalleryUI.swiper = new Swiper('.swiper-container-node', {
         scrollbar: '.swiper-scrollbar-node',
@@ -184,24 +173,51 @@ TOPPANO.createNodeGallery = function(nodes) {
         scrollbarDraggable: true,
         grabCursor: false
     });
+};
 
-    $('#node-gallery .swiper-slide input[type=text]').on('focusout', TOPPANO.onNGTagInputFocusout);
-    $.each(nodes, function(id, prop) {
-        $('#' + id +' img').on('click', function(event) {
-            TOPPANO.onNGThumbnailClick(event, prop['nodeId']);
-        });
-        $('#' + id + ' .ui-icon-edit').on('click', function(event) {
-            TOPPANO.onNGEditBtnClick(event, prop['nodeId']);
-        });
-        $('#' + id + ' .ui-icon-delete').on('click', function(event) {
-            TOPPANO.onNGDeleteBtnClick(event, id);
-        });
-        $('#' + id + ' input[type=text]').on('keyup', function(event) {
-            TOPPANO.onNGTagInputKeyup(event, id);
-        }).on('input', function(event) {
-            TOPPANO.onNGTagInputChange(event, id);
-        });
+// Create a Node.
+TOPPANO.createNode = function(id, prop) {
+    TOPPANO.ui.modelState.addObjProp(id, prop);
+    TOPPANO.createNodeUI(id);
+    TOPPANO.fillNodeContent(id, prop);
+    TOPPANO.addNodeListener(id, prop);
+};
+
+// Create the UI of a Node.
+TOPPANO.createNodeUI = function(id) {
+    var ui =
+        '<div id="' + id + '" class="swiper-slide">' +
+        '  <img src=""></img>' +
+        '  <input type="text" data-mini="true" data-corners="false" disabled="disabled" value="">' +
+        '  <button class="ui-btn ui-icon-edit ui-btn-icon-notext"></button>' +
+        '  <button class="ui-btn ui-icon-delete ui-btn-icon-notext"></button>' +
+        '</div>';
+    $('#node-gallery .swiper-wrapper').append(ui);
+    $('#node-gallery').enhanceWithin();
+};
+
+// Fill the content of a Node.
+TOPPANO.fillNodeContent = function(id, prop) {
+    $('#' + id + ' img').attr('src', prop['url']);
+    $('#' + id + ' input[type=text]').val(prop['tag']);
+};
+
+// Add listeners of a Node.
+TOPPANO.addNodeListener = function(id, prop) {
+    $('#' + id +' img').on('click', function(event) {
+        TOPPANO.onNGThumbnailClick(event, prop['nodeId']);
     });
+    $('#' + id + ' .ui-icon-edit').on('click', function(event) {
+        TOPPANO.onNGEditBtnClick(event, prop['nodeId']);
+    });
+    $('#' + id + ' .ui-icon-delete').on('click', function(event) {
+        TOPPANO.onNGDeleteBtnClick(event, id);
+    });
+    $('#' + id + ' input[type=text]').on('keyup', function(event) {
+        TOPPANO.onNGTagInputKeyup(event, id);
+    }).on('input', function(event) {
+        TOPPANO.onNGTagInputChange(event, id);
+    }).on('focusout', TOPPANO.onNGTagInputFocusout);
 };
 
 TOPPANO.createWaterdrops = function(waterdrops) {

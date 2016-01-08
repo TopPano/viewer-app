@@ -120,6 +120,13 @@ TOPPANO.ModelState = function() {
                         $('#summary-' + input).val(value);
                     });
                     break;
+                case 'node' + _this.Action.UPDATE:
+                    TOPPANO.fillNodeContent(id, currentState[id]);
+                    break;
+                case 'node' + _this.Action.DELETE:
+                    // TODO: It should fall back to the original position before it is deleted.
+                    TOPPANO.createNode(id, currentState[id]);
+                    break;
                 default:
                     break;
             }
