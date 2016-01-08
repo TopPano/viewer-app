@@ -4,7 +4,7 @@
  */
 
 TOPPANO.modelInit = function() {
-    var modelId = getUrlParam('model');
+    var modelId = TOPPANO.gv.modelID = getUrlParam('model');
     var model = {};
 
     $.get(TOPPANO.gv.apiUrl + '/modelmeta/' + modelId).then(function(modelMeta) {
@@ -14,15 +14,39 @@ TOPPANO.modelInit = function() {
             'description': modelMeta['description'],
             'address': modelMeta['address']
         };
+
+        model['nodes'] = {};
+        $.each(modelMeta['nodes'], function(nodeId, prop) {
+            model['nodes']['node-' + nodeId] = {
+                'nodeId': nodeId,
+                'tag': prop['tag'],
+                'heading': prop['heading'],
+                'enabled': prop['enabled']
+            };
+        });
+            
+        return $.get(TOPPANO.gv.apiUrl + '/modelmeta/' + modelId + '/files');
+    }).done(function(files) {
+        console.log(files);
+        TOPPANO.loadAllImg(files).pipe(function(){console.log("start build scene!!")}).
+                 pipe(function(){TOPPANO.buildScene();});
+
+        $.each(model['nodes'], function(nodeHtmlId, prop) {
+            var nodeId = prop['nodeId'];
+
+            // Find the thumbnail url of the node.
+            $.each(files, function(fileName, url) {
+                if(fileName.indexOf('thumb') > -1 && fileName.indexOf(nodeId) > -1) {
+                    model['nodes'][nodeHtmlId]['url'] = url;
+                    return;
+                }
+            });
+        });
         TOPPANO.createUI(model);
         // add listener
         TOPPANO.addListener();
         
-        $.get(TOPPANO.gv.apiUrl + '/modelmeta/' + modelId + '/files').
-            pipe(function(imgs_sets){console.log(imgs_sets);TOPPANO.loadAllImg(imgs_sets).pipe(function(){console.log("start build scene!!")}).
-                 pipe(function(){TOPPANO.buildScene();});
-        });
-    })
+            })
 }
 
 TOPPANO.threeInit = function(map) {
@@ -544,7 +568,8 @@ TOPPANO.hitSphere = function(event) {
 
 
 // snapshot function
-TOPPANO.getSnapshot = function() {
+TOPPANO.getSnapshot = function(width, height) {
+    /*
     var fov = TOPPANO.gv.cam.camera.fov,
     theta = THREE.Math.degToRad(fov / 2),
     img_width = 0.8 * Math.tan(theta);
@@ -553,11 +578,20 @@ TOPPANO.getSnapshot = function() {
     TOPPANO.gv.cam.camera.updateProjectionMatrix();
     TOPPANO.gv.renderer.render(TOPPANO.gv.scene, TOPPANO.gv.cam.camera);
 
-    var cap_img = TOPPANO.gv.renderer.domElement.toDataURL('images/jpeg');
-    var $tmp = $("<a>", {href:cap_img.toString(), download:"xx.png"});
-    $tmp[0].click();
+    var cap_img = TOPPANO.gv.renderer.domElement.toDataURL('image/jpeg', 0.8);
+
     TOPPANO.gv.cam.camera.fov = fov;
     TOPPANO.gv.cam.camera.updateProjectionMatrix();
+    */
+    var canvasMini = $('<canvas width="' + width + '" height="' + height + '"></canvas>')
+            .attr('type', 'hidden').append('#container');
+    var snapshot = '';
+
+    canvasMini[0].getContext('2d').drawImage(TOPPANO.gv.renderer.domElement, 0, 0, width, height);
+    snapshot= canvasMini[0].toDataURL('image/jpeg', 0.8);
+    canvasMini.remove();
+
+    return snapshot;
 };
 
 

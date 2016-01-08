@@ -1,4 +1,4 @@
-// Listener for clicking summary button.
+// Listener for clicking Summary button.
 TOPPANO.onSummaryBtnClick = function(event) {
     var summaryBtn = $('#summary-btn');
     var summaryMain = $('#summary-main');
@@ -15,9 +15,22 @@ TOPPANO.onSummaryBtnClick = function(event) {
     });
 };
 
-// Listener for clicking summary head block.
+// Listener for clicking Summary head block.
 TOPPANO.onSummaryMainClick = function(event) {
     $('.ui-collapsible-content', $('#summary-main')).slideToggle(TOPPANO.ui.summaryUI.animateDelay);
+};
+
+// Listener for value of a Summary input changes.
+TOPPANO.onSummaryInputChange = function(event, input) {
+    var prop = {};
+
+    prop[input] = $('#summary-' + input).val();
+    TOPPANO.ui.modelState.modifyState(
+        'summary',
+        'summary',
+        TOPPANO.ui.modelState.Action.UPDATE,
+        prop
+    );
 };
 
 // Listener for clicking fullscreen button.
@@ -84,47 +97,62 @@ TOPPANO.onNGThumbnailClick = function(event, nodeId) {
 };
 
 // Listener for clicking a Node Gallery delete button.
-TOPPANO.onNGDeleteBtnClick = function(event) {
-    $(this).parent().remove();
+TOPPANO.onNGDeleteBtnClick = function(event, nodeHtmlId) {
+    $('#' + nodeHtmlId).remove();
+    // TODO: Also delete the related waterdrops.
     TOPPANO.ui.nodeGalleryUI.swiper.update(true);
+    TOPPANO.ui.modelState.modifyState(
+        nodeHtmlId,
+        'node',
+        TOPPANO.ui.modelState.Action.DELETE
+    )
 };
 
 // Listener for clicking a Node Gallery edit button.
 TOPPANO.onNGEditBtnClick = function(event, nodeId) {
-    var nameInput = $('input[type=text]', '#node-' + nodeId);
+    var tagInput = $('input[type=text]', '#node-' + nodeId);
     // Opera sometimes sees return character as 2 characters,
     // so we should multiply by 2 to ensure the cursor
     // always ends up in the end.
-    var len = nameInput.val().length * 2;
+    var len = tagInput.val().length * 2;
     var waterdrops = TOPPANO.ui.modelState.getObjPropList('waterdrop');
 
-    TOPPANO.ui.nodeGalleryUI.currentEditNameInputs = [];
+    TOPPANO.ui.nodeGalleryUI.currentEditTagInputs = [];
     $.each(waterdrops, function(id, prop) {
         if(prop['toNodeId'] === nodeId) {
-            TOPPANO.ui.nodeGalleryUI.currentEditNameInputs.push(id);
+            TOPPANO.ui.nodeGalleryUI.currentEditTagInputs.push(id);
         }
     });
-    nameInput.textinput('enable').focus();
-    nameInput[0].setSelectionRange(len, len);
+    tagInput.textinput('enable').focus();
+    tagInput[0].setSelectionRange(len, len);
 };
 
-// Listener when a Node Gallery name input loses focus.
-TOPPANO.onNGNameInputFocusout = function(event) {
+// Listener when a Node Gallery tag input loses focus.
+TOPPANO.onNGTagInputFocusout = function(event) {
     $(this).textinput('disable');
 };
 
-// Listener for keyboard pressing up on a Node Gallery name input.
-TOPPANO.onNGNameInputKeyup= function(event) {
-    var nodeName = $(this).val();
-
-    $.each(TOPPANO.ui.nodeGalleryUI.currentEditNameInputs, function(index, id) {
-        $('#' + id + ' input[type=text]').val(nodeName);
-    });
-
+// Listener for keyboard pressing up on a Node Gallery tag input.
+TOPPANO.onNGTagInputKeyup= function(event, nodeHtmlId) {
     // Detect pressing up Enter key.
     if(event.which == 13) {
-        $(this).textinput('disable');
+        $('input[type=text]', '#' + nodeHtmlId).textinput('disable');
     }
+};
+
+// Listener for a Node Gallery tag input changes.
+TOPPANO.onNGTagInputChange= function(event, nodeHtmlId) {
+    var nodeTag = $('input[type=text]', '#' + nodeHtmlId).val();
+
+    $.each(TOPPANO.ui.nodeGalleryUI.currentEditTagInputs, function(index, id) {
+        $('#' + id + ' input[type=text]').val(nodeTag);
+    });
+    TOPPANO.ui.modelState.modifyState(
+        nodeHtmlId,
+        'node',
+        TOPPANO.ui.modelState.Action.UPDATE,
+        { 'tag': nodeTag }
+    );
 };
 
 // Listener when mouse hovering in a waterdrop
@@ -172,7 +200,29 @@ TOPPANO.onSGSwitchClick = function(event) {
     $(this).toggleClass('ui-icon-arrow-r').toggleClass('ui-icon-arrow-l');
     $('#snapshot-gallery').toggleClass('snapshot-gallery-closed')
             .toggleClass('snapshot-gallery-opened')
-}
+};
+
+// Listener for clicking the snapshot gallery take-snapshot button.
+TOPPANO.onSGSnapshotBtnClick = function(event) {
+    var img = TOPPANO.getSnapshot(TOPPANO.ui.snapshotGalleryUI.snapshotWidth,
+                                TOPPANO.ui.snapshotGalleryUI.snapshotHeight);
+
+    TOPPANO.ui.snapshotGalleryUI.currentSnapshot = {
+        'url': img,
+        'nodeId': TOPPANO.gv.scene1.panoID,
+        'fov': TOPPANO.gv.cam.camera.fov,
+        'lng': TOPPANO.gv.cam.lng,
+        'lat': TOPPANO.gv.cam.lat
+    };
+
+    $('#snapshot-dialog input[type=text]').val('');
+    $('#snapshot-dialog-confirm').prop('disabled', true);
+    // Bind load event to make sure the dialog pops up after image loads completely.
+    $('#snapshot-dialog img').attr('src', img).load(function() {
+        $('#snapshot-dialog').popup('open');
+        $('#snapshot-dialog input[type=text]').focus();
+    });
+};
 
 // Listener for clicking a Snapshot Gallery delete button.
 TOPPANO.onSGDeleteBtnClick = function(event) {
@@ -198,7 +248,7 @@ TOPPANO.onSGNameInputFocusout = function(event) {
     $(this).textinput('disable');
 };
 
-// Listener for keyboard pressing up on a Sode Gallery name input.
+// Listener for keyboard pressing up on a Snapshot Gallery name input.
 TOPPANO.onSGNameInputKeyup= function(event) {
     // Detect pressing up Enter key.
     if(event.which == 13) {
@@ -206,7 +256,40 @@ TOPPANO.onSGNameInputKeyup= function(event) {
     }
 };
 
-//  adjust the take-snapshot icon position in Snapshot Gallery.
+// Listener for clicking the Snapshot Dialog Cancel Button.
+TOPPANO.onSDCancelBtnClick = function(event) {
+    $('#snapshot-dialog').popup('close');
+}
+
+// Listener for clicking the Snapshot Dialog Confirm Button.
+TOPPANO.onSDConfirmBtnClick = function(event) {
+    TOPPANO.ui.snapshotGalleryUI.currentSnapshot['name'] = $('#snapshot-dialog input[type=text]').val();
+    TOPPANO.createSnapshot('snapshot-0', TOPPANO.ui.snapshotGalleryUI.currentSnapshot);
+    $('#snapshot-dialog').popup('close');
+}
+
+// Listener for Snapshot Dialog name input keyup
+TOPPANO.onSDInputKeyup = function(event) {
+    var confirmBtn = $('#snapshot-dialog-confirm');
+
+    // Check input is empty or not.
+    if(!$(this).val()) {
+        confirmBtn.prop('disabled', true);
+    } else {
+        confirmBtn.prop('disabled', false);
+        // Pressing Enter key.
+        if(event.which == 13) {
+            confirmBtn.trigger('click');
+        }
+    }
+};
+
+// Listener for clicking the Main Toolbar save button.
+TOPPANO.onTMSaveClick = function(event) {
+    TOPPANO.ui.modelState.commit();
+};
+
+//  adjust the take-snapshot button position in Snapshot Gallery.
 TOPPANO.adjustSnapshotGallery = function(event) {
     var galleryHeight = $('#snapshot-gallery').height();
     var slideHeight = $('#snapshot-gallery .swiper-slide').height();
@@ -228,6 +311,7 @@ TOPPANO.adjustSnapshotGallery = function(event) {
 
 // Transit current node to another node.
 TOPPANO.transitNode = function(targetNodeId, lng, lat, fov) {
+    /*
     var currentNodeId = TOPPANO.gv.scene1.panoID;
     var currentTransitions = TOPPANO.ui.modelState.getObjProp('node-' + currentNodeId)['transitions'];
     var targetTransitions = TOPPANO.ui.modelState.getObjProp('node-' + targetNodeId)['transitions'];
@@ -236,10 +320,13 @@ TOPPANO.transitNode = function(targetNodeId, lng, lat, fov) {
         $('#waterdrop-' + currentNodeId + '-' + transition).hide();
         $('#node-' + transition).removeClass('has-waterdrop');
     });
+    */
     TOPPANO.changeView(targetNodeId, lng, lat, fov);
+    /*
     $.each(targetTransitions, function(index, transition) {
         $('#waterdrop-' + targetNodeId + '-' + transition).show();
         $('#node-' + transition).addClass('has-waterdrop');
     });
+    */
 };
 

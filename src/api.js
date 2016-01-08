@@ -28,6 +28,7 @@ TOPPANO.initMap = function(map) {
 
 // global variables initialization
 TOPPANO.gv = {
+    modelID: '',
     scene: null,
     objScene: null,
     renderer: null,
