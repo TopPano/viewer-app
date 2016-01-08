@@ -3,7 +3,6 @@
  * @version 0.8
  * @since 0.8
  */
-
 var TOPPANO = TOPPANO || {};
 
 // TOPPANO Panorama Viewer Initialization
@@ -45,7 +44,7 @@ TOPPANO.gv = {
         element: null
     },
 
-    img_files: null,
+    img_obj_sets: [],
 
     // camera parameter
     cam: {

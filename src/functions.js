@@ -7,21 +7,22 @@ TOPPANO.modelInit = function() {
     var modelId = getUrlParam('model');
     var model = {};
 
-    $.get(TOPPANO.gv.apiUrl + '/modelmeta/' + modelId).done(function(modelMeta) {
+    $.get(TOPPANO.gv.apiUrl + '/modelmeta/' + modelId).then(function(modelMeta) {
         model['summary'] = {
             'name': modelMeta['name'],
             'presentedBy': modelMeta['presentedBy'],
             'description': modelMeta['description'],
             'address': modelMeta['address']
         };
-    }).then(function() {
-        return $.get(TOPPANO.gv.apiUrl + '/modelmeta/' + modelId + '/files').done(function(files){ TOPPANO.gv.img_files = files;});
-    }).done(function(files) {
-        
         TOPPANO.createUI(model);
         // add listener
         TOPPANO.addListener();
-    });
+        
+        $.get(TOPPANO.gv.apiUrl + '/modelmeta/' + modelId + '/files').
+            pipe(function(imgs_sets){console.log(imgs_sets);TOPPANO.loadAllImg(imgs_sets).pipe(function(){console.log("start build scene!!")}).
+                 pipe(function(){TOPPANO.buildScene();});
+        });
+    })
 }
 
 TOPPANO.threeInit = function(map) {
@@ -57,14 +58,10 @@ TOPPANO.threeInit = function(map) {
 
     // renderer setting
     TOPPANO.rendererSetting();
-
     // load tile images
     var isTrans = false;
     // TOPPANO.gv.scene1.panoID = TOPPANO.gv.transInfo['00000000'].PanoID;
-    TOPPANO.loadTiles(isTrans, TOPPANO.gv.scene1.panoID);
-
-    // pre-load
-    TOPPANO.preLoadImages();
+//    TOPPANO.loadTiles(isTrans, TOPPANO.gv.scene1.panoID);
 
     // adding icon objects on scene
     if (TOPPANO.gv.objects.showObj) {
@@ -73,8 +70,95 @@ TOPPANO.threeInit = function(map) {
 
     // TOPPANO.addPlane();
     // console.log(TOPPANO.gv.transInfo['00000001'].transition[0].nextID);
+
 };
 
+
+function loadImg(img_url){
+    var _dfr = $.Deferred();
+      
+    var img_name = img_url.substr(img_url.lastIndexOf('/')+1);
+    var texture = THREE.ImageUtils.loadTexture(img_url, THREE.UVMapping, 
+                                               function(){
+                                                    texture.minFilter = THREE.LinearFilter;
+                                                    var img_obj = {"name":img_name, "texture":texture};
+                                                    TOPPANO.gv.img_obj_sets.push(img_obj);
+                                                    return _dfr.resolve("success load "+img_name);
+                                               },
+                                               function(){return _dfr.reject("fail load "+img_name);}
+                                              );
+    return _dfr.promise();
+}
+
+
+// loading tiles images
+TOPPANO.loadAllImg = function(imgs_sets) {
+    THREE.ImageUtils.crossOrigin = '';
+
+    var _dfr = $.Deferred();
+    var deferreds = [];
+    for (img_index in imgs_sets){
+        var img_url = imgs_sets[img_index];
+        if(img_url.search('thumb')<0){
+            deferreds.push( loadImg(img_url).done(function(msg){console.log(msg);}) );
+        }
+    }
+
+    $.when.apply($, deferreds).then(
+            function(){
+                console.log("all imgs success load");
+                // order TOPPANO.gv.img.obj.sets
+                TOPPANO.gv.img_obj_sets.sort(
+                function(a,b){
+                    if(a.name>b.name)
+                        return 1;
+                    else if(a.name<b.name)
+                        return -1
+                    return 0});
+
+                _dfr.resolve();              
+             },
+             function(){console.log("imgs fail load");
+                         _dfr.reject();              
+             }
+            );
+    return _dfr.promise();
+/*
+    var sphereSize = TOPPANO.gv.para.sphereSize;
+    var i;
+    for(i=0;i<8;i++){ 
+        var j = parseInt(i/4);
+        var geometry = new THREE.SphereGeometry(sphereSize, 20, 20, Math.PI/2 * i, Math.PI/2, Math.PI/2 * j, Math.PI/2);
+        geometry.applyMatrix(new THREE.Matrix4().makeScale(-1, 1, 1));
+
+        var material = new THREE.MeshBasicMaterial({
+            map:TOPPANO.gv.img_obj_sets[i].texture,
+            overdraw: true,
+            transparent: true
+        });
+        var mesh = new THREE.Mesh(geometry, material);
+        TOPPANO.gv.scene.add(mesh);
+    }
+*/
+};
+
+TOPPANO.buildScene = function(){
+    var sphereSize = TOPPANO.gv.para.sphereSize;
+    var i;
+    for(i=0;i<8;i++){ 
+        var j = parseInt(i/4);
+        var geometry = new THREE.SphereGeometry(sphereSize, 20, 20, Math.PI/2 * i, Math.PI/2, Math.PI/2 * j, Math.PI/2);
+        geometry.applyMatrix(new THREE.Matrix4().makeScale(-1, 1, 1));
+
+        var material = new THREE.MeshBasicMaterial({
+            map:TOPPANO.gv.img_obj_sets[i].texture,
+            overdraw: true,
+            transparent: true
+        });
+        var mesh = new THREE.Mesh(geometry, material);
+        TOPPANO.gv.scene.add(mesh);
+    }
+}
 
 // add listeners
 TOPPANO.addListener = function() {
@@ -158,7 +242,6 @@ TOPPANO.initGV = function(para) {
 TOPPANO.loadTiles = function(isTrans, ID) {
     var sphereSize = TOPPANO.gv.para.sphereSize;
     THREE.ImageUtils.crossOrigin = '';
-    console.log(TOPPANO.gv.img_files);
 
     for (var i = 0 ; i < 4 ; i++) {
         for (var j = 0 ; j < 8 ; j++) {
@@ -246,12 +329,6 @@ TOPPANO.changeView = function(node_ID, lng, lat, fov) {
     TOPPANO.gv.scene1.panoID = node_ID;
 };
 
-
-// pre-load all scene images
-TOPPANO.preLoadImages = function() {
-    // console.log('Pre-loading...');
-    // ref: threejs LoadingManager
-};
 
 // add all transition objects
 // the argument "panoID" is useless
