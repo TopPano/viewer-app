@@ -116,9 +116,7 @@ TOPPANO.ModelState = function() {
 
             switch(type + action) {
                 case 'summary' + _this.Action.UPDATE:
-                    $.each(currentState[id], function(input, value) {
-                        $('#summary-' + input).val(value);
-                    });
+                    TOPPANO.fillSummaryContent(id, currentState[id]);
                     break;
                 case 'node' + _this.Action.UPDATE:
                     TOPPANO.fillNodeContent(id, currentState[id]);

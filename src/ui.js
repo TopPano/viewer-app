@@ -49,10 +49,29 @@ TOPPANO.createUI = function(model) {
 
 // Create a component for showing summary of the model.
 TOPPANO.createSummary = function(summary) {
-    TOPPANO.ui.modelState.addObjProp('summary', summary);
+    var id = 'summary';
 
-    $.each(summary, function(input, value) {
-        $('#summary-' + input).val(value).on('input', function(event) {
+    TOPPANO.ui.modelState.addObjProp(id, summary);
+    TOPPANO.createSummaryUI(id);
+    TOPPANO.fillSummaryContent(id, summary);
+    TOPPANO.addSummaryListener(id, summary);
+};
+
+// Create the UI of Summary.
+TOPPANO.createSummaryUI = function(id) {
+};
+
+// Fill the content of Summary.
+TOPPANO.fillSummaryContent = function(id, prop) {
+    $.each(prop, function(input, value) {
+        $('#' + id + '-' + input).val(value);
+    });
+};
+
+// Add Listeners of Summary.
+TOPPANO.addSummaryListener = function(id, prop) {
+    $.each(prop, function(input, value) {
+        $('#' + id + '-' + input).on('input', function(event) {
             TOPPANO.onSummaryInputChange(event, input);
         });
     });
