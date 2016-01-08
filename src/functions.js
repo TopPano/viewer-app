@@ -7,16 +7,37 @@ TOPPANO.modelInit = function() {
     var modelId = TOPPANO.gv.modelID = getUrlParam('model');
     var model = {};
 
-    $.get(TOPPANO.gv.apiUrl + '/modelmeta/' + modelId).done(function(modelMeta) {
+    $.get(TOPPANO.gv.apiUrl + '/modelmeta/' + modelId).then(function(modelMeta) {
         model['summary'] = {
             'name': modelMeta['name'],
             'presentedBy': modelMeta['presentedBy'],
             'description': modelMeta['description'],
             'address': modelMeta['address']
         };
-    }).then(function() {
+
+        model['nodes'] = {};
+        $.each(modelMeta['nodes'], function(nodeId, prop) {
+            model['nodes']['node-' + nodeId] = {
+                'nodeId': nodeId,
+                'tag': prop['tag'],
+                'heading': prop['heading'],
+                'enabled': prop['enabled']
+            };
+        });
+
         return $.get(TOPPANO.gv.apiUrl + '/modelmeta/' + modelId + '/files');
     }).done(function(files) {
+        $.each(model['nodes'], function(nodeHtmlId, prop) {
+            var nodeId = prop['nodeId'];
+
+            // Find the thumbnail url of the node.
+            $.each(files, function(fileName, url) {
+                if(fileName.indexOf('thumb') > -1 && fileName.indexOf(nodeId) > -1) {
+                    model['nodes'][nodeHtmlId]['url'] = url;
+                    return;
+                }
+            });
+        });
         TOPPANO.createUI(model);
         // add listener
         TOPPANO.addListener();

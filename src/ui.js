@@ -9,20 +9,8 @@ TOPPANO.createUI = function(model) {
     TOPPANO.createFullscreenBtn()
     TOPPANO.createCompassBtn();
     TOPPANO.createFBShareBtn();
-    TOPPANO.createNodeGallery({
-        'node-00000000': {
-            'nodeId': '00000000', 'name': 'Bath Room', 'url': 'images/00000000/1-5.jpeg',
-            'transitions': ['00000002', '00000003'] },
-        'node-00000001': {
-            'nodeId': '00000001', 'name': 'Living Room', 'url': 'images/00000001/1-5.jpeg',
-            'transitions': ['00000000'] },
-        'node-00000002': {
-            'nodeId': '00000002', 'name': 'Dining Room', 'url': 'images/00000002/1-5.jpeg',
-            'transitions': [] },
-        'node-00000003': {
-            'nodeId': '00000003', 'name': 'Kitchen', 'url': 'images/00000003/1-5.jpeg',
-            'transitions': ['00000002'] }
-    });
+    TOPPANO.createNodeGallery(model['nodes']);
+    /*
     TOPPANO.createWaterdrops({
         'waterdrop-00000000-00000002': {
             'fromNodeId': '00000000',
@@ -50,6 +38,7 @@ TOPPANO.createUI = function(model) {
         }
 
     });
+    */
     TOPPANO.createSnapshotGallery();
     TOPPANO.createToolbarMain();
     setInterval(function() {
@@ -172,7 +161,7 @@ TOPPANO.createNodeGallery = function(nodes) {
         content +=
             '<div id="' + id + '" class="swiper-slide">' +
             '  <img src="' + prop['url'] + '"></img>' +
-            '  <input type="text" data-mini="true" data-corners="false" disabled="disabled" value="' + prop['name'] + '">' +
+            '  <input type="text" data-mini="true" data-corners="false" disabled="disabled" value="' + prop['tag'] + '">' +
             '  <button class="ui-btn ui-icon-edit ui-btn-icon-notext"></button>' +
             '  <button class="ui-btn ui-icon-delete ui-btn-icon-notext"></button>' +
             '</div>';
@@ -196,15 +185,21 @@ TOPPANO.createNodeGallery = function(nodes) {
         grabCursor: false
     });
 
-    $('#node-gallery .swiper-slide .ui-icon-delete').on('click', TOPPANO.onNGDeleteBtnClick);
-    $('#node-gallery .swiper-slide input[type=text]').on('focusout', TOPPANO.onNGNameInputFocusout);
-    $('#node-gallery .swiper-slide input[type=text]').on('keyup', TOPPANO.onNGNameInputKeyup);
+    $('#node-gallery .swiper-slide input[type=text]').on('focusout', TOPPANO.onNGTagInputFocusout);
     $.each(nodes, function(id, prop) {
         $('#' + id +' img').on('click', function(event) {
             TOPPANO.onNGThumbnailClick(event, prop['nodeId']);
         });
         $('#' + id + ' .ui-icon-edit').on('click', function(event) {
             TOPPANO.onNGEditBtnClick(event, prop['nodeId']);
+        });
+        $('#' + id + ' .ui-icon-delete').on('click', function(event) {
+            TOPPANO.onNGDeleteBtnClick(event, id);
+        });
+        $('#' + id + ' input[type=text]').on('keyup', function(event) {
+            TOPPANO.onNGTagInputKeyup(event, id);
+        }).on('input', function(event) {
+            TOPPANO.onNGTagInputChange(event, id);
         });
     });
 };
@@ -217,12 +212,12 @@ TOPPANO.createWaterdrops = function(waterdrops) {
 
 TOPPANO.createWaterdrop = function(id, prop) {
     var toNodeHtmlId = 'node-' + prop['toNodeId'];
-    var name = TOPPANO.ui.modelState.getObjProp(toNodeHtmlId)['name'];
+    var tag = TOPPANO.ui.modelState.getObjProp(toNodeHtmlId)['tag'];
     var content =
         '<div id="' + id + '" class="waterdrop">' +
         '  <button class="ui-btn ui-icon-action ui-btn-icon-notext"></button>' +
         '  <button class="ui-btn ui-icon-delete ui-btn-icon-notext"></button>' +
-        '  <input type="text" data-mini="true" data-corners="false" disabled="disabled" value="' + name + '">' +
+        '  <input type="text" data-mini="true" data-corners="false" disabled="disabled" value="' + tag + '">' +
         '</div>';
 
     $(content).appendTo('.ui-page').enhanceWithin().css({
@@ -301,7 +296,7 @@ TOPPANO.ui = {
     // Node Gallery parameters
     nodeGalleryUI: {
         swiper: null,
-        currentEditNameInputs: []
+        currentEditTagInputs: []
     },
     // Snapshot Gallery parameters
     snapshotGalleryUI: {

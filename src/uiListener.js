@@ -97,47 +97,62 @@ TOPPANO.onNGThumbnailClick = function(event, nodeId) {
 };
 
 // Listener for clicking a Node Gallery delete button.
-TOPPANO.onNGDeleteBtnClick = function(event) {
-    $(this).parent().remove();
+TOPPANO.onNGDeleteBtnClick = function(event, nodeHtmlId) {
+    $('#' + nodeHtmlId).remove();
+    // TODO: Also delete the related waterdrops.
     TOPPANO.ui.nodeGalleryUI.swiper.update(true);
+    TOPPANO.ui.modelState.modifyState(
+        nodeHtmlId,
+        'node',
+        TOPPANO.ui.modelState.Action.DELETE
+    )
 };
 
 // Listener for clicking a Node Gallery edit button.
 TOPPANO.onNGEditBtnClick = function(event, nodeId) {
-    var nameInput = $('input[type=text]', '#node-' + nodeId);
+    var tagInput = $('input[type=text]', '#node-' + nodeId);
     // Opera sometimes sees return character as 2 characters,
     // so we should multiply by 2 to ensure the cursor
     // always ends up in the end.
-    var len = nameInput.val().length * 2;
+    var len = tagInput.val().length * 2;
     var waterdrops = TOPPANO.ui.modelState.getObjPropList('waterdrop');
 
-    TOPPANO.ui.nodeGalleryUI.currentEditNameInputs = [];
+    TOPPANO.ui.nodeGalleryUI.currentEditTagInputs = [];
     $.each(waterdrops, function(id, prop) {
         if(prop['toNodeId'] === nodeId) {
-            TOPPANO.ui.nodeGalleryUI.currentEditNameInputs.push(id);
+            TOPPANO.ui.nodeGalleryUI.currentEditTagInputs.push(id);
         }
     });
-    nameInput.textinput('enable').focus();
-    nameInput[0].setSelectionRange(len, len);
+    tagInput.textinput('enable').focus();
+    tagInput[0].setSelectionRange(len, len);
 };
 
-// Listener when a Node Gallery name input loses focus.
-TOPPANO.onNGNameInputFocusout = function(event) {
+// Listener when a Node Gallery tag input loses focus.
+TOPPANO.onNGTagInputFocusout = function(event) {
     $(this).textinput('disable');
 };
 
-// Listener for keyboard pressing up on a Node Gallery name input.
-TOPPANO.onNGNameInputKeyup= function(event) {
-    var nodeName = $(this).val();
-
-    $.each(TOPPANO.ui.nodeGalleryUI.currentEditNameInputs, function(index, id) {
-        $('#' + id + ' input[type=text]').val(nodeName);
-    });
-
+// Listener for keyboard pressing up on a Node Gallery tag input.
+TOPPANO.onNGTagInputKeyup= function(event, nodeHtmlId) {
     // Detect pressing up Enter key.
     if(event.which == 13) {
-        $(this).textinput('disable');
+        $('input[type=text]', '#' + nodeHtmlId).textinput('disable');
     }
+};
+
+// Listener for a Node Gallery tag input changes.
+TOPPANO.onNGTagInputChange= function(event, nodeHtmlId) {
+    var nodeTag = $('input[type=text]', '#' + nodeHtmlId).val();
+
+    $.each(TOPPANO.ui.nodeGalleryUI.currentEditTagInputs, function(index, id) {
+        $('#' + id + ' input[type=text]').val(nodeTag);
+    });
+    TOPPANO.ui.modelState.modifyState(
+        nodeHtmlId,
+        'node',
+        TOPPANO.ui.modelState.Action.UPDATE,
+        { 'tag': nodeTag }
+    );
 };
 
 // Listener when mouse hovering in a waterdrop
@@ -233,7 +248,7 @@ TOPPANO.onSGNameInputFocusout = function(event) {
     $(this).textinput('disable');
 };
 
-// Listener for keyboard pressing up on a Node Gallery name input.
+// Listener for keyboard pressing up on a Snapshot Gallery name input.
 TOPPANO.onSGNameInputKeyup= function(event) {
     // Detect pressing up Enter key.
     if(event.which == 13) {
@@ -296,6 +311,7 @@ TOPPANO.adjustSnapshotGallery = function(event) {
 
 // Transit current node to another node.
 TOPPANO.transitNode = function(targetNodeId, lng, lat, fov) {
+    /*
     var currentNodeId = TOPPANO.gv.scene1.panoID;
     var currentTransitions = TOPPANO.ui.modelState.getObjProp('node-' + currentNodeId)['transitions'];
     var targetTransitions = TOPPANO.ui.modelState.getObjProp('node-' + targetNodeId)['transitions'];
@@ -304,10 +320,13 @@ TOPPANO.transitNode = function(targetNodeId, lng, lat, fov) {
         $('#waterdrop-' + currentNodeId + '-' + transition).hide();
         $('#node-' + transition).removeClass('has-waterdrop');
     });
+    */
     TOPPANO.changeView(targetNodeId, lng, lat, fov);
+    /*
     $.each(targetTransitions, function(index, transition) {
         $('#waterdrop-' + targetNodeId + '-' + transition).show();
         $('#node-' + transition).addClass('has-waterdrop');
     });
+    */
 };
 

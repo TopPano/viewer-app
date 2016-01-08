@@ -41,7 +41,7 @@ function set_on_holding_swiper_slide(){
                                             function(event){
                                                 if(TOPPANO.gv.cursor.state == "default"){
                                                     TOPPANO.gv.cursor.state = "holding-swiper-slide";
-                                                    var targetName = TOPPANO.ui.modelState.getObjProp(event.currentTarget.id)['name'];
+                                                    var targetName = TOPPANO.ui.modelState.getObjProp(event.currentTarget.id)['tag'];
                                                     var waterdrop = $("#waterdrop-0").clone();
                                                     $('input[type=text]', waterdrop).val(targetName);
                                                     // generate waterdrop id
