@@ -118,7 +118,7 @@ TOPPANO.createSnapshotGallery = function() {
     TOPPANO.createSnapshotDialog();
 
     TOPPANO.ui.snapshotGalleryUI.swiper.slideTo(0);
-    $('#snapshot-gallery-switch').trigger('click');
+    //$('#snapshot-gallery-switch').trigger('click');
 };
 
 // Create a snapshot.
@@ -255,6 +255,7 @@ TOPPANO.createWaterdrop = function(id, prop) {
 // Create the main toolbar which contains save, cancel and mode switching buttons.
 TOPPANO.createToolbarMain = function() {
     $('#toolbar-main-save').on('click', TOPPANO.onTMSaveClick);
+    $('#toolbar-main-cancel').on('click', TOPPANO.onTMCancelClick);
 };
 
 // Control the rotation of compass button.

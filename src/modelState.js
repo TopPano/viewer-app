@@ -2,7 +2,7 @@ TOPPANO.ModelState = function() {
     var _this = this;
 
     /**
-     * Describe the model state sice last modified.
+     * Describe the model state since last saving.
      * It's a list of key-value pairs which key is an object's html id,
      * value is the object's properties represented by JSON.
      */
@@ -108,6 +108,26 @@ TOPPANO.ModelState = function() {
         });
     };
 
+    // Canceling the modification since last saving.
+    TOPPANO.ModelState.prototype.cancel = function() {
+        $.each(diffState, function(id, value) {
+            var type = value['meta']['type'];
+            var action = value['meta']['action'];
+
+            switch(type + action) {
+                case 'summary' + _this.Action.UPDATE:
+                    $.each(currentState[id], function(input, value) {
+                        $('#summary-' + input).val(value);
+                    });
+                    break;
+                default:
+                    break;
+            }
+            delete diffState[id];
+        });
+
+        switchButtons();
+    }
 /* Private methods */
 
     // API server call and merge diffState into currentState.
@@ -144,8 +164,10 @@ TOPPANO.ModelState = function() {
     // Enable/Disable the save and cancel button.
     var switchButtons = function() {
         if($.isEmptyObject(diffState)) {
+            $('#toolbar-main-cancel').prop('disabled', true);
             $('#toolbar-main-save').prop('disabled', true);
         } else {
+            $('#toolbar-main-cancel').prop('disabled', false);
             $('#toolbar-main-save').prop('disabled', false);
         }
     };

@@ -119,3 +119,5 @@ nbproject
 .idea
 .node_history
 toppano.min.js
+*.swo
+*.swp

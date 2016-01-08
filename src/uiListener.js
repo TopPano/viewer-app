@@ -289,6 +289,11 @@ TOPPANO.onTMSaveClick = function(event) {
     TOPPANO.ui.modelState.commit();
 };
 
+// Listener for clicking the Main Toolbar cancel button.
+TOPPANO.onTMCancelClick = function(event) {
+    TOPPANO.ui.modelState.cancel();
+};
+
 //  adjust the take-snapshot button position in Snapshot Gallery.
 TOPPANO.adjustSnapshotGallery = function(event) {
     var galleryHeight = $('#snapshot-gallery').height();
