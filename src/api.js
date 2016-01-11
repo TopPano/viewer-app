@@ -7,8 +7,6 @@ var TOPPANO = TOPPANO || {};
 
 // TOPPANO Panorama Viewer Initialization
 TOPPANO.initMap = function(map) {
-    // threejs init
-    TOPPANO.requestMeta(map.PanoID);
 
     window.onload = function(){
         TOPPANO.modelInit();
@@ -45,7 +43,7 @@ TOPPANO.gv = {
         element: null
     },
 
-    img_obj_sets: [],
+    file_sets: {},
 
     // camera parameter
     cam: {

@@ -7,30 +7,32 @@ TOPPANO.modelInit = function() {
     var modelId = TOPPANO.gv.modelID = getUrlParam('model');
     var model = {};
 
-    $.get(TOPPANO.gv.apiUrl + '/modelmeta/' + modelId).then(function(modelMeta) {
-        model['summary'] = {
-            'name': modelMeta['name'],
-            'presentedBy': modelMeta['presentedBy'],
-            'description': modelMeta['description'],
-            'address': modelMeta['address']
-        };
-
-        model['nodes'] = {};
-        $.each(modelMeta['nodes'], function(nodeId, prop) {
-            model['nodes']['node-' + nodeId] = {
-                'nodeId': nodeId,
-                'tag': prop['tag'],
-                'heading': prop['heading'],
-                'enabled': prop['enabled']
+    $.get(TOPPANO.gv.apiUrl + '/modelmeta/' + modelId).then(
+        function(modelMeta) {
+            model['summary'] = {
+                'name': modelMeta['name'],
+                'presentedBy': modelMeta['presentedBy'],
+                'description': modelMeta['description'],
+                'address': modelMeta['address']
             };
-        });
-            
-        return $.get(TOPPANO.gv.apiUrl + '/modelmeta/' + modelId + '/files');
-    }).done(function(files) {
-        console.log(files);
-        TOPPANO.loadAllImg(files).pipe(function(){console.log("start build scene!!")}).
-                 pipe(function(){TOPPANO.buildScene();});
 
+            model['nodes'] = {};
+            $.each(modelMeta['nodes'], function(nodeId, prop) {
+                model['nodes']['node-' + nodeId] = {
+                    'nodeId': nodeId,
+                    'tag': prop['tag'],
+                    'heading': prop['heading'],
+                    'enabled': prop['enabled']
+                };
+            });
+           
+            // load all imgs and build the first scene 
+            TOPPANO.loadAllImg(modelMeta).pipe(function(){console.log("start build scene!!")}).
+                 pipe(function(){TOPPANO.buildScene(Object.keys(TOPPANO.gv.file_sets)[3]);});
+   
+            return $.get(TOPPANO.gv.apiUrl + '/modelmeta/' + modelId + '/files');
+    }).done(function(files) {
+               
         $.each(model['nodes'], function(nodeHtmlId, prop) {
             var nodeId = prop['nodeId'];
 
@@ -91,55 +93,60 @@ TOPPANO.threeInit = function(map) {
     if (TOPPANO.gv.objects.showObj) {
         TOPPANO.addTransition(TOPPANO.gv.scene1.panoID);
     }
-
-    // TOPPANO.addPlane();
-    // console.log(TOPPANO.gv.transInfo['00000001'].transition[0].nextID);
-
 };
 
 
-function loadImg(img_url){
+function loadImg(node_ID, file_url){
     var _dfr = $.Deferred();
       
-    var img_name = img_url.substr(img_url.lastIndexOf('/')+1);
-    var texture = THREE.ImageUtils.loadTexture(img_url, THREE.UVMapping, 
+    var file_name = file_url.substr(file_url.lastIndexOf('/')+1);
+    var texture = THREE.ImageUtils.loadTexture(file_url, THREE.UVMapping, 
                                                function(){
                                                     texture.minFilter = THREE.LinearFilter;
-                                                    var img_obj = {"name":img_name, "texture":texture};
-                                                    TOPPANO.gv.img_obj_sets.push(img_obj);
-                                                    return _dfr.resolve("success load "+img_name);
+                                                    var file_obj = {"name":file_name, "texture":texture};
+                                                    if(!TOPPANO.gv.file_sets[node_ID]){
+                                                        TOPPANO.gv.file_sets[node_ID] = new Array();
+                                                    }
+                                                    TOPPANO.gv.file_sets[node_ID].push(file_obj);
+                                                    
+                                                    return _dfr.resolve("success load "+file_name);
                                                },
-                                               function(){return _dfr.reject("fail load "+img_name);}
+                                               function(){return _dfr.reject("fail load "+LinearFilter_name);}
                                               );
     return _dfr.promise();
 }
 
 
 // loading tiles images
-TOPPANO.loadAllImg = function(imgs_sets) {
+TOPPANO.loadAllImg = function(modelMeta) {
     THREE.ImageUtils.crossOrigin = '';
-
     var _dfr = $.Deferred();
     var deferreds = [];
-    for (img_index in imgs_sets){
-        var img_url = imgs_sets[img_index];
-        if(img_url.search('thumb')<0){
-            deferreds.push( loadImg(img_url).done(function(msg){console.log(msg);}) );
+
+    for (node_ID in modelMeta.nodes){
+        var node_files = modelMeta.nodes[node_ID].files;
+        for (file_index in node_files){
+            if(file_index.search('thumb')<0 && file_index.search('low')<0 ){
+                var file_url = node_files[file_index];
+                deferreds.push(loadImg(node_ID, file_url).done(function(msg){console.log(msg);}) );
+            }
         }
     }
 
     $.when.apply($, deferreds).then(
             function(){
                 console.log("all imgs success load");
-                // order TOPPANO.gv.img.obj.sets
-                TOPPANO.gv.img_obj_sets.sort(
-                function(a,b){
-                    if(a.name>b.name)
-                        return 1;
-                    else if(a.name<b.name)
-                        return -1
-                    return 0});
-
+                
+                // order all files of nodes in TOPPANO.gv.file_sets
+                for (node_ID in TOPPANO.gv.file_sets){
+                    TOPPANO.gv.file_sets[node_ID].sort(
+                    function(a,b){
+                        if(a.name>b.name)
+                            return 1;
+                        else if(a.name<b.name)
+                            return -1
+                        return 0});
+                }
                 _dfr.resolve();              
              },
              function(){console.log("imgs fail load");
@@ -147,35 +154,20 @@ TOPPANO.loadAllImg = function(imgs_sets) {
              }
             );
     return _dfr.promise();
-/*
-    var sphereSize = TOPPANO.gv.para.sphereSize;
-    var i;
-    for(i=0;i<8;i++){ 
-        var j = parseInt(i/4);
-        var geometry = new THREE.SphereGeometry(sphereSize, 20, 20, Math.PI/2 * i, Math.PI/2, Math.PI/2 * j, Math.PI/2);
-        geometry.applyMatrix(new THREE.Matrix4().makeScale(-1, 1, 1));
-
-        var material = new THREE.MeshBasicMaterial({
-            map:TOPPANO.gv.img_obj_sets[i].texture,
-            overdraw: true,
-            transparent: true
-        });
-        var mesh = new THREE.Mesh(geometry, material);
-        TOPPANO.gv.scene.add(mesh);
-    }
-*/
 };
 
-TOPPANO.buildScene = function(){
+TOPPANO.buildScene = function(node_ID){
     var sphereSize = TOPPANO.gv.para.sphereSize;
+    var node_files = TOPPANO.gv.file_sets[node_ID];
     var i;
-    for(i=0;i<8;i++){ 
+
+    for(i=0; i<8; i++){
         var j = parseInt(i/4);
         var geometry = new THREE.SphereGeometry(sphereSize, 20, 20, Math.PI/2 * i, Math.PI/2, Math.PI/2 * j, Math.PI/2);
         geometry.applyMatrix(new THREE.Matrix4().makeScale(-1, 1, 1));
 
         var material = new THREE.MeshBasicMaterial({
-            map:TOPPANO.gv.img_obj_sets[i].texture,
+            map:node_files[i].texture,
             overdraw: true,
             transparent: true
         });
@@ -603,20 +595,6 @@ TOPPANO.updateURL = function() {
         (TOPPANO.gv.cam.lng + TOPPANO.gv.headingOffset) + ',' + TOPPANO.gv.scene1.panoID;
 };
 
-// request for metadata
-TOPPANO.requestMeta = function(ID) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', TOPPANO.gv.metaURL + '/photometa?panoid=' + ID, false);
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.send(null);
-    if (xhr.status === 200) {
-        var userInfo = JSON.parse(xhr.responseText);
-        TOPPANO.gv.transInfo = userInfo;
-        console.log('Request photo metadata success!');
-    }
-    else
-        console.log('XMLHttpRequest failed. Status: ' + xhr.status);
-};
 
 // render scene
 TOPPANO.renderScene = function() {

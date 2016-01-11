@@ -201,8 +201,8 @@ function set_on_changing_scene(){
                                     isHit = hit[0],
                                     hitObj = hit[1];
                                 if (isHit) {
-                                    //TOPPANO.gv.scene1.nextInfo = hit[1].name; the code maybe useless
-                                    TOPPANO.changeScene(hitObj);
+                                    // TOPPANO.gv.scene1.nextInfo = hit[1].name; the code maybe useless
+                                    // TOPPANO.changeScene(hitObj);
                                 }
                                 TOPPANO.gv.cursor.state = "default";
                                 TOPPANO.gv.cursor.element = null;
@@ -293,8 +293,9 @@ TOPPANO.onDocumentTouchEnd = function(event) {
         isHit = hit[0],
             hitObj = hit[1];
             if (isHit) {
-                TOPPANO.gv.scene1.nextInfo = hit[1].name;
-                TOPPANO.changeScene(hitObj);
+                // TODO
+                // TOPPANO.gv.scene1.nextInfo = hit[1].name;
+                // TOPPANO.changeScene(hitObj);
             }
 };
 
