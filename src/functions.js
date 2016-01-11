@@ -91,7 +91,7 @@ TOPPANO.threeInit = function(map) {
 
     // adding icon objects on scene
     if (TOPPANO.gv.objects.showObj) {
-        TOPPANO.addTransition(TOPPANO.gv.scene1.panoID);
+        //TOPPANO.addTransition(TOPPANO.gv.scene1.panoID);
     }
 };
 
@@ -595,6 +595,19 @@ TOPPANO.updateURL = function() {
         (TOPPANO.gv.cam.lng + TOPPANO.gv.headingOffset) + ',' + TOPPANO.gv.scene1.panoID;
 };
 
+TOPPANO.requestMeta = function(ID) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', TOPPANO.gv.metaURL + '/photometa?panoid=' + ID, false);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.send(null);
+    if (xhr.status === 200) {
+        var userInfo = JSON.parse(xhr.responseText);
+        TOPPANO.gv.transInfo = userInfo;
+        console.log('Request photo metadata success!');
+    }
+    else
+        console.log('XMLHttpRequest failed. Status: ' + xhr.status);
+};
 
 // render scene
 TOPPANO.renderScene = function() {
@@ -607,7 +620,7 @@ TOPPANO.renderScene = function() {
                 TOPPANO.gv.scene.remove(TOPPANO.gv.scene.children[i]);
             }
             TOPPANO.gv.objects.transitionObj = [];
-            TOPPANO.addTransition();
+            //TOPPANO.addTransition();
             TOPPANO.updateURL();
             requestAnimationFrame(TOPPANO.update);
             return 0;

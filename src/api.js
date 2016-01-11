@@ -9,9 +9,10 @@ var TOPPANO = TOPPANO || {};
 TOPPANO.initMap = function(map) {
 
     window.onload = function(){
+        TOPPANO.threeInit(map);
+        
         TOPPANO.modelInit();
 
-        TOPPANO.threeInit(map);
 
         TOPPANO.update();
         // add fb-share
