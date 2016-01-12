@@ -26,7 +26,7 @@ TOPPANO.modelInit = function() {
         });
             
         return $.get(TOPPANO.gv.apiUrl + '/modelmeta/' + modelId + '/files');
-    }).done(function(files) {
+    }).then(function(files) {
         console.log(files);
         TOPPANO.loadAllImg(files).pipe(function(){console.log("start build scene!!")}).
                  pipe(function(){TOPPANO.buildScene();});
@@ -42,11 +42,18 @@ TOPPANO.modelInit = function() {
                 }
             });
         });
+
+        return $.get(TOPPANO.gv.apiUrl + '/modelmeta/' + modelId + '/snapshots');
+    }).then(function(snapshots) {
+        model['snapshot'] = {};
+        $.each(snapshots, function(id, value) {
+            model['snapshot']['snapshot-' + id] = value;
+        });
+
         TOPPANO.createUI(model);
         // add listener
         TOPPANO.addListener();
-        
-            })
+    });
 }
 
 TOPPANO.threeInit = function(map) {

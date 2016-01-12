@@ -39,12 +39,11 @@ TOPPANO.createUI = function(model) {
 
     });
     */
-    TOPPANO.createSnapshotGallery();
+    TOPPANO.createSnapshotGallery('snapshot-gallery', model['snapshot']);
     TOPPANO.createToolbarMain();
     setInterval(function() {
         TOPPANO.rotateCompass(TOPPANO.gv.cam.lng);
     }, rotateInterval);
-
 };
 
 // Create a component for showing summary of the model.
@@ -95,8 +94,11 @@ TOPPANO.createFBShareBtn = function() {
 };
 
 // Create the Snapshot Gallery.
-TOPPANO.createSnapshotGallery = function() {
+TOPPANO.createSnapshotGallery = function(id, prop) {
     var galleryHeight = $(window).height() - $('#node-gallery').height();
+
+    $('#snapshot-gallery .swiper-container').height(galleryHeight);
+    $('#snapshot-gallery').height(galleryHeight);
 
     TOPPANO.ui.snapshotGalleryUI.swiper = new Swiper('.swiper-container-snapshot', {
         scrollbar: '.swiper-scrollbar-snapshot',
@@ -120,19 +122,15 @@ TOPPANO.createSnapshotGallery = function() {
     $('<div class="take-snapshot take-snapshot-long"></div>')
         .appendTo('#snapshot-gallery .swiper-container')
         .zIndex($('#snapshot-gallery .take-snapshot.take-snapshot-short').zIndex() + 1);
-
-    $('#snapshot-gallery .swiper-container').height(galleryHeight);
-    $('#snapshot-gallery').height(galleryHeight);
     TOPPANO.ui.snapshotGalleryUI.swiper.update(true);
     TOPPANO.adjustSnapshotGallery();
 
-    $('#snapshot-gallery .swiper-slide .ui-icon-delete').on('click', TOPPANO.onSGDeleteBtnClick);
-    $('#snapshot-gallery .swiper-slide .ui-icon-edit').on('click', TOPPANO.onSGEditBtnClick);
-    $('#snapshot-gallery .swiper-slide input[type=text]')
-            .on('focusout', TOPPANO.onSGNameInputFocusout)
-            .on('keyup', TOPPANO.onSGNameInputKeyup);
     $('#snapshot-gallery-switch').on('click', TOPPANO.onSGSwitchClick);
     $('#snapshot-gallery .take-snapshot').on('click', TOPPANO.onSGSnapshotBtnClick);
+
+    $.each(prop, function(snapshotId, value) {
+        TOPPANO.createSnapshot(snapshotId, value);
+    });
 
     TOPPANO.createSnapshotDialog();
 
@@ -142,28 +140,48 @@ TOPPANO.createSnapshotGallery = function() {
 
 // Create a snapshot.
 TOPPANO.createSnapshot = function(id, prop) {
-    var content =
-        '<div class="swiper-slide">' +
-        '  <img src="' + prop['url'] + '"></img>' +
-        '  <input type="text" data-mini="true" data-corners="false" disabled="disabled" value="' + prop['name'] + '">' +
+    TOPPANO.ui.modelState.addObjProp(id, prop);
+    TOPPANO.createSnapshotUI(id);
+    TOPPANO.fillSnapshotContent(id, prop);
+    TOPPANO.addSnapshotListener(id, prop);
+}
+
+// Create the UI of a snapshot.
+TOPPANO.createSnapshotUI = function(id) {
+    var ui =
+        '<div id="' + id + '" class="swiper-slide">' +
+        '  <img src=""></img>' +
+        '  <input type="text" data-mini="true" data-corners="false" disabled="disabled" value="">' +
         '  <button class="ui-btn ui-icon-edit ui-btn-icon-notext"></button>' +
         '  <button class="ui-btn ui-icon-delete ui-btn-icon-notext"></button>' +
         '</div>';
-    var snapshot = $(content);
-    var swiper = TOPPANO.ui.snapshotGalleryUI.swiper;
+    var swiper = TOPPANO.ui.snapshotGalleryUI.swiper
+    var snapshotShort = $('#snapshot-gallery .take-snapshot').not('.take-snapshot-long');
 
-    $('#snapshot-gallery .take-snapshot').not('.take-snapshot-long').before(snapshot);
+    $(ui).insertBefore(snapshotShort).enhanceWithin();
+    swiper.update(true);
+    TOPPANO.adjustSnapshotGallery();
+    swiper.slideTo(swiper.slides.length);
+};
+
+// Fill the content of a snapshot.
+TOPPANO.fillSnapshotContent = function(id, prop) {
+    var snapshot = $('#' + id);
+
+    $('img', snapshot).attr('src', prop['url']);
+    $('input[type=text]', snapshot).val(prop['name']);
+};
+
+// Add listeners of a snapshot.
+TOPPANO.addSnapshotListener = function(id, prop) {
+    var snapshot = $('#' + id);
+
     $('.ui-icon-delete', snapshot).on('click', TOPPANO.onSGDeleteBtnClick);
     $('.ui-icon-edit', snapshot).on('click', TOPPANO.onSGEditBtnClick);
     $('input[type=text]', snapshot)
             .on('focusout', TOPPANO.onSGNameInputFocusout)
             .on('keyup', TOPPANO.onSGNameInputKeyup);
-
-    snapshot.enhanceWithin();
-    swiper.update(true);
-    TOPPANO.adjustSnapshotGallery();
-    swiper.slideTo(swiper.slides.length);
-}
+};
 
 // Create the popup dialog for taking a snapshot.
 TOPPANO.createSnapshotDialog = function() {
