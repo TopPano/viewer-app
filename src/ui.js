@@ -130,6 +130,7 @@ TOPPANO.createSnapshotGallery = function(id, prop) {
 
     $.each(prop, function(snapshotId, value) {
         TOPPANO.createSnapshot(snapshotId, value);
+        TOPPANO.ui.modelState.addObjProp(snapshotId, value);
     });
 
     TOPPANO.createSnapshotDialog();
@@ -140,7 +141,6 @@ TOPPANO.createSnapshotGallery = function(id, prop) {
 
 // Create a snapshot.
 TOPPANO.createSnapshot = function(id, prop) {
-    TOPPANO.ui.modelState.addObjProp(id, prop);
     TOPPANO.createSnapshotUI(id);
     TOPPANO.fillSnapshotContent(id, prop);
     TOPPANO.addSnapshotListener(id, prop);
@@ -176,11 +176,16 @@ TOPPANO.fillSnapshotContent = function(id, prop) {
 TOPPANO.addSnapshotListener = function(id, prop) {
     var snapshot = $('#' + id);
 
-    $('.ui-icon-delete', snapshot).on('click', TOPPANO.onSGDeleteBtnClick);
+    $('.ui-icon-delete', snapshot).on('click', function(event) {
+        TOPPANO.onSGDeleteBtnClick(event, id);
+    });
     $('.ui-icon-edit', snapshot).on('click', TOPPANO.onSGEditBtnClick);
     $('input[type=text]', snapshot)
-            .on('focusout', TOPPANO.onSGNameInputFocusout)
-            .on('keyup', TOPPANO.onSGNameInputKeyup);
+        .on('focusout', TOPPANO.onSGNameInputFocusout)
+        .on('keyup', TOPPANO.onSGNameInputKeyup)
+        .on('input', function(event) {
+            TOPPANO.onSGTagInputChange(event, id);
+        });
 };
 
 // Create the popup dialog for taking a snapshot.
@@ -337,6 +342,11 @@ TOPPANO.initFB = function() {
     });
 }
 
+// Gnerate a temporary ID for a dynamically created object that is not synchronized with API server yet.
+TOPPANO.genTempId = function() {
+    return TOPPANO.ui.tmpId++;
+};
+
 // Global ui variables initialization.
 TOPPANO.ui = {
     // Summary block paramters
@@ -359,6 +369,7 @@ TOPPANO.ui = {
         snapshotWidth: 120,
         snapshotHeight: 80
     },
+    tmpId: 0,
     modelState: null
 };
 

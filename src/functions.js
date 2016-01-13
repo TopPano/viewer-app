@@ -46,8 +46,8 @@ TOPPANO.modelInit = function() {
         return $.get(TOPPANO.gv.apiUrl + '/modelmeta/' + modelId + '/snapshots');
     }).then(function(snapshots) {
         model['snapshot'] = {};
-        $.each(snapshots, function(id, value) {
-            model['snapshot']['snapshot-' + id] = value;
+        $.each(snapshots, function(index, prop) {
+            model['snapshot']['snapshot-' + prop['sid']] = prop;
         });
 
         TOPPANO.createUI(model);

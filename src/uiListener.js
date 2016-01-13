@@ -209,6 +209,8 @@ TOPPANO.onSGSnapshotBtnClick = function(event) {
 
     TOPPANO.ui.snapshotGalleryUI.currentSnapshot = {
         'url': img,
+        'width': TOPPANO.ui.snapshotGalleryUI.snapshotWidth,
+        'height': TOPPANO.ui.snapshotGalleryUI.snapshotHeight,
         'nodeId': TOPPANO.gv.scene1.panoID,
         'fov': TOPPANO.gv.cam.camera.fov,
         'lng': TOPPANO.gv.cam.lng,
@@ -225,10 +227,15 @@ TOPPANO.onSGSnapshotBtnClick = function(event) {
 };
 
 // Listener for clicking a Snapshot Gallery delete button.
-TOPPANO.onSGDeleteBtnClick = function(event) {
-    $(this).parent().remove();
+TOPPANO.onSGDeleteBtnClick = function(event, snapshotHtmlId) {
+    $('#' + snapshotHtmlId).remove();
     TOPPANO.ui.snapshotGalleryUI.swiper.update(true);
     TOPPANO.adjustSnapshotGallery();
+    TOPPANO.ui.modelState.modifyState(
+        snapshotHtmlId,
+        'snapshot',
+        TOPPANO.ui.modelState.Action.DELETE
+    );
 };
 
 // Listener for clicking a Snapshot Gallery edit button.
@@ -256,6 +263,18 @@ TOPPANO.onSGNameInputKeyup= function(event) {
     }
 };
 
+// Listener for a Snapshot Gallery name input changes.
+TOPPANO.onSGTagInputChange= function(event, snapshotHtmlId) {
+    var name = $('input[type=text]', '#' + snapshotHtmlId).val();
+
+    TOPPANO.ui.modelState.modifyState(
+        snapshotHtmlId,
+        'snapshot',
+        TOPPANO.ui.modelState.Action.UPDATE,
+        { 'name': name }
+    );
+};
+
 // Listener for clicking the Snapshot Dialog Cancel Button.
 TOPPANO.onSDCancelBtnClick = function(event) {
     $('#snapshot-dialog').popup('close');
@@ -263,8 +282,17 @@ TOPPANO.onSDCancelBtnClick = function(event) {
 
 // Listener for clicking the Snapshot Dialog Confirm Button.
 TOPPANO.onSDConfirmBtnClick = function(event) {
-    TOPPANO.ui.snapshotGalleryUI.currentSnapshot['name'] = $('#snapshot-dialog input[type=text]').val();
-    TOPPANO.createSnapshot('snapshot-0', TOPPANO.ui.snapshotGalleryUI.currentSnapshot);
+    var id = 'snapshot-tmp-' + TOPPANO.genTempId();
+    var currentSnapshot = TOPPANO.ui.snapshotGalleryUI.currentSnapshot;
+
+    currentSnapshot['name'] = $('#snapshot-dialog input[type=text]').val();
+    TOPPANO.createSnapshot(id, currentSnapshot);
+    TOPPANO.ui.modelState.modifyState(
+        id,
+        'snapshot',
+        TOPPANO.ui.modelState.Action.CREATE,
+        currentSnapshot
+    );
     $('#snapshot-dialog').popup('close');
 }
 
