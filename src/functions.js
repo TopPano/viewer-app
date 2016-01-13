@@ -9,7 +9,6 @@ TOPPANO.modelInit = function() {
 
     $.get(TOPPANO.gv.apiUrl + '/modelmeta/' + modelId).then(
         function(modelMeta) {
-            console.log(modelMeta);
             model['summary'] = {
                 'name': modelMeta['name'],
                 'presentedBy': modelMeta['presentedBy'],
@@ -18,13 +17,16 @@ TOPPANO.modelInit = function() {
             };
             model['nodes'] = {};
             $.each(modelMeta['nodes'], function(nodeId, prop) {
-                model['nodes']['node-' + nodeId] = {
-                    'nodeId': nodeId,
-                    'tag': prop['tag'],
-                    'heading': prop['heading'],
-                    'enabled': prop['enabled']
-                };
+                // 'nodes' of modelMeta will be altered by other functions, so we must copy them.
+                var _prop = $.extend(true, {}, prop);
+                model['nodes']['node-' + nodeId] = _prop;
+                delete _prop['files'];
             });            
+            model['snapshotList'] = {};
+            $.each(modelMeta['snapshotList'], function(index, prop) {
+                model['snapshotList']['snapshot-' + prop['sid']] = prop;
+            });
+
             TOPPANO.gv.nodes_meta = Object.assign({}, modelMeta.nodes);
             // load all imgs and build the first scene 
             TOPPANO.loadAllImg(TOPPANO.gv.nodes_meta).pipe(function () {console.log("start build scene!!");}).
@@ -36,34 +38,10 @@ TOPPANO.modelInit = function() {
                         TOPPANO.addWaterDrop(first_node_ID);
                      }
                  });
-        
-        return $.get(TOPPANO.gv.apiUrl + '/modelmeta/' + modelId + '/files');
-    }).then(function(files) {
-
-     
-        $.each(model['nodes'], function(nodeHtmlId, prop) {
-            var nodeId = prop['nodeId'];
-
-            // Find the thumbnail url of the node.
-            $.each(files, function(fileName, url) {
-                if(fileName.indexOf('thumb') > -1 && fileName.indexOf(nodeId) > -1) {
-                    model['nodes'][nodeHtmlId]['url'] = url;
-                    return;
-                }
-            });
-        });
-
-        return $.get(TOPPANO.gv.apiUrl + '/modelmeta/' + modelId + '/snapshots');
-    }).then(function(snapshots) {
-        model['snapshot'] = {};
-        $.each(snapshots, function(index, prop) {
-            model['snapshot']['snapshot-' + prop['sid']] = prop;
-        });
-
+    }).done(function() {
         TOPPANO.createUI(model);
         // add listener
         TOPPANO.addListener();
-
     });
 
 }

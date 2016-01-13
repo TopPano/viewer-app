@@ -12,7 +12,7 @@ TOPPANO.ModelState = function() {
      * Describe the difference between current and modified state.
      * It's a list of key-value pairs which key is an object's html id,
      * value is formatted as: {
-     *     'meta': { 'isNew': boolean, 'type': 'object type', 'action': ACTION_TYPE },
+     *     'meta': { 'type': 'object type', 'action': ACTION_TYPE },
      *     'prop': // object's properties represented by JSON
      * }
      */
@@ -57,12 +57,20 @@ TOPPANO.ModelState = function() {
     // Modify the state. (Create/update/delete an object)
     TOPPANO.ModelState.prototype.modifyState = function(id, type, action, prop) {
         switch(type + action) {
+            case 'snapshot' + _this.Action.CREATE:
+                diffState[id] = {
+                    'meta': { 'type': type, 'action': action},
+                    'prop': prop
+                };
+                break;
             case 'summary' + _this.Action.UPDATE:
             case 'node' + _this.Action.UPDATE:
+            case 'snapshot' + _this.Action.UPDATE:
                 if(!(id in diffState)) {
+                    // Copy properties in currentState of the modified object.
                     diffState[id] = {
-                        'meta': {'isNew': false, 'type': type, 'action': action },
-                        'prop': {}
+                        'meta': { 'type': type, 'action': action },
+                        'prop': $.extend(true, {}, currentState[id])
                     };
                 }
                 $.each(prop, function(key, value) {
@@ -71,26 +79,8 @@ TOPPANO.ModelState = function() {
                 break;
             case 'node' + _this.Action.DELETE:
                 diffState[id] = {
-                    'meta': {'isNew': false, 'type': type, 'action': action }
+                    'meta': { 'type': type, 'action': action }
                 };
-                break;
-            case 'snapshot' + _this.Action.CREATE:
-                diffState[id] = {
-                    'meta': {'isNew': true, 'type': type, 'action': action},
-                    'prop': prop
-                };
-                break;
-            case 'snapshot' + _this.Action.UPDATE:
-                if(!(id in diffState)) {
-                    // Copy properties in currentState of the modified object.
-                    diffState[id] = {
-                        'meta': {'isNew': false, 'type': type, 'action': action },
-                        'prop': $.extend(true, {}, currentState[id])
-                    };
-                }
-                $.each(prop, function(key, value) {
-                    diffState[id]['prop'][key] = value;
-                });
                 break;
             case 'snapshot' + _this.Action.DELETE:
                 if((id in diffState) && (diffState[id]['meta']['action'] === _this.Action.CREATE)) {
@@ -98,7 +88,7 @@ TOPPANO.ModelState = function() {
                     delete diffState[id];
                 } else {
                     diffState[id] = {
-                        'meta': {'isNew': false, 'type': type, 'action': action }
+                        'meta': { 'type': type, 'action': action }
                     };
                 }
                 break;

@@ -39,7 +39,7 @@ TOPPANO.createUI = function(model) {
 
     });
     */
-    TOPPANO.createSnapshotGallery('snapshot-gallery', model['snapshot']);
+    TOPPANO.createSnapshotGallery('snapshot-gallery', model['snapshotList']);
     TOPPANO.createToolbarMain();
     setInterval(function() {
         TOPPANO.rotateCompass(TOPPANO.gv.cam.lng);
@@ -199,6 +199,7 @@ TOPPANO.createSnapshotDialog = function() {
 TOPPANO.createNodeGallery = function(nodes) {
     $.each(nodes, function(id, prop) {
         TOPPANO.createNode(id, prop);
+        TOPPANO.ui.modelState.addObjProp(id, prop);
     });
 
     TOPPANO.ui.nodeGalleryUI.swiper = new Swiper('.swiper-container-node', {
@@ -219,7 +220,6 @@ TOPPANO.createNodeGallery = function(nodes) {
 
 // Create a Node.
 TOPPANO.createNode = function(id, prop) {
-    TOPPANO.ui.modelState.addObjProp(id, prop);
     TOPPANO.createNodeUI(id);
     TOPPANO.fillNodeContent(id, prop);
     TOPPANO.addNodeListener(id, prop);
@@ -240,17 +240,17 @@ TOPPANO.createNodeUI = function(id) {
 
 // Fill the content of a Node.
 TOPPANO.fillNodeContent = function(id, prop) {
-    $('#' + id + ' img').attr('src', prop['url']);
+    $('#' + id + ' img').attr('src', prop['thumbnailUrl']);
     $('#' + id + ' input[type=text]').val(prop['tag']);
 };
 
 // Add listeners of a Node.
 TOPPANO.addNodeListener = function(id, prop) {
     $('#' + id +' img').on('click', function(event) {
-        TOPPANO.onNGThumbnailClick(event, prop['nodeId']);
+        TOPPANO.onNGThumbnailClick(event, prop['sid']);
     });
     $('#' + id + ' .ui-icon-edit').on('click', function(event) {
-        TOPPANO.onNGEditBtnClick(event, prop['nodeId']);
+        TOPPANO.onNGEditBtnClick(event, prop['sid']);
     });
     $('#' + id + ' .ui-icon-delete').on('click', function(event) {
         TOPPANO.onNGDeleteBtnClick(event, id);
