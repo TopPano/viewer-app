@@ -163,6 +163,16 @@ TOPPANO.ModelState = function() {
                     // TODO: It should fall back to the original position before it is deleted.
                     TOPPANO.createNode(id, currentState[id]);
                     break;
+                case 'snapshot' + _this.Action.CREATE:
+                    TOPPANO.removeSnapshot(id);
+                    break;
+                case 'snapshot' + _this.Action.UPDATE:
+                    TOPPANO.fillSnapshotContent(id, currentState[id]);
+                    break;
+                case 'snapshot' + _this.Action.DELETE:
+                    // TODO: It should fall back to the original position before it is deleted.
+                    TOPPANO.createSnapshot(id, currentState[id]);
+                    break;
                 default:
                     break;
             }
@@ -185,8 +195,11 @@ TOPPANO.ModelState = function() {
                     processData: false,
                     data: data
                 }).done(function(response) {
+                    var newId = type + '-' + response['sid'];
+
                     delete diffState[id];
-                    currentState[type + '-' + response['sid']] = response;
+                    currentState[newId] = response;
+                    TOPPANO.resetSnapshotId(id, newId, response);
                     switchButtons();
                 }).fail(function(jqXHR, textStatus, errorThrown) {
                     // TODO: Error handling.

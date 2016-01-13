@@ -184,8 +184,23 @@ TOPPANO.addSnapshotListener = function(id, prop) {
         .on('focusout', TOPPANO.onSGNameInputFocusout)
         .on('keyup', TOPPANO.onSGNameInputKeyup)
         .on('input', function(event) {
-            TOPPANO.onSGTagInputChange(event, id);
+            TOPPANO.onSGNameInputChange(event, id);
         });
+};
+
+// Remove a snapshot.
+TOPPANO.removeSnapshot = function(id) {
+    $('#' + id).remove();
+    TOPPANO.ui.snapshotGalleryUI.swiper.update(true);
+    TOPPANO.adjustSnapshotGallery();
+};
+
+// Reset a new ID of a snapshot.
+TOPPANO.resetSnapshotId = function(oldId, newId, prop) {
+    // Fire all registed events before adding listeners.
+    $('#' + oldId).attr('id', newId).unbind()
+        .find('*').unbind();
+    TOPPANO.addSnapshotListener(newId, prop);
 };
 
 // Create the popup dialog for taking a snapshot.
@@ -312,8 +327,8 @@ TOPPANO.createWaterdrop = function(id, prop) {
 
 // Create the main toolbar which contains save, cancel and mode switching buttons.
 TOPPANO.createToolbarMain = function() {
-    $('#toolbar-main-save').on('click', TOPPANO.onTMSaveClick);
-    $('#toolbar-main-cancel').on('click', TOPPANO.onTMCancelClick);
+    $('#toolbar-main-save').on('click', TOPPANO.onMTSaveClick);
+    $('#toolbar-main-cancel').on('click', TOPPANO.onMTCancelClick);
 };
 
 // Control the rotation of compass button.
