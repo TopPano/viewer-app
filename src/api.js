@@ -9,12 +9,14 @@ var TOPPANO = TOPPANO || {};
 TOPPANO.initMap = function(map) {
 
     window.onload = function(){
+        // init threejs scene and camera
         TOPPANO.threeInit(map);
-        
+       
+        // request metadata, load all img files and build the first scene 
         TOPPANO.modelInit();
 
-
         TOPPANO.update();
+        
         // add fb-share
         if (TOPPANO.gv.isFBShare) {
             TOPPANO.addFBShare();
@@ -37,15 +39,16 @@ TOPPANO.gv = {
     isState: false,
     isFullScreen: false,
     headingOffset: 0,
-    transInfo: {},
     
     cursor:{
         state: "default",
         element: null
     },
 
-    file_sets: {},
-
+    nodes_meta: null,
+    current_node_ID:'',
+    isTransitioning: false,
+    
     // camera parameter
     cam: {
         camera: null,
@@ -74,6 +77,8 @@ TOPPANO.gv = {
             right:0
         }
     },
+
+
 
     // scene1 for showing to users
     scene1: {
@@ -129,9 +134,6 @@ TOPPANO.gv = {
         timer: null
     },
     urlHash: window.location.hash,
-    // tilePath: 'http://helios-api-0.cloudapp.net:6688',
-    tilePath: './images/',
-    //tilePath: 'http://localhost:3002',
     defaultMap: './image/tile/0-0.jpeg',
     apiUrl: 'http://52.11.28.251:3000/api',
     metaURL: 'http://52.11.28.251:3001'

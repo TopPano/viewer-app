@@ -398,7 +398,7 @@ TOPPANO.onDocumentDragOver = function(event) {
 };
 
 TOPPANO.onDocumentDragEnter = function() {
-    document.body.style.opacity = 0.5;
+   // document.body.style.opacity = 0.5;
 };
 
 TOPPANO.onDocumentDragLeave = function() {
