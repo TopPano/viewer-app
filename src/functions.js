@@ -16,7 +16,6 @@ TOPPANO.modelInit = function() {
                 'description': modelMeta['description'],
                 'address': modelMeta['address']
             };
-
             model['nodes'] = {};
             $.each(modelMeta['nodes'], function(nodeId, prop) {
                 model['nodes']['node-' + nodeId] = {
@@ -25,7 +24,7 @@ TOPPANO.modelInit = function() {
                     'heading': prop['heading'],
                     'enabled': prop['enabled']
                 };
-            });
+            });            
             TOPPANO.gv.nodes_meta = Object.assign({}, modelMeta.nodes);
             // load all imgs and build the first scene 
             TOPPANO.loadAllImg(TOPPANO.gv.nodes_meta).pipe(function () {console.log("start build scene!!");}).
@@ -37,10 +36,11 @@ TOPPANO.modelInit = function() {
                         TOPPANO.addWaterDrop(first_node_ID);
                      }
                  });
+        
+        return $.get(TOPPANO.gv.apiUrl + '/modelmeta/' + modelId + '/files');
+    }).then(function(files) {
 
-            return $.get(TOPPANO.gv.apiUrl + '/modelmeta/' + modelId + '/files');
-    }).done(function(files) {
-               
+     
         $.each(model['nodes'], function(nodeHtmlId, prop) {
             var nodeId = prop['nodeId'];
 
@@ -52,10 +52,20 @@ TOPPANO.modelInit = function() {
                 }
             });
         });
+
+        return $.get(TOPPANO.gv.apiUrl + '/modelmeta/' + modelId + '/snapshots');
+    }).then(function(snapshots) {
+        model['snapshot'] = {};
+        $.each(snapshots, function(index, prop) {
+            model['snapshot']['snapshot-' + prop['sid']] = prop;
+        });
+
         TOPPANO.createUI(model);
         // add listener
         TOPPANO.addListener();
-            })
+
+    });
+
 }
 
 TOPPANO.threeInit = function(map) {

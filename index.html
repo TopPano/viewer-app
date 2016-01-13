@@ -45,11 +45,6 @@
                 </div>
                 <div id="summary-body">
                     <textarea id="summary-description" type="text" data-mini="true" data-corners="false" value="" placeholder="Description" style="resize: none;"></textarea>
-                    <!--
-                    <input id="summary-contact" type="text" data-mini="true" data-corners="false" value="" placeholder="Contact">
-                    <input id="summary-telephone" type="tel" data-mini="true" data-corners="false" value="" placeholder="Telephone">
-                    <input id="summary-email" type="email" data-mini="true" data-corners="false" value="" placeholder="Email">
-                    -->
                     <input id="summary-address" type="text" data-mini="true" data-corners="false" value="" placeholder="Address">
                 </div>
             </div>
@@ -85,20 +80,7 @@
 
         <div id="snapshot-gallery" class="snapshot-gallery-closed">
             <div class="swiper-container swiper-container-snapshot">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                        <img src="images/00000000/2-3.jpeg"></img>
-                        <input type="text" data-mini="true" data-corners="false" disabled="disabled" value="A">
-                        <button class="ui-btn ui-icon-edit ui-btn-icon-notext"></button>
-                        <button class="ui-btn ui-icon-delete ui-btn-icon-notext"></button>
-                    </div>
-                    <div class="swiper-slide">
-                        <img src="images/00000000/2-3.jpeg"></img>
-                        <input type="text" data-mini="true" data-corners="false" disabled="disabled" value="A">
-                        <button class="ui-btn ui-icon-edit ui-btn-icon-notext"></button>
-                        <button class="ui-btn ui-icon-delete ui-btn-icon-notext"></button>
-                    </div>
-                </div>
+                <div class="swiper-wrapper"><!-- Add snapshots here dynamically. --></div>
                 <div class="swiper-button-prev swiper-button-prev-snapshot"></div>
                 <div class="swiper-button-next swiper-button-next-snapshot"></div>
                 <div class="swiper-scrollbar  swiper-scrollbar-snapshot"></div>
@@ -111,7 +93,6 @@
             <input type="text" data-corners="false" value="" placeholder="Give it a name!">
             <button id="snapshot-dialog-cancel" type="submit" class="ui-btn ui-btn-inline">Cancel</button>
             <button id="snapshot-dialog-confirm" type="submit" class="ui-btn ui-btn-inline" disabled="disabled">Confirm</button>
-        </div>
         </div>
 
         <div id="node-gallery" data-role="footer" class="swiper-container swiper-container-node">
@@ -128,7 +109,7 @@
         </div>
 
         <div id="toolbar-main">
-            <button id="toolbar-main-cancel" class="ui-btn ui-btn-inline">Cancel</button>
+            <button id="toolbar-main-cancel" class="ui-btn ui-btn-inline" disabled="disabled">Cancel</button>
             <button id="toolbar-main-mode-switch" class="ui-btn ui-btn-inline">Preview</button>
             <button id="toolbar-main-save" class="ui-btn ui-btn-inline" disabled="disabled">Save</button>
         </div>

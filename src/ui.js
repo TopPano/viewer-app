@@ -39,20 +39,38 @@ TOPPANO.createUI = function(model) {
 
     });
     */
-    TOPPANO.createSnapshotGallery();
+    TOPPANO.createSnapshotGallery('snapshot-gallery', model['snapshot']);
     TOPPANO.createToolbarMain();
     setInterval(function() {
         TOPPANO.rotateCompass(TOPPANO.gv.cam.lng);
     }, rotateInterval);
-
 };
 
 // Create a component for showing summary of the model.
 TOPPANO.createSummary = function(summary) {
-    TOPPANO.ui.modelState.addObjProp('summary', summary);
+    var id = 'summary';
 
-    $.each(summary, function(input, value) {
-        $('#summary-' + input).val(value).on('input', function(event) {
+    TOPPANO.ui.modelState.addObjProp(id, summary);
+    TOPPANO.createSummaryUI(id);
+    TOPPANO.fillSummaryContent(id, summary);
+    TOPPANO.addSummaryListener(id, summary);
+};
+
+// Create the UI of Summary.
+TOPPANO.createSummaryUI = function(id) {
+};
+
+// Fill the content of Summary.
+TOPPANO.fillSummaryContent = function(id, prop) {
+    $.each(prop, function(input, value) {
+        $('#' + id + '-' + input).val(value);
+    });
+};
+
+// Add Listeners of Summary.
+TOPPANO.addSummaryListener = function(id, prop) {
+    $.each(prop, function(input, value) {
+        $('#' + id + '-' + input).on('input', function(event) {
             TOPPANO.onSummaryInputChange(event, input);
         });
     });
@@ -76,8 +94,11 @@ TOPPANO.createFBShareBtn = function() {
 };
 
 // Create the Snapshot Gallery.
-TOPPANO.createSnapshotGallery = function() {
+TOPPANO.createSnapshotGallery = function(id, prop) {
     var galleryHeight = $(window).height() - $('#node-gallery').height();
+
+    $('#snapshot-gallery .swiper-container').height(galleryHeight);
+    $('#snapshot-gallery').height(galleryHeight);
 
     TOPPANO.ui.snapshotGalleryUI.swiper = new Swiper('.swiper-container-snapshot', {
         scrollbar: '.swiper-scrollbar-snapshot',
@@ -101,50 +122,71 @@ TOPPANO.createSnapshotGallery = function() {
     $('<div class="take-snapshot take-snapshot-long"></div>')
         .appendTo('#snapshot-gallery .swiper-container')
         .zIndex($('#snapshot-gallery .take-snapshot.take-snapshot-short').zIndex() + 1);
-
-    $('#snapshot-gallery .swiper-container').height(galleryHeight);
-    $('#snapshot-gallery').height(galleryHeight);
     TOPPANO.ui.snapshotGalleryUI.swiper.update(true);
     TOPPANO.adjustSnapshotGallery();
 
-    $('#snapshot-gallery .swiper-slide .ui-icon-delete').on('click', TOPPANO.onSGDeleteBtnClick);
-    $('#snapshot-gallery .swiper-slide .ui-icon-edit').on('click', TOPPANO.onSGEditBtnClick);
-    $('#snapshot-gallery .swiper-slide input[type=text]')
-            .on('focusout', TOPPANO.onSGNameInputFocusout)
-            .on('keyup', TOPPANO.onSGNameInputKeyup);
     $('#snapshot-gallery-switch').on('click', TOPPANO.onSGSwitchClick);
     $('#snapshot-gallery .take-snapshot').on('click', TOPPANO.onSGSnapshotBtnClick);
+
+    $.each(prop, function(snapshotId, value) {
+        TOPPANO.createSnapshot(snapshotId, value);
+        TOPPANO.ui.modelState.addObjProp(snapshotId, value);
+    });
 
     TOPPANO.createSnapshotDialog();
 
     TOPPANO.ui.snapshotGalleryUI.swiper.slideTo(0);
-    $('#snapshot-gallery-switch').trigger('click');
+    //$('#snapshot-gallery-switch').trigger('click');
 };
 
 // Create a snapshot.
 TOPPANO.createSnapshot = function(id, prop) {
-    var content =
-        '<div class="swiper-slide">' +
-        '  <img src="' + prop['url'] + '"></img>' +
-        '  <input type="text" data-mini="true" data-corners="false" disabled="disabled" value="' + prop['name'] + '">' +
+    TOPPANO.createSnapshotUI(id);
+    TOPPANO.fillSnapshotContent(id, prop);
+    TOPPANO.addSnapshotListener(id, prop);
+}
+
+// Create the UI of a snapshot.
+TOPPANO.createSnapshotUI = function(id) {
+    var ui =
+        '<div id="' + id + '" class="swiper-slide">' +
+        '  <img src=""></img>' +
+        '  <input type="text" data-mini="true" data-corners="false" disabled="disabled" value="">' +
         '  <button class="ui-btn ui-icon-edit ui-btn-icon-notext"></button>' +
         '  <button class="ui-btn ui-icon-delete ui-btn-icon-notext"></button>' +
         '</div>';
-    var snapshot = $(content);
-    var swiper = TOPPANO.ui.snapshotGalleryUI.swiper;
+    var swiper = TOPPANO.ui.snapshotGalleryUI.swiper
+    var snapshotShort = $('#snapshot-gallery .take-snapshot').not('.take-snapshot-long');
 
-    $('#snapshot-gallery .take-snapshot').not('.take-snapshot-long').before(snapshot);
-    $('.ui-icon-delete', snapshot).on('click', TOPPANO.onSGDeleteBtnClick);
-    $('.ui-icon-edit', snapshot).on('click', TOPPANO.onSGEditBtnClick);
-    $('input[type=text]', snapshot)
-            .on('focusout', TOPPANO.onSGNameInputFocusout)
-            .on('keyup', TOPPANO.onSGNameInputKeyup);
-
-    snapshot.enhanceWithin();
+    $(ui).insertBefore(snapshotShort).enhanceWithin();
     swiper.update(true);
     TOPPANO.adjustSnapshotGallery();
     swiper.slideTo(swiper.slides.length);
-}
+};
+
+// Fill the content of a snapshot.
+TOPPANO.fillSnapshotContent = function(id, prop) {
+    var snapshot = $('#' + id);
+
+    $('img', snapshot).attr('src', prop['url']);
+    $('input[type=text]', snapshot).val(prop['name']);
+};
+
+// Add listeners of a snapshot.
+TOPPANO.addSnapshotListener = function(id, prop) {
+    var snapshot = $('#' + id);
+
+    $('.ui-icon-delete', snapshot).on('click', function(event) {
+        TOPPANO.onSGDeleteBtnClick(event, id);
+    });
+    $('.ui-icon-edit', snapshot).on('click', TOPPANO.onSGEditBtnClick);
+    $('input[type=text]', snapshot)
+        .on('focusout', TOPPANO.onSGNameInputFocusout)
+        .on('keyup', TOPPANO.onSGNameInputKeyup)
+        .on('input', function(event) {
+            TOPPANO.onSGTagInputChange(event, id);
+        });
+};
 
 // Create the popup dialog for taking a snapshot.
 TOPPANO.createSnapshotDialog = function() {
@@ -153,22 +195,11 @@ TOPPANO.createSnapshotDialog = function() {
     $('#snapshot-dialog-confirm').on('click', TOPPANO.onSDConfirmBtnClick);
 }
 
-// Create A node gallery.
+// Create the Node Gallery.
 TOPPANO.createNodeGallery = function(nodes) {
-    var content = '';
-
     $.each(nodes, function(id, prop) {
-        content +=
-            '<div id="' + id + '" class="swiper-slide">' +
-            '  <img src="' + prop['url'] + '"></img>' +
-            '  <input type="text" data-mini="true" data-corners="false" disabled="disabled" value="' + prop['tag'] + '">' +
-            '  <button class="ui-btn ui-icon-edit ui-btn-icon-notext"></button>' +
-            '  <button class="ui-btn ui-icon-delete ui-btn-icon-notext"></button>' +
-            '</div>';
-        TOPPANO.ui.modelState.addObjProp(id, prop);
+        TOPPANO.createNode(id, prop);
     });
-    $('#node-gallery .swiper-wrapper').append(content);
-    $('#node-gallery').enhanceWithin();
 
     TOPPANO.ui.nodeGalleryUI.swiper = new Swiper('.swiper-container-node', {
         scrollbar: '.swiper-scrollbar-node',
@@ -184,24 +215,51 @@ TOPPANO.createNodeGallery = function(nodes) {
         scrollbarDraggable: true,
         grabCursor: false
     });
+};
 
-    $('#node-gallery .swiper-slide input[type=text]').on('focusout', TOPPANO.onNGTagInputFocusout);
-    $.each(nodes, function(id, prop) {
-        $('#' + id +' img').on('click', function(event) {
-            TOPPANO.onNGThumbnailClick(event, prop['nodeId']);
-        });
-        $('#' + id + ' .ui-icon-edit').on('click', function(event) {
-            TOPPANO.onNGEditBtnClick(event, prop['nodeId']);
-        });
-        $('#' + id + ' .ui-icon-delete').on('click', function(event) {
-            TOPPANO.onNGDeleteBtnClick(event, id);
-        });
-        $('#' + id + ' input[type=text]').on('keyup', function(event) {
-            TOPPANO.onNGTagInputKeyup(event, id);
-        }).on('input', function(event) {
-            TOPPANO.onNGTagInputChange(event, id);
-        });
+// Create a Node.
+TOPPANO.createNode = function(id, prop) {
+    TOPPANO.ui.modelState.addObjProp(id, prop);
+    TOPPANO.createNodeUI(id);
+    TOPPANO.fillNodeContent(id, prop);
+    TOPPANO.addNodeListener(id, prop);
+};
+
+// Create the UI of a Node.
+TOPPANO.createNodeUI = function(id) {
+    var ui =
+        '<div id="' + id + '" class="swiper-slide">' +
+        '  <img src=""></img>' +
+        '  <input type="text" data-mini="true" data-corners="false" disabled="disabled" value="">' +
+        '  <button class="ui-btn ui-icon-edit ui-btn-icon-notext"></button>' +
+        '  <button class="ui-btn ui-icon-delete ui-btn-icon-notext"></button>' +
+        '</div>';
+    $('#node-gallery .swiper-wrapper').append(ui);
+    $('#node-gallery').enhanceWithin();
+};
+
+// Fill the content of a Node.
+TOPPANO.fillNodeContent = function(id, prop) {
+    $('#' + id + ' img').attr('src', prop['url']);
+    $('#' + id + ' input[type=text]').val(prop['tag']);
+};
+
+// Add listeners of a Node.
+TOPPANO.addNodeListener = function(id, prop) {
+    $('#' + id +' img').on('click', function(event) {
+        TOPPANO.onNGThumbnailClick(event, prop['nodeId']);
     });
+    $('#' + id + ' .ui-icon-edit').on('click', function(event) {
+        TOPPANO.onNGEditBtnClick(event, prop['nodeId']);
+    });
+    $('#' + id + ' .ui-icon-delete').on('click', function(event) {
+        TOPPANO.onNGDeleteBtnClick(event, id);
+    });
+    $('#' + id + ' input[type=text]').on('keyup', function(event) {
+        TOPPANO.onNGTagInputKeyup(event, id);
+    }).on('input', function(event) {
+        TOPPANO.onNGTagInputChange(event, id);
+    }).on('focusout', TOPPANO.onNGTagInputFocusout);
 };
 
 TOPPANO.createWaterdrops = function(waterdrops) {
@@ -255,6 +313,7 @@ TOPPANO.createWaterdrop = function(id, prop) {
 // Create the main toolbar which contains save, cancel and mode switching buttons.
 TOPPANO.createToolbarMain = function() {
     $('#toolbar-main-save').on('click', TOPPANO.onTMSaveClick);
+    $('#toolbar-main-cancel').on('click', TOPPANO.onTMCancelClick);
 };
 
 // Control the rotation of compass button.
@@ -283,6 +342,11 @@ TOPPANO.initFB = function() {
     });
 }
 
+// Gnerate a temporary ID for a dynamically created object that is not synchronized with API server yet.
+TOPPANO.genTempId = function() {
+    return TOPPANO.ui.tmpId++;
+};
+
 // Global ui variables initialization.
 TOPPANO.ui = {
     // Summary block paramters
@@ -305,6 +369,7 @@ TOPPANO.ui = {
         snapshotWidth: 120,
         snapshotHeight: 80
     },
+    tmpId: 0,
     modelState: null
 };
 
