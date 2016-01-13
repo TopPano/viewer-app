@@ -136,7 +136,7 @@ TOPPANO.gv = {
     urlHash: window.location.hash,
     defaultMap: './image/tile/0-0.jpeg',
     apiUrl: 'http://52.11.28.251:3000/api',
-    metaURL: 'http://52.11.28.251:3001'
+    //metaURL: 'http://52.11.28.251:3001'
     //metaURL: 'http://helios-api-0.cloudapp.net:6687'
 };
 

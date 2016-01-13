@@ -9,6 +9,7 @@ TOPPANO.modelInit = function() {
 
     $.get(TOPPANO.gv.apiUrl + '/modelmeta/' + modelId).then(
         function(modelMeta) {
+            console.log(modelMeta);
             model['summary'] = {
                 'name': modelMeta['name'],
                 'presentedBy': modelMeta['presentedBy'],
@@ -27,7 +28,7 @@ TOPPANO.modelInit = function() {
             });
             TOPPANO.gv.nodes_meta = Object.assign({}, modelMeta.nodes);
             // load all imgs and build the first scene 
-            TOPPANO.loadAllImg(TOPPANO.gv.nodes_meta).pipe(function(){console.log("start build scene!!")}).
+            TOPPANO.loadAllImg(TOPPANO.gv.nodes_meta).pipe(function () {console.log("start build scene!!");}).
                  pipe(function(){
                      var first_node_ID = Object.keys(TOPPANO.gv.nodes_meta)[0];
                      TOPPANO.gv.current_node_ID = first_node_ID;
