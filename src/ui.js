@@ -39,7 +39,7 @@ TOPPANO.createUI = function(model) {
 
     });
     */
-    TOPPANO.createSnapshotGallery('snapshot-gallery', model['snapshot']);
+    TOPPANO.createSnapshotGallery('snapshot-gallery', model['snapshotList']);
     TOPPANO.createToolbarMain();
     setInterval(function() {
         TOPPANO.rotateCompass(TOPPANO.gv.cam.lng);
@@ -184,7 +184,7 @@ TOPPANO.addSnapshotListener = function(id, prop) {
         .on('focusout', TOPPANO.onSGNameInputFocusout)
         .on('keyup', TOPPANO.onSGNameInputKeyup)
         .on('input', function(event) {
-            TOPPANO.onSGTagInputChange(event, id);
+            TOPPANO.onSGNameInputChange(event, id);
         });
     
     //TODO: it is a fix of wrong fov
@@ -193,6 +193,21 @@ TOPPANO.addSnapshotListener = function(id, prop) {
     $('img', snapshot).on('click', function(){
         TOPPANO.onSGImgClick(prop);
     });
+};
+
+// Remove a snapshot.
+TOPPANO.removeSnapshot = function(id) {
+    $('#' + id).remove();
+    TOPPANO.ui.snapshotGalleryUI.swiper.update(true);
+    TOPPANO.adjustSnapshotGallery();
+};
+
+// Reset a new ID of a snapshot.
+TOPPANO.resetSnapshotId = function(oldId, newId, prop) {
+    // Fire all registed events before adding listeners.
+    $('#' + oldId).attr('id', newId).unbind()
+        .find('*').unbind();
+    TOPPANO.addSnapshotListener(newId, prop);
 };
 
 // Create the popup dialog for taking a snapshot.
@@ -206,6 +221,7 @@ TOPPANO.createSnapshotDialog = function() {
 TOPPANO.createNodeGallery = function(nodes) {
     $.each(nodes, function(id, prop) {
         TOPPANO.createNode(id, prop);
+        TOPPANO.ui.modelState.addObjProp(id, prop);
     });
 
     TOPPANO.ui.nodeGalleryUI.swiper = new Swiper('.swiper-container-node', {
@@ -226,7 +242,6 @@ TOPPANO.createNodeGallery = function(nodes) {
 
 // Create a Node.
 TOPPANO.createNode = function(id, prop) {
-    TOPPANO.ui.modelState.addObjProp(id, prop);
     TOPPANO.createNodeUI(id);
     TOPPANO.fillNodeContent(id, prop);
     TOPPANO.addNodeListener(id, prop);
@@ -247,17 +262,17 @@ TOPPANO.createNodeUI = function(id) {
 
 // Fill the content of a Node.
 TOPPANO.fillNodeContent = function(id, prop) {
-    $('#' + id + ' img').attr('src', prop['url']);
+    $('#' + id + ' img').attr('src', prop['thumbnailUrl']);
     $('#' + id + ' input[type=text]').val(prop['tag']);
 };
 
 // Add listeners of a Node.
 TOPPANO.addNodeListener = function(id, prop) {
     $('#' + id +' img').on('click', function(event) {
-        TOPPANO.onNGThumbnailClick(event, prop['nodeId']);
+        TOPPANO.onNGThumbnailClick(event, prop['sid']);
     });
     $('#' + id + ' .ui-icon-edit').on('click', function(event) {
-        TOPPANO.onNGEditBtnClick(event, prop['nodeId']);
+        TOPPANO.onNGEditBtnClick(event, prop['sid']);
     });
     $('#' + id + ' .ui-icon-delete').on('click', function(event) {
         TOPPANO.onNGDeleteBtnClick(event, id);
@@ -319,8 +334,8 @@ TOPPANO.createWaterdrop = function(id, prop) {
 
 // Create the main toolbar which contains save, cancel and mode switching buttons.
 TOPPANO.createToolbarMain = function() {
-    $('#toolbar-main-save').on('click', TOPPANO.onTMSaveClick);
-    $('#toolbar-main-cancel').on('click', TOPPANO.onTMCancelClick);
+    $('#toolbar-main-save').on('click', TOPPANO.onMTSaveClick);
+    $('#toolbar-main-cancel').on('click', TOPPANO.onMTCancelClick);
 };
 
 // Control the rotation of compass button.

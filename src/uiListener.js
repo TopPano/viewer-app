@@ -233,9 +233,7 @@ TOPPANO.onSGSnapshotBtnClick = function(event) {
 
 // Listener for clicking a Snapshot Gallery delete button.
 TOPPANO.onSGDeleteBtnClick = function(event, snapshotHtmlId) {
-    $('#' + snapshotHtmlId).remove();
-    TOPPANO.ui.snapshotGalleryUI.swiper.update(true);
-    TOPPANO.adjustSnapshotGallery();
+    TOPPANO.removeSnapshot(snapshotHtmlId);
     TOPPANO.ui.modelState.modifyState(
         snapshotHtmlId,
         'snapshot',
@@ -269,7 +267,7 @@ TOPPANO.onSGNameInputKeyup= function(event) {
 };
 
 // Listener for a Snapshot Gallery name input changes.
-TOPPANO.onSGTagInputChange= function(event, snapshotHtmlId) {
+TOPPANO.onSGNameInputChange= function(event, snapshotHtmlId) {
     var name = $('input[type=text]', '#' + snapshotHtmlId).val();
 
     TOPPANO.ui.modelState.modifyState(
@@ -318,12 +316,12 @@ TOPPANO.onSDInputKeyup = function(event) {
 };
 
 // Listener for clicking the Main Toolbar save button.
-TOPPANO.onTMSaveClick = function(event) {
+TOPPANO.onMTSaveClick = function(event) {
     TOPPANO.ui.modelState.commit();
 };
 
 // Listener for clicking the Main Toolbar cancel button.
-TOPPANO.onTMCancelClick = function(event) {
+TOPPANO.onMTCancelClick = function(event) {
     TOPPANO.ui.modelState.cancel();
 };
 
