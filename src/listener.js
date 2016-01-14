@@ -44,13 +44,22 @@ function set_on_holding_swiper_slide(){
                                                     var targetName = TOPPANO.ui.modelState.getObjProp(event.currentTarget.id)['tag'];
                                                     var waterdrop = $("#waterdrop-0").clone();
                                                     $('input[type=text]', waterdrop).val(targetName);
+                                                    
+                                                    var swiper_slide_ID = $(event.currentTarget).attr('id');
                                                     // generate waterdrop id
                                                     var length = TOPPANO.gv.objects.waterdropObj.length;
                                                     // TODO: id generating must be unique
-                                                    var id = event.currentTarget.id.toString()+"-waterdrop-"+length.toString();
+                                                    var current_node_ID = TOPPANO.gv.current_node_ID;
+                                                    var next_node_ID = swiper_slide_ID.replace('node-', '');
+                                                    
+                                                    var id = current_node_ID+'-to-'+next_node_ID+"-"+length.toString();
                                                     waterdrop.id = id;
                                                     $('#container').append(waterdrop);
-                                                    var waterdrop_obj = {"id": id, "obj": waterdrop, "position_3D": null, "node_ID":event.currentTarget.id.toString()};
+                                                    var waterdrop_obj = {'current_node_ID': current_node_ID,
+                                                                         'id': 'unsaved-'+id, 
+                                                                         'next_node_ID': next_node_ID,
+                                                                         'obj': waterdrop, 
+                                                                         'position_3D': null};
                                                     TOPPANO.gv.cursor.element = waterdrop_obj;
                                                 }
                                             });

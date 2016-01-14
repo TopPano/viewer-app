@@ -323,10 +323,8 @@ TOPPANO.changeScene = function(next_node_ID) {
         });
     //clear TOPPANO.gv.objects.waterdropObj    
     TOPPANO.gv.objects.waterdropObj.splice(0, TOPPANO.gv.objects.waterdropObj.length);
-    
     TOPPANO.gv.current_node_ID = next_node_ID;
 
-    //TOPPANO.loadTiles(true, nextInfo.name.nextID);
     TOPPANO.gv.isTransitioning = true;
     TOPPANO.buildScene(next_node_ID);
     TOPPANO.addWaterDrop(next_node_ID);
@@ -335,10 +333,20 @@ TOPPANO.changeScene = function(next_node_ID) {
 // it's a cooperation function for Su Jia-Kuan
 // it's a copy of TOPPANO.changeScene()
 TOPPANO.changeView = function(node_ID, lng, lat, fov) {
-    // request node metadata and update to TOPPANO.gv.transInfo
-    TOPPANO.requestMeta(node_ID);
-    TOPPANO.gv.headingOffset =  TOPPANO.gv.transInfo.heading;
-
+    // delete all waterdrops html obj in current scene
+    if (node_ID != TOPPANO.gv.current_node_ID){
+        TOPPANO.gv.objects.waterdropObj.forEach(
+            function(element, array, index){
+                $('#'+element.id).remove();
+            });
+        //clear TOPPANO.gv.objects.waterdropObj    
+        TOPPANO.gv.objects.waterdropObj.splice(0, TOPPANO.gv.objects.waterdropObj.length);
+        TOPPANO.gv.current_node_ID = node_ID;
+    
+        TOPPANO.gv.isTransitioning = true;
+        TOPPANO.buildScene(node_ID);
+        TOPPANO.addWaterDrop(node_ID);
+    }
     if(lng)
     {TOPPANO.gv.cam.lng = lng;}
 
@@ -347,14 +355,7 @@ TOPPANO.changeView = function(node_ID, lng, lat, fov) {
     
     if(fov)
     {TOPPANO.gv.cam.camera.fov = fov;}
-    
-    for (var i = TOPPANO.gv.objScene.children.length - 1 ; i >= 0 ; i--) {
-        TOPPANO.gv.objScene.remove(TOPPANO.gv.objScene.children[i]);
-    }
-
-    TOPPANO.loadTiles(true, node_ID);
-    TOPPANO.gv.interact.isAnimate = true;
-    TOPPANO.gv.scene1.panoID = node_ID;
+    TOPPANO.update();
 };
 
 
@@ -372,26 +373,32 @@ function latlng_to_dimen3(lat, lng){
 
 TOPPANO.addWaterDrop = function(node_ID){
     var node_meta = TOPPANO.gv.nodes_meta[node_ID];
-    node_meta.transitions.forEach(
-        function(transition, index, array)
-        {
-        // clone a waterdrop html obj                                                          
-        // push the waterdrop element in waterdropObj[]
-        var waterdrop = $("#waterdrop-0").clone();
-        var nextNodeTag = TOPPANO.gv.nodes_meta[transition.nextNodeId].tag;
-        $('input[type=text]', waterdrop).val(nextNodeTag);
-        waterdrop.css({position:'absolute', display:'block'});
-        var id = 'waterdrop-'+TOPPANO.gv.current_node_ID+'-to-'+transition.nextNodeId;
-        waterdrop.attr('id', id);
+    if(node_meta.transitions)
+    {   
+        node_meta.transitions.forEach(
+            function(transition, index, array)
+            {
+                // clone a waterdrop html obj                                                          
+                // push the waterdrop element in waterdropObj[]
+                var waterdrop = $("#waterdrop-0").clone();
+                var nextNodeTag = TOPPANO.gv.nodes_meta[transition.nextNodeId].tag;
+                $('input[type=text]', waterdrop).val(nextNodeTag);
+                waterdrop.css({position:'absolute', display:'block'});
+                var id = 'waterdrop-'+TOPPANO.gv.current_node_ID+'-to-'+transition.nextNodeId;
+                waterdrop.attr('id', id);
 
-        waterdrop.on('click', function(event){
-            TOPPANO.changeScene(transition.nextNodeId);
-        })
+                waterdrop.on('click', function(event){
+                    TOPPANO.changeScene(transition.nextNodeId);
+                })
 
-        $('#container').append(waterdrop);
-        var waterdrop_obj = {"id": id, "obj": waterdrop, "position_3D": latlng_to_dimen3(transition.lat, transition.lng), "next_node_ID":transition.nextNodeId, "current_node_ID":TOPPANO.gv.current_node_ID};  
-        TOPPANO.gv.objects.waterdropObj.push(waterdrop_obj);
-    });
+                $('#container').append(waterdrop);
+                var waterdrop_obj = {"id": id, "obj": waterdrop, 
+                                     "position_3D": latlng_to_dimen3(transition.lat, transition.lng), 
+                                     "next_node_ID":transition.nextNodeId, 
+                                     "current_node_ID":TOPPANO.gv.current_node_ID};  
+                TOPPANO.gv.objects.waterdropObj.push(waterdrop_obj);
+            });
+    }
 }
 
 
@@ -641,6 +648,7 @@ TOPPANO.update = function() {
     
     // whenever holding-waterdrop, the position of each waterdrop will be update.
     // so do not modify the waterdrop css position
+    
     if(TOPPANO.gv.cursor.state != "holding-waterdrop"){
     TOPPANO.gv.objects.waterdropObj.forEach(
                             function(element, index, array)
@@ -650,8 +658,9 @@ TOPPANO.update = function() {
                                 var x = (position_3D.x+1)*window.innerWidth/2;
                                 var y = -(position_3D.y-1)*window.innerHeight/2;
                                 if(position_3D.z<1){
-                                    element.obj.css({"left":x-35, "top":y-30});
+                                    element.obj.css({"left":x-35, "top":y-30, "display":"block"});
                                 }
+                                else{element.obj.css({"display":"none"});}
                             });
     }
 

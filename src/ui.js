@@ -186,6 +186,13 @@ TOPPANO.addSnapshotListener = function(id, prop) {
         .on('input', function(event) {
             TOPPANO.onSGTagInputChange(event, id);
         });
+    
+    //TODO: it is a fix of wrong fov
+    prop.fov = TOPPANO.gv.cam.camera.fov;
+    
+    $('img', snapshot).on('click', function(){
+        TOPPANO.onSGImgClick(prop);
+    });
 };
 
 // Create the popup dialog for taking a snapshot.
