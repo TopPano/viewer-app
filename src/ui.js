@@ -1,13 +1,10 @@
 // The enter function for creating all ui components.
 TOPPANO.createUI = function(model) {
-    var rotateInterval = Math.round(1000 / TOPPANO.ui.compassUI.frames);
-
     TOPPANO.ui.modelState = new TOPPANO.ModelState();
 
     TOPPANO.initFB();
     TOPPANO.createSummary(model['summary']);
     TOPPANO.createFullscreenBtn()
-    TOPPANO.createCompassBtn();
     TOPPANO.createFBShareBtn();
     /*
     TOPPANO.createWaterdrops({
@@ -40,9 +37,6 @@ TOPPANO.createUI = function(model) {
     */
     TOPPANO.createSnapshotGallery('snapshot-gallery', model['snapshotList']);
     TOPPANO.createToolbarMain();
-    setInterval(function() {
-        TOPPANO.rotateCompass(TOPPANO.gv.cam.lng);
-    }, rotateInterval);
 };
 
 // Create a component for showing summary of the model.
@@ -80,11 +74,6 @@ TOPPANO.addSummaryListener = function(id, prop) {
 // Create a button for enter/exit fullscreen mode.
 TOPPANO.createFullscreenBtn = function() {
     $('#fullscreen-btn').on('click', TOPPANO.onFullscreenBtnClick);
-};
-
-// Create a compass button for showing current longitude.
-TOPPANO.createCompassBtn = function() {
-    $('#compass-btn').on('click', TOPPANO.onCompassBtnClick);
 };
 
 // Create a Facebook share button.
@@ -270,19 +259,6 @@ TOPPANO.createToolbarMain = function() {
     $('#toolbar-main-cancel').on('click', TOPPANO.onMTCancelClick);
 };
 
-// Control the rotation of compass button.
-TOPPANO.rotateCompass = function(degrees) {
-    var rotate = 'rotate(' + degrees + 'deg)';
-
-    $('#compass-arrow-btn').css({
-        '-webkit-transform' : rotate,
-        '-moz-transform' : rotate,
-        '-ms-transform' : rotate,
-        '-o-transform' : rotate,
-        'transform' : rotate
-    });
-};
-
 // Initialize Facebook SDK.
 TOPPANO.initFB = function() {
     $.ajaxSetup({ cache: true });
@@ -306,10 +282,6 @@ TOPPANO.ui = {
     // Summary block paramters
     summaryUI: {
         animateDelay: 1500
-    },
-    // Compass Button parameters
-    compassUI: {
-        frames: 60
     },
     // Snapshot Gallery parameters
     snapshotGalleryUI: {

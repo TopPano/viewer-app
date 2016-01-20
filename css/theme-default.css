@@ -417,37 +417,6 @@ button[disabled],
 	outline-style: auto;
 }
 
-/* Compass icon */
-.ui-icon-compass {
-    background-color: transparent !important;
-    border: 0 !important;
-    width: 100px !important;
-    height: 100px !important;
-    overflow: hidden !important;
-}
-.ui-icon-compass:after {
-    background: transparent !important;
-}
-.ui-icon-compass .ui-icon-compass-body {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url("images/icons-svg/compass-body.svg");
-    background-size: contain;
-}
-.ui-icon-compass .ui-icon-compass-arrow {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url("images/icons-svg/compass-arrow.svg");
-    background-size: contain;
-}
-
-
 /* Waterdrop */
 .waterdrop {
     position: absolute;
