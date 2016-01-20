@@ -15,13 +15,6 @@ TOPPANO.modelInit = function() {
                 'description': modelMeta['description'],
                 'address': modelMeta['address']
             };
-            model['nodes'] = {};
-            $.each(modelMeta['nodes'], function(nodeId, prop) {
-                // 'nodes' of modelMeta will be altered by other functions, so we must copy them.
-                var _prop = $.extend(true, {}, prop);
-                model['nodes']['node-' + nodeId] = _prop;
-                delete _prop['files'];
-            });            
             model['snapshotList'] = {};
             $.each(modelMeta['snapshotList'], function(index, prop) {
                 model['snapshotList']['snapshot-' + prop['sid']] = prop;

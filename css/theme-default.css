@@ -447,59 +447,6 @@ button[disabled],
     background-size: contain;
 }
 
-/* Node Gallery */
-#node-gallery {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100% !important;
-    height: 150px; !important;
-}
-#node-gallery .swiper-slide {
-    text-align: center;
-    width: 300px;
-    height: 120px;
-    top: 15px;
-}
-#node-gallery .swiper-slide.waterdrop-hover {
-    border: 3px solid #b3b3ff;
-}
-#node-gallery .swiper-slide img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    filter: Alpha(Opacity=30);
-    opacity: .30;
-}
-#node-gallery .swiper-slide.has-waterdrop img {
-    filter: Alpha(Opacity=100);
-    opacity: 1;
-}
-#node-gallery .swiper-slide input[type=text] {
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-color: transparent;
-    text-align: center;
-}
-#node-gallery .swiper-slide button {
-    display: none;
-}
-#node-gallery .swiper-slide:hover button {
-    display: block;
-}
-#node-gallery .swiper-slide .ui-icon-edit {
-    position: absolute;
-    top: -5px;
-    right: 1px;
-}
-#node-gallery .swiper-slide .ui-icon-delete {
-    position: absolute;
-    bottom: -5px;
-    right: 1px;
-}
 
 /* Waterdrop */
 .waterdrop {
