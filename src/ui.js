@@ -1,20 +1,16 @@
 // The enter function for creating all ui components.
 TOPPANO.createUI = function(model) {
-    TOPPANO.ui.modelState = new TOPPANO.ModelState();
-
     TOPPANO.initFB();
     TOPPANO.createSummary(model['summary']);
     TOPPANO.createFullscreenBtn()
     TOPPANO.createFBShareBtn();
     TOPPANO.createSnapshotGallery('snapshot-gallery', model['snapshotList']);
-    TOPPANO.createToolbarMain();
 };
 
 // Create a component for showing summary of the model.
 TOPPANO.createSummary = function(summary) {
     var id = 'summary';
 
-    TOPPANO.ui.modelState.addObjProp(id, summary);
     TOPPANO.createSummaryUI(id);
     TOPPANO.fillSummaryContent(id, summary);
     TOPPANO.addSummaryListener(id, summary);
@@ -33,11 +29,6 @@ TOPPANO.fillSummaryContent = function(id, prop) {
 
 // Add Listeners of Summary.
 TOPPANO.addSummaryListener = function(id, prop) {
-    $.each(prop, function(input, value) {
-        $('#' + id + '-' + input).on('input', function(event) {
-            TOPPANO.onSummaryInputChange(event, input);
-        });
-    });
     $('#summary-main .ui-collapsible-heading-toggle').on('click', TOPPANO.onSummaryMainClick);
     $('#summary-btn').on('click', TOPPANO.onSummaryBtnClick);
 };
@@ -128,12 +119,6 @@ TOPPANO.addSnapshotListener = function(id, prop) {
     });
 };
 
-// Create the main toolbar which contains save, cancel and mode switching buttons.
-TOPPANO.createToolbarMain = function() {
-    $('#toolbar-main-save').on('click', TOPPANO.onMTSaveClick);
-    $('#toolbar-main-cancel').on('click', TOPPANO.onMTCancelClick);
-};
-
 // Initialize Facebook SDK.
 TOPPANO.initFB = function() {
     $.ajaxSetup({ cache: true });
@@ -147,11 +132,6 @@ TOPPANO.initFB = function() {
     });
 }
 
-// Gnerate a temporary ID for a dynamically created object that is not synchronized with API server yet.
-TOPPANO.genTempId = function() {
-    return TOPPANO.ui.tmpId++;
-};
-
 // Global ui variables initialization.
 TOPPANO.ui = {
     // Summary block paramters
@@ -162,7 +142,5 @@ TOPPANO.ui = {
     snapshotGalleryUI: {
         swiper: null
     },
-    tmpId: 0,
-    modelState: null
 };
 

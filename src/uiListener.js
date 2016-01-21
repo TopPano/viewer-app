@@ -20,19 +20,6 @@ TOPPANO.onSummaryMainClick = function(event) {
     $('.ui-collapsible-content', $('#summary-main')).slideToggle(TOPPANO.ui.summaryUI.animateDelay);
 };
 
-// Listener for value of a Summary input changes.
-TOPPANO.onSummaryInputChange = function(event, input) {
-    var prop = {};
-
-    prop[input] = $('#summary-' + input).val();
-    TOPPANO.ui.modelState.modifyState(
-        'summary',
-        'summary',
-        TOPPANO.ui.modelState.Action.UPDATE,
-        prop
-    );
-};
-
 // Listener for clicking fullscreen button.
 TOPPANO.onFullscreenBtnClick = function(event) {
     if($.fullscreen.isFullScreen()) {
@@ -75,16 +62,6 @@ TOPPANO.onSGSwitchClick = function(event) {
     $(this).toggleClass('ui-icon-arrow-r').toggleClass('ui-icon-arrow-l');
     $('#snapshot-gallery').toggleClass('snapshot-gallery-closed')
             .toggleClass('snapshot-gallery-opened')
-};
-
-// Listener for clicking the Main Toolbar save button.
-TOPPANO.onMTSaveClick = function(event) {
-    TOPPANO.ui.modelState.commit();
-};
-
-// Listener for clicking the Main Toolbar cancel button.
-TOPPANO.onMTCancelClick = function(event) {
-    TOPPANO.ui.modelState.cancel();
 };
 
 // Transit current node to another node.
