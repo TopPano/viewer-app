@@ -76,23 +76,11 @@ TOPPANO.createSnapshotGallery = function(id, prop) {
         resistanceRatio: 0
     });
 
-    TOPPANO.ui.snapshotGalleryUI.swiper
-        .appendSlide('<div class="swiper-slide take-snapshot take-snapshot-short"></div>');
-    $('<div class="take-snapshot take-snapshot-long"></div>')
-        .appendTo('#snapshot-gallery .swiper-container')
-        .zIndex($('#snapshot-gallery .take-snapshot.take-snapshot-short').zIndex() + 1);
-    TOPPANO.ui.snapshotGalleryUI.swiper.update(true);
-    TOPPANO.adjustSnapshotGallery();
-
     $('#snapshot-gallery-switch').on('click', TOPPANO.onSGSwitchClick);
-    $('#snapshot-gallery .take-snapshot').on('click', TOPPANO.onSGSnapshotBtnClick);
 
     $.each(prop, function(snapshotId, value) {
         TOPPANO.createSnapshot(snapshotId, value);
-        TOPPANO.ui.modelState.addObjProp(snapshotId, value);
     });
-
-    TOPPANO.createSnapshotDialog();
 
     TOPPANO.ui.snapshotGalleryUI.swiper.slideTo(0);
     //$('#snapshot-gallery-switch').trigger('click');
@@ -111,15 +99,12 @@ TOPPANO.createSnapshotUI = function(id) {
         '<div id="' + id + '" class="swiper-slide">' +
         '  <img src=""></img>' +
         '  <input type="text" data-mini="true" data-corners="false" disabled="disabled" value="">' +
-        '  <button class="ui-btn ui-icon-edit ui-btn-icon-notext"></button>' +
-        '  <button class="ui-btn ui-icon-delete ui-btn-icon-notext"></button>' +
         '</div>';
     var swiper = TOPPANO.ui.snapshotGalleryUI.swiper
-    var snapshotShort = $('#snapshot-gallery .take-snapshot').not('.take-snapshot-long');
 
-    $(ui).insertBefore(snapshotShort).enhanceWithin();
+    swiper.appendSlide(ui);
+    $('#snapshot-gallery').enhanceWithin();
     swiper.update(true);
-    TOPPANO.adjustSnapshotGallery();
     swiper.slideTo(swiper.slides.length);
 };
 
@@ -135,45 +120,12 @@ TOPPANO.fillSnapshotContent = function(id, prop) {
 TOPPANO.addSnapshotListener = function(id, prop) {
     var snapshot = $('#' + id);
 
-    $('.ui-icon-delete', snapshot).on('click', function(event) {
-        TOPPANO.onSGDeleteBtnClick(event, id);
-    });
-    $('.ui-icon-edit', snapshot).on('click', TOPPANO.onSGEditBtnClick);
-    $('input[type=text]', snapshot)
-        .on('focusout', TOPPANO.onSGNameInputFocusout)
-        .on('keyup', TOPPANO.onSGNameInputKeyup)
-        .on('input', function(event) {
-            TOPPANO.onSGNameInputChange(event, id);
-        });
-    
     //TODO: it is a fix of wrong fov
     prop.fov = TOPPANO.gv.cam.camera.fov;
     
     $('img', snapshot).on('click', function(){
         TOPPANO.onSGImgClick(prop);
     });
-};
-
-// Remove a snapshot.
-TOPPANO.removeSnapshot = function(id) {
-    $('#' + id).remove();
-    TOPPANO.ui.snapshotGalleryUI.swiper.update(true);
-    TOPPANO.adjustSnapshotGallery();
-};
-
-// Reset a new ID of a snapshot.
-TOPPANO.resetSnapshotId = function(oldId, newId, prop) {
-    // Fire all registed events before adding listeners.
-    $('#' + oldId).attr('id', newId).unbind()
-        .find('*').unbind();
-    TOPPANO.addSnapshotListener(newId, prop);
-};
-
-// Create the popup dialog for taking a snapshot.
-TOPPANO.createSnapshotDialog = function() {
-    $('#snapshot-dialog-cancel').on('click', TOPPANO.onSDCancelBtnClick);
-    $('#snapshot-dialog input[type=text]').on('keyup', TOPPANO.onSDInputKeyup);
-    $('#snapshot-dialog-confirm').on('click', TOPPANO.onSDConfirmBtnClick);
 };
 
 // Create the main toolbar which contains save, cancel and mode switching buttons.
@@ -208,10 +160,7 @@ TOPPANO.ui = {
     },
     // Snapshot Gallery parameters
     snapshotGalleryUI: {
-        swiper: null,
-        currentSnapshot: {},
-        snapshotWidth: 120,
-        snapshotHeight: 80
+        swiper: null
     },
     tmpId: 0,
     modelState: null

@@ -463,27 +463,6 @@ button[disabled],
 #snapshot-gallery .swiper-button-next {
     top: 95%;
 }
-#snapshot-gallery .take-snapshot {
-    background: url(../images/snapshot.png);
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-color: yellow;
-    width: 120px;
-    height: 80px;
-    left: 15px;
-}
-#snapshot-gallery .take-snapshot.take-snapshot-short {
-    // Same as above
-}
-#snapshot-gallery .take-snapshot.take-snapshot-empty {
-    background: none;
-    background-color: none;
-}
-#snapshot-gallery .take-snapshot.take-snapshot-long {
-    position: absolute;
-    bottom: 0;
-}
 #snapshot-gallery .swiper-slide {
     width: 120px;
     height: 80px;
@@ -502,32 +481,6 @@ button[disabled],
     left: 0;
     background-color: transparent;
     text-align: center;
-}
-#snapshot-gallery .swiper-slide button {
-    display: none;
-}
-#snapshot-gallery .swiper-slide:hover button {
-    display: block;
-}
-#snapshot-gallery .swiper-slide .ui-icon-edit {
-    position: absolute;
-    top: -5px;
-    right: 1px;
-}
-#snapshot-gallery .swiper-slide .ui-icon-delete {
-    position: absolute;
-    bottom: -5px;
-    right: 1px;
-}
-
-/* Snapshot Dialog */
-#snapshot-dialog-confirm:disabled {
-    color: #ffffff;
-    background-color: #4f4f4f;
-}
-#snapshot-dialog-confirm {
-    color: black;
-    background-color: yellow;
 }
 
 /* Main Toolbar (save/cancel/mode-switch) */
