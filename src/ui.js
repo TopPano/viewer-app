@@ -6,35 +6,6 @@ TOPPANO.createUI = function(model) {
     TOPPANO.createSummary(model['summary']);
     TOPPANO.createFullscreenBtn()
     TOPPANO.createFBShareBtn();
-    /*
-    TOPPANO.createWaterdrops({
-        'waterdrop-00000000-00000002': {
-            'fromNodeId': '00000000',
-            'toNodeId': '00000002',
-            'lng': 150,
-            'lat': 50
-        },
-        'waterdrop-00000000-00000003': {
-            'fromNodeId': '00000000',
-            'toNodeId': '00000003',
-            'lng': 150,
-            'lat': 150
-        },
-        'waterdrop-00000001-00000000': {
-            'fromNodeId': '00000001',
-            'toNodeId': '00000000',
-            'lng': 200,
-            'lat': 200
-        },
-        'waterdrop-00000003-00000002': {
-            'fromNodeId': '00000003',
-            'toNodeId': '00000002',
-            'lng': 250,
-            'lat': 200
-        }
-
-    });
-    */
     TOPPANO.createSnapshotGallery('snapshot-gallery', model['snapshotList']);
     TOPPANO.createToolbarMain();
 };
@@ -203,54 +174,6 @@ TOPPANO.createSnapshotDialog = function() {
     $('#snapshot-dialog-cancel').on('click', TOPPANO.onSDCancelBtnClick);
     $('#snapshot-dialog input[type=text]').on('keyup', TOPPANO.onSDInputKeyup);
     $('#snapshot-dialog-confirm').on('click', TOPPANO.onSDConfirmBtnClick);
-};
-
-TOPPANO.createWaterdrops = function(waterdrops) {
-    $.each(waterdrops, function(id, prop) {
-        TOPPANO.createWaterdrop(id, prop);
-    });
-};
-
-TOPPANO.createWaterdrop = function(id, prop) {
-    var toNodeHtmlId = 'node-' + prop['toNodeId'];
-    var tag = TOPPANO.ui.modelState.getObjProp(toNodeHtmlId)['tag'];
-    var content =
-        '<div id="' + id + '" class="waterdrop">' +
-        '  <button class="ui-btn ui-icon-action ui-btn-icon-notext"></button>' +
-        '  <button class="ui-btn ui-icon-delete ui-btn-icon-notext"></button>' +
-        '  <input type="text" data-mini="true" data-corners="false" disabled="disabled" value="' + tag + '">' +
-        '</div>';
-
-    $(content).appendTo('.ui-page').enhanceWithin().css({
-        'top': prop['lng'],
-        'left': prop['lat']
-    });
-
-    $('#' + id).draggable({
-        containment: '#container',
-        addClasses: false,
-        opacity: 0.75,
-        stack: '#node-gallery'
-    });
-
-    $('#' + id).hover(function(event) {
-        TOPPANO.onWaterdropHoverIn(event, toNodeHtmlId);
-    }, function(event) {
-        TOPPANO.onWaterdropHoverOut(event, toNodeHtmlId);
-    });
-    $('#' + id + ' .ui-icon-delete').on('click', function(event) {
-        TOPPANO.onWDDeleteBtnClick(event, id);
-    });
-    $('#' + id + ' .ui-icon-action').on('click', function(event) {
-        TOPPANO.onWDGotoBtnClick(event, prop['toNodeId']);
-    });
-
-    TOPPANO.ui.modelState.addObjProp(id, prop);
-    if(TOPPANO.gv.scene1.panoID == prop['fromNodeId']) {
-        $('#' + toNodeHtmlId).addClass('has-waterdrop');
-    } else {
-        $('#' + id).hide();
-    }
 };
 
 // Create the main toolbar which contains save, cancel and mode switching buttons.

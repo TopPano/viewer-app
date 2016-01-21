@@ -66,46 +66,6 @@ TOPPANO.onFBShareBtnClick = function(event) {
     });
 };
 
-// Listener when mouse hovering in a waterdrop
-TOPPANO.onWaterdropHoverIn = function(event, toNodeHtmlId) {
-    $('#node-gallery .swiper-slide').each(function(index, slide) {
-        if(slide.id === toNodeHtmlId) {
-            TOPPANO.ui.nodeGalleryUI.swiper.slideTo(index);
-            return false;
-        }
-    });
-
-    $('#' + toNodeHtmlId).addClass('waterdrop-hover');
-};
-
-// Listener when mouse hovering out a waterdrop
-TOPPANO.onWaterdropHoverOut = function(event, toNodeHtmlId) {
-    $('#' + toNodeHtmlId).removeClass('waterdrop-hover');
-};
-
-// Listener for clicking a waterdrop delete button.
-TOPPANO.onWDDeleteBtnClick = function(event, waterdropHtmlId) {
-    var toNodeId = TOPPANO.ui.modelState.getObjProp(waterdropHtmlId)['toNodeId'];
-    var currentNodeId = TOPPANO.gv.scene1.panoID;
-    var transitions = TOPPANO.ui.modelState.getObjProp('node-' + currentNodeId)['transitions'];
-
-    $('#' + waterdropHtmlId).trigger('mouseleave').remove();
-    $('#node-' + toNodeId).removeClass('has-waterdrop');
-    TOPPANO.ui.modelState.delObjProp(waterdropHtmlId);
-    for(var index = 0;index < transitions.length;index++) {
-        if(transitions[index] === toNodeId) {
-            transitions.splice(index, 1);
-            break;
-        }
-    }
-};
-
-// Listener for clicking a waterdrop goto button.
-TOPPANO.onWDGotoBtnClick = function(event, nodeId) {
-    $(event.target).parent().trigger('mouseleave');
-    TOPPANO.transitNode(nodeId);
-};
-
 TOPPANO.onSGImgClick = function(prop){
     TOPPANO.changeView(prop.nodeId, prop.lng, prop.lat, prop.fov);
 };
@@ -258,22 +218,6 @@ TOPPANO.adjustSnapshotGallery = function(event) {
 
 // Transit current node to another node.
 TOPPANO.transitNode = function(targetNodeId, lng, lat, fov) {
-    /*
-    var currentNodeId = TOPPANO.gv.scene1.panoID;
-    var currentTransitions = TOPPANO.ui.modelState.getObjProp('node-' + currentNodeId)['transitions'];
-    var targetTransitions = TOPPANO.ui.modelState.getObjProp('node-' + targetNodeId)['transitions'];
-
-    $.each(currentTransitions, function(index, transition) {
-        $('#waterdrop-' + currentNodeId + '-' + transition).hide();
-        $('#node-' + transition).removeClass('has-waterdrop');
-    });
-    */
     TOPPANO.changeView(targetNodeId, lng, lat, fov);
-    /*
-    $.each(targetTransitions, function(index, transition) {
-        $('#waterdrop-' + targetNodeId + '-' + transition).show();
-        $('#node-' + transition).addClass('has-waterdrop');
-    });
-    */
 };
 
