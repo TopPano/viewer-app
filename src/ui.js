@@ -124,8 +124,8 @@ TOPPANO.initFB = function() {
     $.ajaxSetup({ cache: true });
     $.getScript('//connect.facebook.net/en_US/sdk.js', function(){
         FB.init({
-            appId: '226223091041998',
-            version: 'v2.5'
+            appId: TOPPANO.ui.fbSdkParams.appId,
+            version: TOPPANO.ui.fbSdkParams.version
         });
         // Enable Facebook share button when sdk is loaded completely.
         $('#fb-share-btn').removeAttr('disabled');
@@ -142,5 +142,13 @@ TOPPANO.ui = {
     snapshotGalleryUI: {
         swiper: null
     },
+    // Facebook SDK parameters
+    fbSdkParams: {
+        appId: '226223091041998',
+        version: 'v2.5'
+    },
+    googleApiParams: {
+        shortUrlKey: 'AIzaSyDh1jky-M2BSe5Dnq2CdZiqadfB7t0Qan4'
+    }
 };
 

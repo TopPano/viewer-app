@@ -17,11 +17,6 @@ TOPPANO.initMap = function(map) {
 
         TOPPANO.update();
         
-        // add fb-share
-        if (TOPPANO.gv.isFBShare) {
-            TOPPANO.addFBShare();
-        }
-
         // draw snapshot canvas
         TOPPANO.snapshotCanvasInit();
     };
