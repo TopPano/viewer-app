@@ -150,7 +150,13 @@ function set_on_rotating_scene(){
                                 TOPPANO.gv.interact.onPointerDownPointerY = event.clientY;
                                 TOPPANO.gv.interact.onPointerDownLon = TOPPANO.gv.cam.lng;
                                 TOPPANO.gv.interact.onPointerDownLat = TOPPANO.gv.cam.lat;
+                                TOPPANO.gv.cursor.position_array.splice(0, TOPPANO.gv.cursor.position_array.length);
                                 TOPPANO.gv.cursor.state = 'mouse-down-container';
+
+                                while(TOPPANO.gv.cursor.slide_func_array.length>0){
+                                    clearTimeout(TOPPANO.gv.cursor.slide_func_array.shift());
+                                }
+
                             }
                       });
 
@@ -164,8 +170,11 @@ function set_on_rotating_scene(){
                                 var deltaX = TOPPANO.gv.interact.onPointerDownPointerX - event.clientX,
                                     deltaY = event.clientY - TOPPANO.gv.interact.onPointerDownPointerY;
 
-                                    TOPPANO.gv.cam.lng = deltaX * 0.1 + TOPPANO.gv.interact.onPointerDownLon;
-                                    TOPPANO.gv.cam.lat = deltaY * 0.1 + TOPPANO.gv.interact.onPointerDownLat;
+                                TOPPANO.gv.cam.lng = deltaX * 0.1 + TOPPANO.gv.interact.onPointerDownLon;
+                                TOPPANO.gv.cam.lat = deltaY * 0.1 + TOPPANO.gv.interact.onPointerDownLat;
+                                
+                                var position = {'clientX': event.clientX, 'clientY': event.clientY};
+                                TOPPANO.gv.cursor.position_array.push(position);
                             }
     });
     
@@ -174,9 +183,25 @@ function set_on_rotating_scene(){
                            if(TOPPANO.gv.cursor.state == "rotating-scene"){
                                 TOPPANO.gv.cursor.state = "default";
                                 TOPPANO.gv.cursor.element = null;
-                            }
+                                
+                                var last_position = TOPPANO.gv.cursor.position_array.pop();
+                                    last_sec_position = TOPPANO.gv.cursor.position_array.pop();
+                                
+                                var deltaX = (last_position.clientX+last_sec_position.clientX)/2 - event.clientX ,
+                                    deltaY = event.clientY - (last_position.clientY+last_sec_position.clientY)/2;
+                              
+                                var count, speed;
+                                for (count=0; count<200; count++){    
+                                    var id = setTimeout(function(count, id){
+                                        TOPPANO.gv.cam.lng += deltaX * (200-count)/10000;
+                                        TOPPANO.gv.cam.lat += deltaY * (200-count)/10000;
+                                    },(1+count)*5, count, id);
+                                    TOPPANO.gv.cursor.slide_func_array.push(id);
+                                }
+                           }
                        });
 }
+
 
 function set_on_hovering_scene(){
     // hovering-on-scene

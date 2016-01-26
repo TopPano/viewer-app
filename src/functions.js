@@ -4,10 +4,10 @@
  */
 
 TOPPANO.modelInit = function() {
-    var modelId = TOPPANO.gv.modelID = getUrlParam('model');
+    var modelId = TOPPANO.gv.modelID = getUrlParam('post');
     var model = {};
 
-    $.get(TOPPANO.gv.apiUrl + '/modelmeta/' + modelId).then(
+    $.get(TOPPANO.gv.apiUrl + '/posts/' + modelId).then(
         function(modelMeta) {
             model['summary'] = {
                 'name': modelMeta['name'],

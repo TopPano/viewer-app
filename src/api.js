@@ -37,7 +37,9 @@ TOPPANO.gv = {
     
     cursor:{
         state: "default",
-        element: null
+        element: null,
+        position_array: [],
+        slide_func_array:[]
     },
 
     nodes_meta: null,
@@ -130,7 +132,7 @@ TOPPANO.gv = {
     },
     urlHash: window.location.hash,
     defaultMap: './image/tile/0-0.jpeg',
-    apiUrl: 'http://52.11.28.251:3000/api',
+    apiUrl: 'http://my.verpix.me:3000/api',
    };
 
 
