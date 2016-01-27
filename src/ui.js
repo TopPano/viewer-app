@@ -5,7 +5,6 @@ TOPPANO.createUI = function(model) {
     TOPPANO.createFullscreenBtn()
     TOPPANO.createFBShareBtn();
     TOPPANO.createEmbeddedLink();
-    TOPPANO.createSnapshotGallery('snapshot-gallery', model['snapshotList']);
 };
 
 // Create a component for showing summary of the model.
@@ -51,82 +50,6 @@ TOPPANO.createEmbeddedLink = function() {
     $('#embedded-link-height').on('input', TOPPANO.onEmbeddedLinkChange);
 };
 
-// Create the Snapshot Gallery.
-TOPPANO.createSnapshotGallery = function(id, prop) {
-    var galleryHeight = $(window).height();
-
-    $('#snapshot-gallery .swiper-container').height(galleryHeight);
-    $('#snapshot-gallery').height(galleryHeight);
-
-    TOPPANO.ui.snapshotGalleryUI.swiper = new Swiper('.swiper-container-snapshot', {
-        scrollbar: '.swiper-scrollbar-snapshot',
-        nextButton: '.swiper-button-next-snapshot',
-        prevButton: '.swiper-button-prev-snapshot',
-        direction: 'vertical',
-        scrollbarHide: true,
-        slidesPerView: 'auto',
-        keyboardControl: true,
-        mousewheelControl: true,
-        speed: 400,
-        spaceBetween: 5,
-        setWarpperSize: true,
-        scrollbarDraggable: true,
-        grabCursor: false,
-        resistanceRatio: 0
-    });
-
-    $('#snapshot-gallery-switch').on('click', TOPPANO.onSGSwitchClick);
-
-    $.each(prop, function(snapshotId, value) {
-        TOPPANO.createSnapshot(snapshotId, value);
-    });
-
-    TOPPANO.ui.snapshotGalleryUI.swiper.slideTo(0);
-    //$('#snapshot-gallery-switch').trigger('click');
-};
-
-// Create a snapshot.
-TOPPANO.createSnapshot = function(id, prop) {
-    TOPPANO.createSnapshotUI(id);
-    TOPPANO.fillSnapshotContent(id, prop);
-    TOPPANO.addSnapshotListener(id, prop);
-}
-
-// Create the UI of a snapshot.
-TOPPANO.createSnapshotUI = function(id) {
-    var ui =
-        '<div id="' + id + '" class="swiper-slide">' +
-        '  <img src=""></img>' +
-        '  <input type="text" data-mini="true" data-corners="false" disabled="disabled" value="">' +
-        '</div>';
-    var swiper = TOPPANO.ui.snapshotGalleryUI.swiper
-
-    swiper.appendSlide(ui);
-    $('#snapshot-gallery').enhanceWithin();
-    swiper.update(true);
-    swiper.slideTo(swiper.slides.length);
-};
-
-// Fill the content of a snapshot.
-TOPPANO.fillSnapshotContent = function(id, prop) {
-    var snapshot = $('#' + id);
-
-    $('img', snapshot).attr('src', prop['url']);
-    $('input[type=text]', snapshot).val(prop['name']);
-};
-
-// Add listeners of a snapshot.
-TOPPANO.addSnapshotListener = function(id, prop) {
-    var snapshot = $('#' + id);
-
-    //TODO: it is a fix of wrong fov
-    prop.fov = TOPPANO.gv.cam.camera.fov;
-    
-    $('img', snapshot).on('click', function(){
-        TOPPANO.onSGImgClick(prop);
-    });
-};
-
 // Initialize Facebook SDK.
 TOPPANO.initFB = function() {
     $.ajaxSetup({ cache: true });
@@ -145,10 +68,6 @@ TOPPANO.ui = {
     // Summary block paramters
     summaryUI: {
         animateDelay: 1500
-    },
-    // Snapshot Gallery parameters
-    snapshotGalleryUI: {
-        swiper: null
     },
     // Facebook SDK parameters
     fbSdkParams: {

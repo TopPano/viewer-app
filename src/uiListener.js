@@ -119,13 +119,6 @@ TOPPANO.onSGImgClick = function(prop) {
     TOPPANO.transitNode(prop.nodeId, prop.lng, prop.lat, prop.fov);
 };
 
-// Listener for clicking the snapshot gallery switch button.
-TOPPANO.onSGSwitchClick = function(event) {
-    $(this).toggleClass('ui-icon-arrow-r').toggleClass('ui-icon-arrow-l');
-    $('#snapshot-gallery').toggleClass('snapshot-gallery-closed')
-            .toggleClass('snapshot-gallery-opened')
-};
-
 // Transit current node to another node.
 TOPPANO.transitNode = function(targetNodeId, lng, lat, fov) {
     TOPPANO.changeView(targetNodeId, lng, lat, fov);
