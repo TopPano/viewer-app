@@ -101,6 +101,20 @@ TOPPANO.onFBShareBtnClick = function(event) {
     }, { scope: 'publish_actions' });
 };
 
+// Listener for embedded link width or height field changes.
+TOPPANO.onEmbeddedLinkChange = function(event) {
+    var width = parseInt($('#embedded-link-width').val());
+    var height = parseInt($('#embedded-link-height').val());
+    var minWidth = TOPPANO.ui.embeddedLinkUI.minWidth;
+    var minHeight = TOPPANO.ui.embeddedLinkUI.minHeight;
+    var currentUrl = window.location.href;
+    var link =
+        '<iframe width="' + ((isNaN(width) || width < minWidth) ? minWidth : width) +
+        '" height="' + ((isNaN(height) || height < minHeight) ? minHeight : height) +
+        '" src="' + currentUrl +
+        '" style="border: none" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
+    $('#embedded-link-output').val(link);
+};
 TOPPANO.onSGImgClick = function(prop) {
     TOPPANO.transitNode(prop.nodeId, prop.lng, prop.lat, prop.fov);
 };

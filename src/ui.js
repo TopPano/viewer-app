@@ -4,6 +4,7 @@ TOPPANO.createUI = function(model) {
     TOPPANO.createSummary(model['summary']);
     TOPPANO.createFullscreenBtn()
     TOPPANO.createFBShareBtn();
+    TOPPANO.createEmbeddedLink();
     TOPPANO.createSnapshotGallery('snapshot-gallery', model['snapshotList']);
 };
 
@@ -41,6 +42,13 @@ TOPPANO.createFullscreenBtn = function() {
 // Create a Facebook share button.
 TOPPANO.createFBShareBtn = function() {
     $('#fb-share-btn').on('click', TOPPANO.onFBShareBtnClick);
+};
+
+// Create a block for sharing embedded link.
+TOPPANO.createEmbeddedLink = function() {
+    TOPPANO.onEmbeddedLinkChange();
+    $('#embedded-link-width').on('input', TOPPANO.onEmbeddedLinkChange);
+    $('#embedded-link-height').on('input', TOPPANO.onEmbeddedLinkChange);
 };
 
 // Create the Snapshot Gallery.
@@ -147,8 +155,14 @@ TOPPANO.ui = {
         appId: '226223091041998',
         version: 'v2.5'
     },
+    // Google API parameters
     googleApiParams: {
         shortUrlKey: 'AIzaSyDh1jky-M2BSe5Dnq2CdZiqadfB7t0Qan4'
+    },
+    // Embedded Link parameters
+    embeddedLinkUI: {
+        minWidth: 240,
+        minHeight: 160
     }
 };
 
