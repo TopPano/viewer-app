@@ -1,12 +1,151 @@
-body {
-	background-color: #000000;
-	margin: 0px;
-	overflow: hidden;
+html {
+    font-family: Helvetica;
+    font-size: 100%; /* 16px as 1rem */
 }
 
-#container {
-/*	height: 700px;
-	width: 500px;
-	position: absolute;
-	left: 100px;*/
+body {
+    font-size: 1em;
+    color: white;
+    background-color: #000000;
+    background-color: white;
+    margin: 0px;
+    overflow: hidden;
 }
+
+/**
+  * Styles for sidebar.
+  */
+/* Main styles for sidebar */
+.sidebar {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    height: 210px;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+/* Only sidebar button is shown. */
+.sidebar-collapsed {
+}
+/* Sidebar button and icon list are shown. */
+.sidebar-partial-expanded {
+}
+/* All sub-components are shown. */
+.sidebar-expanded {
+}
+/* Common sytles for sub-components*/
+.sidebar-btn,
+.sidebar-iconlist,
+.sidebar-content-wrapper {
+    display: inline-block;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    float: left;
+}
+.sidebar-iconlist,
+.sidebar-content-wrapper {
+    -webkit-transition: width 300ms ease, padding 300ms ease;
+    -moz-transition: width 300ms ease, padding 300ms ease;
+    -o-transition: width 300ms ease, padding 300ms ease;
+    -ms-transition: width 300ms ease, padding 300ms ease;
+    transition: width 300ms ease, padding 300ms ease;
+}
+/* sidebar-title: a label that shows the title of sidebar. */
+.sidebar-title {
+    position: absolute;
+    top: 3px;
+    text-align: center;
+    font-size: 0.813rem; /* 13px */
+    cursor: default;
+    -webkit-transition: left 300ms ease;
+    -moz-transition: left 300ms ease;
+    -o-transition: left 300ms ease;
+    -ms-transition: left 300ms ease;
+    transition: left 300ms ease;
+}
+.sidebar-collapsed .sidebar-title {
+    left: 0;
+    width: 50px;
+}
+.sidebar-partial-expanded .sidebar-title,
+.sidebar-expanded .sidebar-title {
+    left: 50px;
+    width: 40px;
+}
+/* sidebar-btn: A button used to collpase/expand the sidebar */
+.sidebar-btn {
+    width: 50px;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    cursor: pointer;
+}
+.sidebar.sidebar-collapsed .sidebar-btn {
+    background-image: url("images/sidebar/sidebar-btn-collapsed.png");
+}
+.sidebar.sidebar-partial-expanded .sidebar-btn,
+.sidebar.sidebar-expanded .sidebar-btn {
+    background-image: url("images/sidebar/sidebar-btn-expanded.png");
+}
+/* sidebar-iconlist: a bar to show icons */
+.sidebar-iconlist {
+    height: 100%;
+    padding: 30px 0 0 0;
+}
+.sidebar-collapsed .sidebar-iconlist {
+    width: 0;
+}
+.sidebar-partial-expanded .sidebar-iconlist,
+.sidebar-expanded .sidebar-iconlist {
+    width: 40px;
+}
+.sidebar-iconlist .sidebar-icon {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 20px;
+    background-size: contain;
+    cursor: pointer;
+}
+/* Customize icons */
+.sidebar-icon-info {
+    background-image: url("images/sidebar/sidebar-icon-info.png");
+}
+.sidebar-icon-tag {
+    background-image: url("images/sidebar/sidebar-icon-tag.png");
+}
+.sidebar-icon-share {
+    background-image: url("images/sidebar/sidebar-icon-share.png");
+}
+/* sidbar-content-wrapper: A space for showing detailed informaiton. */
+.sidebar-content-wrapper {
+    width: 240px;
+    height: 100%;
+}
+.sidebar-collapsed .sidebar-content-wrapper,
+.sidebar-partial-expanded .sidebar-content-wrapper {
+    width: 0;
+    padding: 5px 0;
+}
+.sidebar-expanded .sidebar-content-wrapper {
+    width: 240px;
+    padding: 5px;
+}
+.sidebar-content-wrapper .sidebar-content {
+    width: 100%;
+    height: 100%;
+}
+/* Customize contents */
+.sidebar-content-info img {
+    width: 80px;
+    height: 80px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    border: solid 3px black;
+}
+

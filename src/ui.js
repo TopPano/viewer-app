@@ -1,10 +1,17 @@
 // The enter function for creating all ui components.
 TOPPANO.createUI = function(model) {
+    TOPPANO.createMenu();
     TOPPANO.initFB();
     TOPPANO.createSummary(model['summary']);
     TOPPANO.createFullscreenBtn()
     TOPPANO.createFBShareBtn();
     TOPPANO.createEmbeddedLink();
+};
+
+// Create a sidebar menu.
+TOPPANO.createMenu = function() {
+    $('#menu .sidebar-btn').on('click', TOPPANO.onMenuBtnClick);
+    $('#menu .sidebar-icon').on('click', TOPPANO.onMenuIconClick);
 };
 
 // Create a component for showing summary of the model.

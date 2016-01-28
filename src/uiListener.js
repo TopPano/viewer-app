@@ -1,3 +1,21 @@
+TOPPANO.onMenuBtnClick = function(event) {
+    var menu = $(this).parent();
+
+    if(menu.hasClass('sidebar-collapsed')) {
+        menu.addClass('sidebar-partial-expanded');
+    } else {
+        menu.removeClass('sidebar-partial-expanded')
+            .removeClass('sidebar-expanded');
+    }
+    menu.toggleClass('sidebar-collapsed');
+};
+
+TOPPANO.onMenuIconClick = function(event) {
+    var menu = $(this).parent().parent();
+
+    menu.toggleClass('sidebar-partial-expanded').toggleClass('sidebar-expanded');
+};
+
 // Listener for clicking Summary button.
 TOPPANO.onSummaryBtnClick = function(event) {
     var summaryBtn = $('#summary-btn');
