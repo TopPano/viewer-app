@@ -143,30 +143,54 @@ function set_on_holding_waterdrop(){
 
 function set_on_rotating_scene(){
     // rotating-scene
-    $('#container').on('mousedown',
+    // determine if on the mobile or PC web
+
+    var start_event, move_event, end_event;
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) 
+    {
+        start_event = 'touchstart';
+        move_event = 'touchmove';
+        end_event = 'touchend';
+    }
+    else{
+        start_event = 'mousedown';
+        move_event = 'mousemove';
+        end_event = 'mouseup';
+    }
+
+    $('#container').on(start_event,
                       function(event){
-                            if(TOPPANO.gv.cursor.state == "default"){
-                                TOPPANO.gv.interact.onPointerDownPointerX = event.clientX;
-                                TOPPANO.gv.interact.onPointerDownPointerY = event.clientY;
-                                TOPPANO.gv.interact.onPointerDownLon = TOPPANO.gv.cam.lng;
-                                TOPPANO.gv.interact.onPointerDownLat = TOPPANO.gv.cam.lat;
-                                TOPPANO.gv.cursor.position_array.splice(0, TOPPANO.gv.cursor.position_array.length);
-                                TOPPANO.gv.cursor.state = 'mouse-down-container';
+                          console.log(event);
+                          if(TOPPANO.gv.cursor.state == "default"){
+                              if(event.type == 'touchstart')
+                              {
+                                event = event.originalEvent.touches[0];
+                              }
+                              TOPPANO.gv.interact.onPointerDownPointerX = event.clientX;
+                              TOPPANO.gv.interact.onPointerDownPointerY = event.clientY;
+                              TOPPANO.gv.interact.onPointerDownLon = TOPPANO.gv.cam.lng;
+                              TOPPANO.gv.interact.onPointerDownLat = TOPPANO.gv.cam.lat;
+                              TOPPANO.gv.cursor.position_array.splice(0, TOPPANO.gv.cursor.position_array.length);
+                              TOPPANO.gv.cursor.state = 'mouse-down-container';
 
-                                while(TOPPANO.gv.cursor.slide_func_array.length>0){
-                                    clearTimeout(TOPPANO.gv.cursor.slide_func_array.shift());
-                                }
+                              while(TOPPANO.gv.cursor.slide_func_array.length>0){
+                                  clearTimeout(TOPPANO.gv.cursor.slide_func_array.shift());
+                              }
 
-                            }
+                          }
                       });
 
-    $('#container').on('mousemove', 
+    $('#container').on(move_event, 
                        function(event){
                            if(TOPPANO.gv.cursor.state == "mouse-down-container"){
                                 TOPPANO.gv.cursor.state = "rotating-scene";
                             }
                             else if(TOPPANO.gv.cursor.state == "rotating-scene")
                             {
+                                if(event.type == 'touchmove')
+                                {
+                                    event = event.originalEvent.touches[0];
+                                }
                                 var deltaX = TOPPANO.gv.interact.onPointerDownPointerX - event.clientX,
                                     deltaY = event.clientY - TOPPANO.gv.interact.onPointerDownPointerY;
 
@@ -178,12 +202,15 @@ function set_on_rotating_scene(){
                             }
     });
     
-    $('#container').on('mouseup', 
+    $('#container').on(end_event, 
                        function(event){
                            if(TOPPANO.gv.cursor.state == "rotating-scene"){
                                 TOPPANO.gv.cursor.state = "default";
                                 TOPPANO.gv.cursor.element = null;
-                                
+                                if(event.type == 'touchend')
+                                {
+                                    event = event.originalEvent.changedTouches[0];
+                                }
                                 var last_position = TOPPANO.gv.cursor.position_array.pop();
                                     last_sec_position = TOPPANO.gv.cursor.position_array.pop();
                                 
@@ -194,6 +221,7 @@ function set_on_rotating_scene(){
                                 for (count=0; count<200; count++){    
                                     var id = setTimeout(function(count, id){
                                         TOPPANO.gv.cam.lng += deltaX * (200-count)/10000;
+                                        
                                         TOPPANO.gv.cam.lat += deltaY * (200-count)/10000;
                                     },(1+count)*5, count, id);
                                     TOPPANO.gv.cursor.slide_func_array.push(id);
@@ -295,43 +323,6 @@ TOPPANO.setCursorHandler = function(){
     set_on_hovering_scene();
     set_on_changing_scene();
     set_on_scrolling_scene();
-};
-
-
-
-
-TOPPANO.onDocumentTouchStart = function(event) {
-    // console.log('TouchStart');
-    console.log("TouchStart event.clientX = ",event.touches[0].clientX);
-    console.log("TouchStart event.clientY = ",event.touches[0].clientY);
-    TOPPANO.gv.interact.onPointerDownPointerX = event.touches[0].clientX;
-    TOPPANO.gv.interact.onPointerDownPointerY = event.touches[0].clientY;
-    TOPPANO.gv.interact.onPointerDownLon = TOPPANO.gv.cam.lng;
-    TOPPANO.gv.interact.onPointerDownLat = TOPPANO.gv.cam.lat;
-};
-TOPPANO.onDocumentTouchMove = function(event) {
-    console.log('TouchMove');
-    var angle = -TOPPANO.gyro.screen_rot_angle*(Math.PI/180);
-    var deltaX = TOPPANO.gv.interact.onPointerDownPointerX - event.touches[0].clientX,
-        deltaY = event.touches[0].clientY - TOPPANO.gv.interact.onPointerDownPointerY;
-        TOPPANO.gv.cam.lng = (deltaX*(Math.cos(angle)) - deltaY*(Math.sin(angle))) * 0.1 + TOPPANO.gv.interact.onPointerDownLon;
-        TOPPANO.gv.cam.lat = (deltaX*(Math.sin(angle)) + deltaY*(Math.cos(angle))) * 0.1 + TOPPANO.gv.interact.onPointerDownLat;
-    console.log(TOPPANO.gyro.screen_rot_angle);
-        console.log(deltaX);
-    console.log("\n\n");
-};
-TOPPANO.onDocumentTouchEnd = function(event) {
-    // console.log('TouchEnd');
-    console.log("TouchEnd event.clientX = ",event.changedTouches[0].clientX);
-    console.log("TouchEnd event.clientY = ",event.changedTouches[0].clientY);
-    var hit = TOPPANO.hitSomething(Math.abs(event.changedTouches[0]), TOPPANO.gv.objects.transitionObj),
-        isHit = hit[0],
-            hitObj = hit[1];
-            if (isHit) {
-                // TODO
-                // TOPPANO.gv.scene1.nextInfo = hit[1].name;
-                // TOPPANO.changeScene(hitObj);
-            }
 };
 
 

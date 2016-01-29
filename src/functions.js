@@ -169,9 +169,6 @@ TOPPANO.buildScene = function(node_ID){
 // add listeners
 TOPPANO.addListener = function() {
     TOPPANO.setCursorHandler();
-    document.addEventListener('touchstart', TOPPANO.onDocumentTouchStart, false);
-    document.addEventListener('touchmove', TOPPANO.onDocumentTouchMove, false);
-    document.addEventListener('touchend', TOPPANO.onDocumentTouchEnd, false);
     document.addEventListener('dragover', function(event) {
         TOPPANO.onDocumentDragOver(event);
     }, false);
