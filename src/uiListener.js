@@ -3,18 +3,48 @@ TOPPANO.onMenuBtnClick = function(event) {
 
     if(menu.hasClass('sidebar-collapsed')) {
         menu.addClass('sidebar-partial-expanded');
+    } else if(menu.hasClass('sidebar-partial-expanded')) {
+        menu.removeClass('sidebar-partial-expanded');
     } else {
-        menu.removeClass('sidebar-partial-expanded')
-            .removeClass('sidebar-expanded');
+        TOPPANO.toggleMenuClickedIcon(TOPPANO.ui.menuUI.currentClickedIcon);
+        menu.removeClass('sidebar-expanded');
+        TOPPANO.ui.menuUI.currentClickedIcon = null;
     }
     menu.toggleClass('sidebar-collapsed');
 };
 
 TOPPANO.onMenuIconClick = function(event) {
     var menu = $(this).parent().parent();
+    var clickedIcon = $(this);
 
-    menu.toggleClass('sidebar-partial-expanded').toggleClass('sidebar-expanded');
+    if(menu.hasClass('sidebar-partial-expanded')) {
+        // Menu is partially expanded.
+        TOPPANO.toggleMenuClickedIcon(clickedIcon);
+        menu.removeClass('sidebar-partial-expanded').addClass('sidebar-expanded');
+        TOPPANO.ui.menuUI.currentClickedIcon = clickedIcon;
+    } else if(TOPPANO.ui.menuUI.currentClickedIcon.attr('class') === clickedIcon.attr('class')) {
+        // Menu is fully expanded and the same icon is clicked.
+        TOPPANO.toggleMenuClickedIcon(clickedIcon);
+        menu.removeClass('sidebar-expanded').addClass('sidebar-partial-expanded');
+        TOPPANO.ui.menuUI.currentClickedIcon = null;
+    } else {
+        // Menu is fully expanded and a different icon is clicked.
+        TOPPANO.toggleMenuClickedIcon(TOPPANO.ui.menuUI.currentClickedIcon);
+        TOPPANO.toggleMenuClickedIcon(clickedIcon);
+        TOPPANO.ui.menuUI.currentClickedIcon = clickedIcon;
+    }
 };
+
+TOPPANO.toggleMenuClickedIcon = function(icon) {
+    var menu = icon.parent().parent();
+    var contentWrapper = $('.sidebar-content-wrapper', menu);
+    var contentClass = icon.attr('data-target-content');
+    var contentSize = $('.' + contentClass, menu).attr('data-content-size');
+
+    icon.toggleClass('sidebar-icon-clicked');
+    contentWrapper.toggleClass('sidebar-contentsize-' + contentSize);
+    $('.' + contentClass).toggleClass('sidebar-content-shown');
+}
 
 // Listener for clicking Summary button.
 TOPPANO.onSummaryBtnClick = function(event) {
