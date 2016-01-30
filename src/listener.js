@@ -160,11 +160,11 @@ function set_on_rotating_scene(){
 
     $('#container').on(start_event,
                       function(event){
-                          console.log(event);
                           if(TOPPANO.gv.cursor.state == "default"){
                               if(event.type == 'touchstart')
                               {
-                                event = event.originalEvent.touches[0];
+                                  event.preventDefault();
+                                  event = event.originalEvent.touches[0];
                               }
                               TOPPANO.gv.interact.onPointerDownPointerX = event.clientX;
                               TOPPANO.gv.interact.onPointerDownPointerY = event.clientY;
@@ -190,13 +190,18 @@ function set_on_rotating_scene(){
                                 if(event.type == 'touchmove')
                                 {
                                     event = event.originalEvent.touches[0];
+                                    var deltaX = TOPPANO.gv.interact.onPointerDownPointerX - event.clientX,
+                                        deltaY = event.clientY - TOPPANO.gv.interact.onPointerDownPointerY;
+                                    var angle = -TOPPANO.gyro.screen_rot_angle*(Math.PI/180);
+                                    TOPPANO.gv.cam.lng = (deltaX*(Math.cos(angle)) - deltaY*(Math.sin(angle))) * 0.1 + TOPPANO.gv.interact.onPointerDownLon;
+                                    TOPPANO.gv.cam.lat = (deltaX*(Math.sin(angle)) + deltaY*(Math.cos(angle))) * 0.1 + TOPPANO.gv.interact.onPointerDownLat;
                                 }
-                                var deltaX = TOPPANO.gv.interact.onPointerDownPointerX - event.clientX,
-                                    deltaY = event.clientY - TOPPANO.gv.interact.onPointerDownPointerY;
-
-                                TOPPANO.gv.cam.lng = deltaX * 0.1 + TOPPANO.gv.interact.onPointerDownLon;
-                                TOPPANO.gv.cam.lat = deltaY * 0.1 + TOPPANO.gv.interact.onPointerDownLat;
-                                
+                                else{
+                                    var deltaX = TOPPANO.gv.interact.onPointerDownPointerX - event.clientX,
+                                        deltaY = event.clientY - TOPPANO.gv.interact.onPointerDownPointerY;
+                                    TOPPANO.gv.cam.lng = deltaX * 0.1 + TOPPANO.gv.interact.onPointerDownLon;
+                                    TOPPANO.gv.cam.lat = deltaY * 0.1 + TOPPANO.gv.interact.onPointerDownLat;
+                                }
                                 var position = {'clientX': event.clientX, 'clientY': event.clientY};
                                 TOPPANO.gv.cursor.position_array.push(position);
                             }
@@ -210,6 +215,10 @@ function set_on_rotating_scene(){
                                 if(event.type == 'touchend')
                                 {
                                     event = event.originalEvent.changedTouches[0];
+                                    var angle = -TOPPANO.gyro.screen_rot_angle*(Math.PI/180);
+                                }
+                                else{
+                                    var angle = 0;
                                 }
                                 var last_position = TOPPANO.gv.cursor.position_array.pop();
                                     last_sec_position = TOPPANO.gv.cursor.position_array.pop();
@@ -220,9 +229,8 @@ function set_on_rotating_scene(){
                                 var count, speed;
                                 for (count=0; count<200; count++){    
                                     var id = setTimeout(function(count, id){
-                                        TOPPANO.gv.cam.lng += deltaX * (200-count)/10000;
-                                        
-                                        TOPPANO.gv.cam.lat += deltaY * (200-count)/10000;
+                                        TOPPANO.gv.cam.lng += (deltaX*(Math.cos(angle)) - deltaY*(Math.sin(angle))) * (200-count)/10000;
+                                        TOPPANO.gv.cam.lat += (deltaX*(Math.sin(angle)) + deltaY*(Math.cos(angle))) * (200-count)/10000;
                                     },(1+count)*5, count, id);
                                     TOPPANO.gv.cursor.slide_func_array.push(id);
                                 }
@@ -365,7 +373,9 @@ TOPPANO.onDeviceOrientation = function(event){
     {    
         TOPPANO.gv.cam.lng = longitude;
         TOPPANO.gv.cam.lat = latitude;
+        TOPPANO.gv.cam.virtual_lat = latitude;
         TOPPANO.gyro.lng = longitude; 
+        TOPPANO.gyro.lat = latitude; 
         TOPPANO.gyro.lat = latitude; 
         TOPPANO.gyro.setup = true; 
     }
@@ -375,6 +385,7 @@ TOPPANO.onDeviceOrientation = function(event){
         var lat_delta = latitude-TOPPANO.gyro.lat;
         TOPPANO.gv.cam.lng += lng_delta;
         TOPPANO.gv.cam.lat += lat_delta;
+        TOPPANO.gv.cam.virtual_lat += lat_delta;
         TOPPANO.gyro.lng = longitude; 
         TOPPANO.gyro.lat = latitude;
     }
@@ -386,19 +397,27 @@ TOPPANO.onDeviceOrientation = function(event){
     V_rot_axis.crossVectors(V_heading_negZ, V_Z);
       
     V_rot_axis = V_rot_axis.normalize();
-    V_Z.applyAxisAngle(V_rot_axis, (Math.PI/180)*TOPPANO.gv.cam.lat);
-
+    V_Z.applyAxisAngle(V_rot_axis, (Math.PI/180)*TOPPANO.gv.cam.virtual_lat);
+    
     var angle = V_Z.angleTo(V_heading_Y);
     angle = angle*(180/Math.PI);
+
+
+
 
     var side = V_heading_Y.dot(V_rot_axis) ;
     if(side<0)
     {angle = -angle;}
-    
-    TOPPANO.gyro.screen_rot_angle = angle;
+/*
+console.log('V_Z');
+    console.log(V_Z);
+    console.log('V_heading_Y');
+    console.log(V_heading_Y);
+    console.log('angle');
     console.log(angle);
-    console.log(TOPPANO.gyro.screen_rot_angle);
-    console.log("\n\n");
+    console.log('\n\n');
+  */ 
+    TOPPANO.gyro.screen_rot_angle = angle;
     var cam_rot_axis = new THREE.Vector3(Math.cos(TOPPANO.gv.cam.lng*(Math.PI/180)), 0,  Math.sin(TOPPANO.gv.cam.lng*(Math.PI/180)));
     var cam_z_axis = new THREE.Vector3(0, 1, 0);
     cam_z_axis.applyAxisAngle(cam_rot_axis, (Math.PI/180)*(angle));

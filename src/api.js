@@ -50,6 +50,7 @@ TOPPANO.gv = {
     cam: {
         camera: null,
         lat: 0,
+        virtual_lat: 0,
         lng: 0,
         camPos: new THREE.Vector3(0, 0, 0),
         defaultCamFOV: 60,
