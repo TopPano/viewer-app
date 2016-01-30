@@ -72,6 +72,10 @@ TOPPANO.initFB = function() {
 
 // Global ui variables initialization.
 TOPPANO.ui = {
+    // variables for Menu
+    menuUI: {
+        currentClickedIcon: null
+    },
     // Summary block paramters
     summaryUI: {
         animateDelay: 1500
