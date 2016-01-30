@@ -408,15 +408,6 @@ TOPPANO.onDeviceOrientation = function(event){
     var side = V_heading_Y.dot(V_rot_axis) ;
     if(side<0)
     {angle = -angle;}
-/*
-console.log('V_Z');
-    console.log(V_Z);
-    console.log('V_heading_Y');
-    console.log(V_heading_Y);
-    console.log('angle');
-    console.log(angle);
-    console.log('\n\n');
-  */ 
     TOPPANO.gyro.screen_rot_angle = angle;
     var cam_rot_axis = new THREE.Vector3(Math.cos(TOPPANO.gv.cam.lng*(Math.PI/180)), 0,  Math.sin(TOPPANO.gv.cam.lng*(Math.PI/180)));
     var cam_z_axis = new THREE.Vector3(0, 1, 0);
