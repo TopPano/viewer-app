@@ -182,9 +182,6 @@ TOPPANO.addListener = function() {
     document.addEventListener('drop', function(event) {
         TOPPANO.onDocumentDrop(event);
     }, false);
-    document.addEventListener('keyup', function(key) {
-        TOPPANO.onDocumentKeyUp(key);
-    }, false);
     window.addEventListener('resize', TOPPANO.onWindowResize, false);
     
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {

@@ -449,43 +449,6 @@ TOPPANO.onDocumentDrop = function(event) {
     document.body.style.opacity = 1;
 };
 
-TOPPANO.onDocumentKeyUp = function(key) {
-    var canvas = document.getElementById('myCanvas');
-
-    if (canvas.style.opacity > 0) {
-        // press 's': snapshot function
-        if (key.which === 83) {
-            fadeOut(canvas, 600);
-        }
-    }
-    else{    
-        // press 's': snapshot function
-        if (key.which === 83) {
-            fadeIn(canvas, 600);
-            TOPPANO.getSnapshot();
-        } 
-        else{
-            // press 'q': snapshot function (for testing ajax func now.)
-            if (key.which === 81) {
-                var xhr = new XMLHttpRequest();
-                xhr.open('GET', 'get?id=456', false);
-                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xhr.send(null);
-                if (xhr.status === 200) {
-                    // console.log(xhr.responseText);
-                    var userInfo = JSON.parse(xhr.responseText);
-                    console.log(userInfo);
-                }
-                else
-                    console.log('XMLHttpRequest failed. Status: ' + xhr.status);
-            } else
-
-                // press 'p': snapshot save image
-                if (key.which === 80) {
-                    TOPPANO.change2Scene('00000002');
-                }
-        }}
-};
 
 TOPPANO.onWindowResize = function() {
     if (TOPPANO.gv.isFullScreen) {
