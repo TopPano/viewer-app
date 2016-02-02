@@ -280,6 +280,45 @@ body {
     overflow: hidden;
 }
 
+/**
+  * Styles for like buttn
+  */
+/* button to like the post, and show the number of total liked count. */
+.likebtn {
+    position: absolute;
+    width: 40px;
+    height: 50px;
+    top: 60px;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+.likebtn .likebtn-icon {
+    width: 40px;
+    height: 40px;
+    background-image: url("images/likebtn/likebtn-icon.png");
+    cursor: pointer;
+}
+.likebtn .likebtn-icon.likebtn-icon-clicked {
+    background-image: url("images/likebtn/likebtn-icon-clicked.png");
+}
+.likebtn .likebtn-count-wrapper {
+    position: relative;
+    display: inline-block;
+    left: 50%;
+}
+.likebtn .likebtn-count {
+    height: 10px;
+    line-height: 10px;
+    font-size: 0.813rem; /* 13px */
+    white-space: nowrap;
+    margin-left: -50%;
+    cursor: default;
+}
+
 .logo-bar {
     background: black;
     width: 100%;
