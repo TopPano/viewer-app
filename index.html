@@ -5,9 +5,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1, user-scalable=no ">
         <title>Toppano - Panorama Viewer Test</title>
         <link rel="stylesheet" href="./css/style.css">
-        <link rel="stylesheet" href="./css/theme-default.css">
-        <link rel="stylesheet" href="./css/jquery.mobile.icons.min.css">
-        <link rel="stylesheet" href="./css/jquery.mobile.structure-1.4.5.min.css">
         <link rel="stylesheet" href="./css/swiper.min.css">
         <!-- <script src="./dist/toppano.min.js"></script>-->
         <script src="./src/lib/three.min.js"></script>
@@ -23,7 +20,6 @@
         <script src="./src/view.js"></script>
         <script src="./src/ui.js"></script>
         <script src="./src/uiListener.js"></script>
-        <script src="./src/lib/jquery.mobile-1.4.5.min.js"></script>
         <script src="./src/lib/jquery.fullscreen-0.4.1.min.js"></script>
         <script src="./src/lib/swiper.jquery.min.js"></script>
         <script src="./src/lib/jquery.ui.draggable-1.11.4.min.js"></script>
@@ -70,84 +66,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div id="summary">
-            <button id="summary-btn" class="ui-btn ui-icon-arrow-r ui-btn-icon-notext" style="position: absolute;"></button>
-            <div id="summary-main" data-role="collapsible" data-heading="#summary-head"  data-iconpos="right" data-collapsed-icon="arrow-d" data-expanded-icon="arrow-u" data-corners="false" style="position: absolute; left: 35px;">
-                <div id="summary-head">
-                    <input id="summary-presentedBy" type="text" data-mini="true" data-corners="false" value="" placeholder="Presenter" disabled="disabled">
-                    <input id="summary-name" type="text" data-mini="true" data-corners="false" value="" placeholder="Caption" disabled="disabled">
-                </div>
-                <div id="summary-body">
-                    <textarea id="summary-description" type="text" data-mini="true" data-corners="false" value="" placeholder="Description" style="resize: none;" disabled="disabled"></textarea>
-                    <input id="summary-address" type="text" data-mini="true" data-corners="false" value="" placeholder="Address" disabled="disabled">
-                </div>
-            </div>
-        </div>
-
-        <a href="#help-menu" data-rel="popup" class="ui-btn ui-icon-info ui-btn-icon-notext" style="position: absolute; top: 150px;"></a>
-        <div id="help-menu" data-role="popup" data-corners="false" data-position-to="window" data-transition="fade">
-            <div data-role="header">
-                <h1>Help Menu</h1>
-            </div>
-            <div data-role="main" class="ui-content">
-                <p>Use mouse or swipe to navigate!</p>
-            </div>
-            <div data-role="footer">
-                <h3>Click outside the menu to continue</h3>
-            </div>
-        </div>
-
-        <button id="fullscreen-btn" class="ui-btn ui-icon-eye ui-btn-icon-notext" style="position: absolute; bottom: 0; right: 0;"></button>
-
-        <script>
-        window.twttr = (function(d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0],
-            t = window.twttr || {};
-            if (d.getElementById(id)) return t;
-            js = d.createElement(s);
-            js.id = id;
-            js.src = "https://platform.twitter.com/widgets.js";
-            fjs.parentNode.insertBefore(js, fjs);
-              
-            t._e = [];
-            t.ready = function(f) {
-                t._e.push(f);
-            };
-                   
-            return t;
-        }(document, "script", "twitter-wjs"));
-
-        
-        </script>
-
-        <button id="tw-share-btn" class="ui-btn ui-icon-delete ui-btn-icon-notext twitter-share-button" style="position: absolute; bottom: 0; right: 100px"></button>
-        <script>
-        var tw_share_btn = document.getElementById('tw-share-btn');
-        tw_share_btn.onclick = function()
-        {
-            var position_left = screen.width/2-400;
-            var position_top = screen.height/2-200;
-            var spec ='height=400,width=800,top='+position_top.toString()+',left='+position_left.toString();
-            var url = "https://twitter.com/intent/tweet?url="+document.URL;
-            window.open(url,'name',spec);
-        };
-        
-        </script>
-        
-        <button id="fb-share-btn" disabled="true" class="ui-btn ui-icon-heart ui-btn-icon-notext" style="position: absolute; bottom: 0; right: 50px"></button>
-
-        <div id="fb-share-result-dialog" data-role="popup" data-corners="false" data-position-to="window" data-transition="fade">
-            <div data-role="main" class="ui-content">
-                <p>Successfully share to your Facebook Timeline!</p>
-            </div>
-        </div>
-
-        <div id="embedded-link" style="position: absolute; top: 20%; right: 0;">
-            <input id="embedded-link-width" type="text" data-corners="false" value="240" placeholder="width">
-            <input id="embedded-link-height" type="text" data-corners="false" value="160" placeholder="height">
-            <textarea id="embedded-link-output" data-corners="false" style="resize: none;" disabled="disabled"></textarea>
         </div>
 
         <div id="container"></div>
