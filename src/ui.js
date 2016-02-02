@@ -1,6 +1,7 @@
 // The enter function for creating all ui components.
 TOPPANO.createUI = function(model) {
     TOPPANO.createMenu(model['menu']);
+    TOPPANO.createLikeBtn(model['likebtn']);
 };
 
 // Create a sidebar menu.
@@ -14,6 +15,12 @@ TOPPANO.createMenu = function(menu) {
     $('#menu .sidebar-content-share-width').on('input', TOPPANO.onEmbeddedLinkChange);
     $('#menu .sidebar-content-share-height').on('input', TOPPANO.onEmbeddedLinkChange);
     TOPPANO.onEmbeddedLinkChange();
+};
+
+// Create a like button.
+TOPPANO.createLikeBtn = function(likebtn) {
+    $('#like-btn .likebtn-count').html(likebtn['likes']);
+    $('#like-btn .likebtn-icon').on('click', TOPPANO.onLikeIconClick);
 };
 
 // Initialize Facebook SDK.

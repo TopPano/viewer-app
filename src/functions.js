@@ -24,6 +24,9 @@ TOPPANO.modelInit = function() {
                     'message': modelMeta['message']
                 }
             };
+            model['likebtn'] = {
+                'likes': modelMeta['likes']
+            };
 
             TOPPANO.gv.nodes_meta = Object.assign({}, modelMeta.nodes);
             // load all imgs and build the first scene 
