@@ -133,7 +133,6 @@ function set_on_holding_waterdrop(){
                             {   
                                 var waterdrop_obj = TOPPANO.gv.cursor.element;
                                 waterdrop_obj.position_3D = dimen2_to_dimen3(event);
-                                console.log(TOPPANO.gv.cursor.element);
                                 TOPPANO.gv.cursor.state = "default";
                                 TOPPANO.gv.cursor.element = null;
                             }
@@ -402,20 +401,12 @@ TOPPANO.onDeviceOrientation = function(event){
     var angle = V_Z.angleTo(V_heading_Y);
     angle = angle*(180/Math.PI);
 
-
-
-
     var side = V_heading_Y.dot(V_rot_axis) ;
     if(side<0)
     {angle = -angle;}
+    
+    angle = Math.round(1000*angle)/1000;
     TOPPANO.gyro.screen_rot_angle = angle;
-    var cam_rot_axis = new THREE.Vector3(Math.cos(TOPPANO.gv.cam.lng*(Math.PI/180)), 0,  Math.sin(TOPPANO.gv.cam.lng*(Math.PI/180)));
-    var cam_z_axis = new THREE.Vector3(0, 1, 0);
-    cam_z_axis.applyAxisAngle(cam_rot_axis, (Math.PI/180)*(angle));
-
-    TOPPANO.gv.cam.camera.up.x = cam_z_axis.x;
-    TOPPANO.gv.cam.camera.up.y = cam_z_axis.y;
-    TOPPANO.gv.cam.camera.up.z = cam_z_axis.z;
 }
 
 function sleep(milliseconds) {

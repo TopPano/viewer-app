@@ -603,6 +603,21 @@ TOPPANO.update = function() {
     TOPPANO.gv.cam.camera.target.y = Math.cos(TOPPANO.gv.cam.phi);
     TOPPANO.gv.cam.camera.target.z = Math.sin(TOPPANO.gv.cam.phi) * Math.sin(TOPPANO.gv.cam.theta);
     TOPPANO.gv.cam.camera.lookAt(TOPPANO.gv.cam.camera.target);
+    
+   
+    var vect_target_onXZ = new THREE.Vector3(TOPPANO.gv.cam.camera.target.x, 0, TOPPANO.gv.cam.camera.target.z); 
+    var vect_cam_up = new THREE.Vector3(0, 1, 0);
+    var normal_vect = new THREE.Vector3();
+    normal_vect.crossVectors(vect_target_onXZ, vect_cam_up);
+    normal_vect = normal_vect.normalize();
+    vect_cam_up.applyAxisAngle(normal_vect, (Math.PI/180)*(TOPPANO.gv.cam.lat));
+    
+
+    vect_cam_up.applyAxisAngle(TOPPANO.gv.cam.camera.target, (Math.PI/180)*TOPPANO.gyro.screen_rot_angle);
+    TOPPANO.gv.cam.camera.up.x = vect_cam_up.x;
+    TOPPANO.gv.cam.camera.up.y = vect_cam_up.y;
+    TOPPANO.gv.cam.camera.up.z = vect_cam_up.z;
+    
     if (TOPPANO.gv.isState) {
         TOPPANO.gv.stats.update();
     }

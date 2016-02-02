@@ -175,9 +175,16 @@ body {
     left: 0px; 
 }
 
-.logo-bar img{
+.logo-bar #logo_img{
     position: fixed;
     top: 10px;
     left: 50%;
 }
 
+.logo-bar #q_mark_img{
+    position: fixed;
+    top: 8px;
+    left: 90%;
+    width:35px; 
+    height:35px;
+}
