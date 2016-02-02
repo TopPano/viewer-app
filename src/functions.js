@@ -19,6 +19,11 @@ TOPPANO.modelInit = function() {
             $.each(modelMeta['snapshotList'], function(index, prop) {
                 model['snapshotList']['snapshot-' + prop['sid']] = prop;
             });
+            model['menu'] = {
+                'info': {
+                    'message': modelMeta['message']
+                }
+            };
 
             TOPPANO.gv.nodes_meta = Object.assign({}, modelMeta.nodes);
             // load all imgs and build the first scene 

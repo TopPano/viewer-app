@@ -35,6 +35,7 @@
     </head>
     <body>
         <div id="logo" class="logo-bar"><img src="./images/logo.png"></img></div>
+
         <div id="menu" class="sidebar sidebar-collapsed">
             <div class="sidebar-title">MENU</div>
             <div class="sidebar-btn"></div>
@@ -46,12 +47,31 @@
             <div class="sidebar-content-wrapper">
                 <div class="sidebar-content sidebar-content-info" data-content-size="large">
                     <img src="https://i.imgur.com/PAdAP3F.jpg" alt="Author Picture"></img>
+                    <div class="sidebar-content-info-title">
+                        <div class="sidebar-content-info-author sidebar-text-singleline">Jellyfish Ma</div>
+                        <div class="sidebar-content-info-date sidebar-text-singleline">2016/05/20 00:00</div>
+                    </div>
+                    <div class="sidebar-content-info-message sidebar-text-multiline"></div>
                 </div>
                 <div class="sidebar-content sidebar-content-tag" data-content-size="none"></div>
                 <div class="sidebar-content sidebar-content-share" data-content-size="small">
+                    <div class="sidebar-content-share-iconlist">
+                        <div class="sidebar-content-share-icon sidebar-content-share-facebook"></div>
+                        <div class="sidebar-content-share-icon sidebar-content-share-twitter"></div>
+                    </div>
+                    <div class="sidebar-content-share-size">
+                        <input type="text" class="sidebar-content-share-width" value="240" placeholder="width">
+                        <div class="sidebar-content-share-multiply">X</div>
+                        <input type="text" class="sidebar-content-share-height" value="160" placeholder="height">
+                    </div>
+                    <div class="sidebar-content-share-link">
+                        <div class="sidebar-content-share-codebr"></div>
+                        <textarea class="sidebar-content-share-output" disabled></textarea>
+                    </div>
                 </div>
             </div>
         </div>
+
         <div id="summary">
             <button id="summary-btn" class="ui-btn ui-icon-arrow-r ui-btn-icon-notext" style="position: absolute;"></button>
             <div id="summary-main" data-role="collapsible" data-heading="#summary-head"  data-iconpos="right" data-collapsed-icon="arrow-d" data-expanded-icon="arrow-u" data-corners="false" style="position: absolute; left: 35px;">
