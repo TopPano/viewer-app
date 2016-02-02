@@ -49,11 +49,22 @@ body {
 }
 .sidebar-iconlist,
 .sidebar-content-wrapper {
-    -webkit-transition: width 300ms ease, padding 300ms ease;
-    -moz-transition: width 300ms ease, padding 300ms ease;
-    -o-transition: width 300ms ease, padding 300ms ease;
-    -ms-transition: width 300ms ease, padding 300ms ease;
-    transition: width 300ms ease, padding 300ms ease;
+    -webkit-transition: width 100ms ease, padding 100ms ease;
+    -moz-transition: width 100ms ease, padding 100ms ease;
+    -o-transition: width 100ms ease, padding 100ms ease;
+    -ms-transition: width 100ms ease, padding 100ms ease;
+    transition: width 100ms ease, padding 100ms ease;
+}
+.sidebar-text-singleline {
+    white-space: nowrap;
+}
+.sidebar-text-multiline {
+    /* Wrap words in a component */
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
 }
 /* sidebar-title: a label that shows the title of sidebar. */
 .sidebar-title {
@@ -62,11 +73,11 @@ body {
     text-align: center;
     font-size: 0.813rem; /* 13px */
     cursor: default;
-    -webkit-transition: left 300ms ease;
-    -moz-transition: left 300ms ease;
-    -o-transition: left 300ms ease;
-    -ms-transition: left 300ms ease;
-    transition: left 300ms ease;
+    -webkit-transition: left 100ms ease;
+    -moz-transition: left 100ms ease;
+    -o-transition: left 100ms ease;
+    -ms-transition: left 100ms ease;
+    transition: left 100ms ease;
 }
 .sidebar-collapsed .sidebar-title {
     left: 0;
@@ -111,7 +122,7 @@ body {
     background-size: contain;
     cursor: pointer;
 }
-/* Customize icons */
+/* Customized icons */
 .sidebar-icon-info {
     background-image: url("images/sidebar/sidebar-icon-info.png");
 }
@@ -130,7 +141,7 @@ body {
 .sidebar-icon-share.sidebar-icon-clicked {
     background-image: url("images/sidebar/sidebar-icon-share-clicked.png");
 }
-/* sidbar-content-wrapper: A space for showing detailed informaiton. */
+/* sidbar-content-wrapper: a container for wrapping different contents. */
 .sidebar-content-wrapper {
     width: 0;
     height: 100%;
@@ -153,10 +164,18 @@ body {
     width: 100%;
     height: 100%;
 }
-.sidebar-expanded .sidebar-content.sidebar-content-shown {
-    display: block;
+/* Customized content: sidebar-content-info */
+.sidebar-content-info img,
+.sidebar-content-info .sidebar-content-info-title,
+.sidebar-content-info .sidebar-content-info-message {
+    display: inline-block;
+    float: left;
 }
-/* Customize contents */
+.sidebar-content-info * {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
 .sidebar-content-info img {
     width: 80px;
     height: 80px;
@@ -164,6 +183,101 @@ body {
     -moz-border-radius: 50%;
     border-radius: 50%;
     border: solid 3px black;
+}
+.sidebar-content-info .sidebar-content-info-title {
+    width: 150px;
+    height: 80px;
+}
+.sidebar-content-info .sidebar-content-info-message {
+    width: 100%;
+    height: 120px;
+    padding: 5px;
+    font-size: 0.813rem; /* 13px */
+    color: #CCCCCC;
+}
+.sidebar-content-info .sidebar-content-info-title .sidebar-content-info-author,
+.sidebar-content-info .sidebar-content-info-title .sidebar-content-info-date {
+    width: 100%;
+    height: 40px;
+}
+.sidebar-content-info .sidebar-content-info-title .sidebar-content-info-author {
+    font-size: 0.938rem; /* 15px */
+    font-weight: bold;
+    text-align: center;
+    padding-top: 20px;
+}
+.sidebar-content-info .sidebar-content-info-title .sidebar-content-info-date {
+    font-size: 0.813rem; /* 13px */
+    text-align: center;
+}
+/* Customized content: sidebar-content-share */
+.sidebar-content-share * {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.sidebar-content-share .sidebar-content-share-iconlist {
+    width: 100%;
+    height: 60px;
+    padding-top: 7px;
+    text-align: center;
+}
+.sidebar-content-share .sidebar-content-share-size {
+    width: 100%;
+    height: 30px;
+    padding: 5px 0;
+}
+.sidebar-content-share .sidebar-content-share-link {
+    width: 100%;
+    height: 110px;
+    padding: 0 5px;
+    background-color: white;
+    border: solid 2px rgb(238, 238, 238);
+}
+.sidebar-content-share .sidebar-content-share-iconlist .sidebar-content-share-icon {
+    display: inline-block;
+    width: 53px;
+    height: 53px;
+    margin: 0 10px;
+    background-size: contain;
+    cursor: pointer;
+}
+.sidebar-content-share .sidebar-content-share-iconlist .sidebar-content-share-facebook {
+    background-image: url("images/sidebar/sidebar-content-share-facebook.png");
+}
+.sidebar-content-share .sidebar-content-share-iconlist .sidebar-content-share-twitter {
+    background-image: url("images/sidebar/sidebar-content-share-twitter.png");
+}
+.sidebar-content-share .sidebar-content-share-size * {
+    display: inline-block;
+    float: left;
+    height: 100%;
+}
+.sidebar-content-share .sidebar-content-share-size input[type="text"].sidebar-content-share-width,
+.sidebar-content-share .sidebar-content-share-size input[type="text"].sidebar-content-share-height {
+    width: 90px;
+    text-align: right;
+}
+.sidebar-content-share .sidebar-content-share-size .sidebar-content-share-multiply {
+    width: 20px;
+    text-align: center;
+    line-height: 20px;
+    cursor: default;
+}
+.sidebar-content-share .sidebar-content-share-link .sidebar-content-share-codebr {
+    width: 40px;
+    height: 40px;
+    background-image: url("images/sidebar/sidebar-content-share-codebr.png");
+}
+.sidebar-content-share .sidebar-content-share-link textarea.sidebar-content-share-output {
+    width: 100%;
+    height: 60px;
+    font-size: 0.813rem; /* 13px */
+    color: black;
+    resize: none;
+    border: none;
+    background: none;
+    overflow: hidden;
 }
 
 .logo-bar {

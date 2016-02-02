@@ -6,7 +6,7 @@ TOPPANO.onMenuBtnClick = function(event) {
     } else if(menu.hasClass('sidebar-partial-expanded')) {
         menu.removeClass('sidebar-partial-expanded');
     } else {
-        TOPPANO.toggleMenuClickedIcon(TOPPANO.ui.menuUI.currentClickedIcon);
+        TOPPANO.changeContents(TOPPANO.ui.menuUI.currentClickedIcon, null);
         menu.removeClass('sidebar-expanded');
         TOPPANO.ui.menuUI.currentClickedIcon = null;
     }
@@ -19,61 +19,75 @@ TOPPANO.onMenuIconClick = function(event) {
 
     if(menu.hasClass('sidebar-partial-expanded')) {
         // Menu is partially expanded.
-        TOPPANO.toggleMenuClickedIcon(clickedIcon);
+        TOPPANO.changeContents(null, clickedIcon);
         menu.removeClass('sidebar-partial-expanded').addClass('sidebar-expanded');
         TOPPANO.ui.menuUI.currentClickedIcon = clickedIcon;
     } else if(TOPPANO.ui.menuUI.currentClickedIcon.attr('class') === clickedIcon.attr('class')) {
         // Menu is fully expanded and the same icon is clicked.
-        TOPPANO.toggleMenuClickedIcon(clickedIcon);
+        TOPPANO.changeContents(clickedIcon, null);
         menu.removeClass('sidebar-expanded').addClass('sidebar-partial-expanded');
         TOPPANO.ui.menuUI.currentClickedIcon = null;
     } else {
         // Menu is fully expanded and a different icon is clicked.
-        TOPPANO.toggleMenuClickedIcon(TOPPANO.ui.menuUI.currentClickedIcon);
-        TOPPANO.toggleMenuClickedIcon(clickedIcon);
+        TOPPANO.changeContents(TOPPANO.ui.menuUI.currentClickedIcon, clickedIcon);
         TOPPANO.ui.menuUI.currentClickedIcon = clickedIcon;
     }
 };
 
-TOPPANO.toggleMenuClickedIcon = function(icon) {
+TOPPANO.changeContents = function(from, to) {
+    var fromWidth = !from ? 0 : TOPPANO.getContentWidth(from),
+        toWidth = !to ? 0 : TOPPANO.getContentWidth(to);
+
+    if((fromWidth - toWidth) === 0) {
+        TOPPANO.toggleMenuClickedIcon(from, 'start');
+        TOPPANO.toggleMenuClickedIcon(to, 'start');
+    } else {
+        TOPPANO.toggleMenuClickedIcon(from, 'start');
+        TOPPANO.toggleMenuClickedIcon(to, 'end');
+    }
+};
+
+TOPPANO.getContentWidth = function(icon) {
     var menu = icon.parent().parent();
-    var contentWrapper = $('.sidebar-content-wrapper', menu);
     var contentClass = icon.attr('data-target-content');
     var contentSize = $('.' + contentClass, menu).attr('data-content-size');
 
-    icon.toggleClass('sidebar-icon-clicked');
-    contentWrapper.toggleClass('sidebar-contentsize-' + contentSize);
-    $('.' + contentClass).toggleClass('sidebar-content-shown');
-}
+    return TOPPANO.ui.menuUI.width[contentSize];
+};
 
-// Listener for clicking Summary button.
-TOPPANO.onSummaryBtnClick = function(event) {
-    var summaryBtn = $('#summary-btn');
-    var summaryMain = $('#summary-main');
+TOPPANO.toggleMenuClickedIcon = function(icon, whenToggleContent) {
+    if(icon) {
+        var menu = icon.parent().parent();
+        var contentWrapper = $('.sidebar-content-wrapper', menu);
+        var contentClass = icon.attr('data-target-content');
+        var contentSize = $('.' + contentClass, menu).attr('data-content-size');
 
-    // When the main block is about to be closed, we should collapse
-    // the main block if it is expanded.
-    if(summaryBtn.hasClass('ui-icon-arrow-r') && !summaryMain.hasClass('ui-collapsible-collapsed')) {
-        $('#summary-main .ui-collapsible-heading-toggle').trigger('click');
-        summaryMain.delay(TOPPANO.ui.summaryUI.animateDelay);
+        if(whenToggleContent === 'start') {
+            $('.' + contentClass).toggle();
+        } else if(whenToggleContent === 'end') {
+            contentWrapper.one(TOPPANO.getTransitionEndEventName(), function(event) {
+                $('.' + contentClass).toggle();
+            });
+        }
+        icon.toggleClass('sidebar-icon-clicked');
+        contentWrapper.toggleClass('sidebar-contentsize-' + contentSize);
     }
-    summaryMain.animate({width: 'toggle' }, TOPPANO.ui.summaryUI.animateDelay, function() {
-        summaryBtn.toggleClass('ui-icon-arrow-r');
-        summaryBtn.toggleClass('ui-icon-arrow-l');
-    });
 };
 
-// Listener for clicking Summary head block.
-TOPPANO.onSummaryMainClick = function(event) {
-    $('.ui-collapsible-content', $('#summary-main')).slideToggle(TOPPANO.ui.summaryUI.animateDelay);
-};
+TOPPANO.getTransitionEndEventName = function() {
+    var t;
+    var el = document.createElement('fakeelement');
+    var transitions = {
+      'transition': 'transitionend',
+      'OTransition': 'oTransitionEnd',
+      'MozTransition': 'transitionend',
+      'WebkitTransition': 'webkitTransitionEnd'
+    }
 
-// Listener for clicking fullscreen button.
-TOPPANO.onFullscreenBtnClick = function(event) {
-    if($.fullscreen.isFullScreen()) {
-        $.fullscreen.exit();
-    } else {
-        $('body').fullscreen();
+    for(t in transitions){
+        if( el.style[t] !== undefined ){
+            return transitions[t];
+        }
     }
 };
 
@@ -131,16 +145,7 @@ TOPPANO.onFBShareBtnClick = function(event) {
                     picture: shortUrl,
                     description: 'The most beautiful jellyfish!'
                 }, function(response){
-                    // 5. Show message when posting is completed successfully.
-                    if(response && response['post_id']) {
-                        var resultDialog = $('#fb-share-result-dialog').popup('open');
-                        setTimeout(function() {
-                            // Check whether it is closed by user before we close it.
-                            if(resultDialog.parent().hasClass('ui-popup-active')) {
-                                resultDialog.popup('close');
-                            }
-                        }, 2000);
-                    }
+                    // 5. TODO: Show message when posting is completed successfully.
                 });
             });
         } else {
@@ -149,27 +154,27 @@ TOPPANO.onFBShareBtnClick = function(event) {
     }, { scope: 'publish_actions' });
 };
 
+TOPPANO.onTwitterShareBtnClick = function() {
+    var position_left = screen.width/2-400;
+    var position_top = screen.height/2-200;
+    var spec ='height=400,width=800,top='+position_top.toString()+',left='+position_left.toString();
+    var url = "https://twitter.com/intent/tweet?url="+document.URL;
+    window.open(url,'name',spec);
+};
+
 // Listener for embedded link width or height field changes.
 TOPPANO.onEmbeddedLinkChange = function(event) {
-    var width = parseInt($('#embedded-link-width').val());
-    var height = parseInt($('#embedded-link-height').val());
-    var minWidth = TOPPANO.ui.embeddedLinkUI.minWidth;
-    var minHeight = TOPPANO.ui.embeddedLinkUI.minHeight;
+    var width = parseInt($('#menu .sidebar-content-share-width').val());
+    var height = parseInt($('#menu .sidebar-content-share-height').val());
+    var minWidth = TOPPANO.ui.menuUI.linkMinWidth;
+    var minHeight = TOPPANO.ui.menuUI.linkMinHeight;
     var currentUrl = window.location.href;
     var link =
         '<iframe width="' + ((isNaN(width) || width < minWidth) ? minWidth : width) +
         '" height="' + ((isNaN(height) || height < minHeight) ? minHeight : height) +
         '" src="' + currentUrl +
         '" style="border: none" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
-    $('#embedded-link-output').val(link);
-};
-TOPPANO.onSGImgClick = function(prop) {
-    TOPPANO.transitNode(prop.nodeId, prop.lng, prop.lat, prop.fov);
-};
-
-// Transit current node to another node.
-TOPPANO.transitNode = function(targetNodeId, lng, lat, fov) {
-    TOPPANO.changeView(targetNodeId, lng, lat, fov);
+    $('#menu .sidebar-content-share-output').html(link);
 };
 
 // Convert a base64-encoded image to a Blob.
@@ -191,5 +196,14 @@ TOPPANO.base64toBlob = function(dataUrl) {
     }
 
     return new Blob([ia], {type:mimeString});
+};
+
+// Listener for clicking fullscreen button.
+TOPPANO.onFullscreenBtnClick = function(event) {
+    if($.fullscreen.isFullScreen()) {
+        $.fullscreen.exit();
+    } else {
+        $('body').fullscreen();
+    }
 };
 
