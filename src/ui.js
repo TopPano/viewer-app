@@ -7,6 +7,7 @@ TOPPANO.createUI = function(model) {
 TOPPANO.createMenu = function(menu) {
     TOPPANO.initFB();
     TOPPANO.initTwitter();
+    TOPPANO.initQMark();
     $('#menu .sidebar-content-info-message').html(menu['info']['message']);
     $('#menu .sidebar-btn').on('click', TOPPANO.onMenuBtnClick);
     $('#menu .sidebar-icon').on('click', TOPPANO.onMenuIconClick);
@@ -48,6 +49,12 @@ TOPPANO.initTwitter = function() {
     }(document, "script", "twitter-wjs"));
     $('#menu .sidebar-content-share-twitter').on('click', TOPPANO.onTwitterShareBtnClick);
 };
+
+
+// initial question mark at top right side
+TOPPANO.initQMark = function(){
+    $('#q_mark_img').on('click', TOPPANO.onQMarkClick);
+}
 
 // Global ui variables initialization.
 TOPPANO.ui = {

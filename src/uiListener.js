@@ -162,6 +162,11 @@ TOPPANO.onTwitterShareBtnClick = function() {
     window.open(url,'name',spec);
 };
 
+
+TOPPANO.onQMarkClick = function(){
+    $('#how_to_use').bPopup();
+}
+
 // Listener for embedded link width or height field changes.
 TOPPANO.onEmbeddedLinkChange = function(event) {
     var width = parseInt($('#menu .sidebar-content-share-width').val());
