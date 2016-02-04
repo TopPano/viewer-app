@@ -81,7 +81,10 @@ TOPPANO.threeInit = function(map) {
     TOPPANO.rendererSetting();
     // load tile images
     var isTrans = false;
-
+    
+   /* increase progress bar */
+   var current_progress = $('#progress-div progress').val();
+   $('#progress-div progress').val(current_progress+8);
 };
 
 
@@ -114,9 +117,16 @@ TOPPANO.loadAllImg = function(nodes_meta) {
     for (node_ID in nodes_meta){
         var node_files = nodes_meta[node_ID].files;
         for (file_index in node_files){
-            if(file_index.search('thumb')<0 && file_index.search('low')<0 ){
+            if(file_index.search('equirectangular')>0 && file_index.search('low')<0 ){
                 var file_url = node_files[file_index];
-                deferreds.push(loadImg(node_ID, file_url).done(function(msg){console.log(msg);}) );
+                deferreds.push(loadImg(node_ID, file_url)
+                               .done(
+                                   function(msg){
+                                       console.log(msg);
+                                       /* increase progress bar */
+                                       var current_progress = $('#progress-div progress').val();
+                                       $('#progress-div progress').val(current_progress+10); 
+                                   }));
             }
         }
     }

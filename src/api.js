@@ -16,9 +16,14 @@ TOPPANO.initMap = function(map) {
         TOPPANO.modelInit();
 
         TOPPANO.update();
+
         
+        /* increase progress bar */
+        setTimeout(function(){$('#progress-div progress').val(94);},500);
+        setTimeout(function(){$('#progress-div progress').val(100);},1000);
+
         // draw snapshot canvas
-        TOPPANO.snapshotCanvasInit();
+//        TOPPANO.snapshotCanvasInit();
     };
 };
 

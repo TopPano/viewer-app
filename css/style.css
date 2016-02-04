@@ -370,3 +370,41 @@ body {
     display: none;
 }
 
+/* progress bar shape and position and turnoff the default setting of each browser*/
+progress.progress-bar{
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border: none;
+    height: 4px;
+}
+
+/* set the bar background color of firefox and chrome*/
+progress,                          /* Firefox  */ 
+progress[role][aria-valuenow] {    /* Polyfill */
+       background: #1d1b1b !important; /* !important is needed by the polyfill */
+}
+
+progress::-webkit-progress-bar {
+        background: #1d1b1b;
+}
+
+/* set the bar color*/
+/* IE10 */
+progress {
+    color: #ff504b;
+}
+
+/* Firefox */
+progress::-moz-progress-bar { 
+    background: #ff504b;  
+}
+
+/* Chrome */
+progress::-webkit-progress-value {
+    background: #ff504b;
+}
+
