@@ -228,13 +228,20 @@ function set_on_rotating_scene(){
                                 var count, speed;
                                 for (count=0; count<200; count++){    
                                     var id = setTimeout(function(count, id){
-                                        TOPPANO.gv.cam.lng += (deltaX*(Math.cos(angle)) - deltaY*(Math.sin(angle))) * (200-count)/10000;
-                                        TOPPANO.gv.cam.lat += (deltaX*(Math.sin(angle)) + deltaY*(Math.cos(angle))) * (200-count)/10000;
+                                        TOPPANO.gv.cam.lng += (deltaX) * (200-count)/10000;
+                                        TOPPANO.gv.cam.lat += deltaY * (200-count)/10000;
                                     },(1+count)*5, count, id);
                                     TOPPANO.gv.cursor.slide_func_array.push(id);
                                 }
                            }
                        });
+
+
+    $('#container').on('mouseout', 
+                       function(){
+                            TOPPANO.gv.cursor.state = "default";
+                            TOPPANO.gv.cursor.element = null;
+                       }); 
 }
 
 
