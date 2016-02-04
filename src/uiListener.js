@@ -208,7 +208,7 @@ TOPPANO.onEmbeddedLinkChange = function(event) {
         '" height="' + ((isNaN(height) || height < minHeight) ? minHeight : height) +
         '" src="' + currentUrl +
         '" style="border: none" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
-    $('#menu .sidebar-content-share-output').html(link);
+    $('#menu textarea.sidebar-content-share-link').val(link);
 };
 
 // Convert a base64-encoded image to a Blob.
