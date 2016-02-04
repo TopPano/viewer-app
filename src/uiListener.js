@@ -232,12 +232,3 @@ TOPPANO.base64toBlob = function(dataUrl) {
     return new Blob([ia], {type:mimeString});
 };
 
-// Listener for clicking fullscreen button.
-TOPPANO.onFullscreenBtnClick = function(event) {
-    if($.fullscreen.isFullScreen()) {
-        $.fullscreen.exit();
-    } else {
-        $('body').fullscreen();
-    }
-};
-

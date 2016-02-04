@@ -27,6 +27,14 @@ body {
     transform: translateY(-50%);
     height: 210px;
     background-color: rgba(0, 0, 0, 0.5);
+    -webkit-transition: right 300ms ease;
+    -moz-transition: right 300ms ease;
+    -o-transition: right 300ms ease;
+    -ms-transition: right 300ms ease;
+    transition: right 300ms ease;
+}
+.sidebar.ui-hidden {
+    right: -350px;
 }
 /* Only sidebar button is shown. */
 .sidebar-collapsed {
@@ -319,6 +327,10 @@ body {
     cursor: default;
 }
 
+/**
+  * Styles for logo bar
+  */
+/* A bar for showing logo and help icon*/
 .logo-bar {
     background: black;
     width: 100%;
@@ -326,9 +338,16 @@ body {
     position: absolute;
     top: 0px;
     left: 0px; 
+    -webkit-transition: top 300ms ease;
+    -moz-transition: top 300ms ease;
+    -o-transition: top 300ms ease;
+    -ms-transition: top 300ms ease;
+    transition: top 300ms ease;
 }
-
-.logo-bar #logo_img{
+.logo-bar.ui-hidden {
+    top: -150px;
+}
+.logo-bar #logo_img {
     -webkit-transform: translateX(-50%);
     -moz-transform: translateX(-50%);
     -o-transform: translateX(-50%);
@@ -338,15 +357,16 @@ body {
     top: 10px;
     left: 50%;
 }
-
-.logo-bar #q_mark_img{
-    position: fixed;
+.logo-bar #q_mark_img {
+    position: absolute;
     top: 8px;
     left: 90%;
     width:35px; 
     height:35px;
+    cursor: pointer;
 }
 
 #how_to_use{
     display: none;
 }
+

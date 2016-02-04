@@ -2,6 +2,7 @@
 TOPPANO.createUI = function(model) {
     TOPPANO.createMenu(model['menu']);
     TOPPANO.createLikeBtn(model['likebtn']);
+    TOPPANO.addContainerEvent();
 };
 
 // Create a sidebar menu.
@@ -21,6 +22,41 @@ TOPPANO.createMenu = function(menu) {
 TOPPANO.createLikeBtn = function(likebtn) {
     $('#like-btn .likebtn-count').html(likebtn['likes']);
     $('#like-btn .likebtn-icon').on('click', TOPPANO.onLikeIconClick);
+};
+
+// Add events of container that are related to UI.
+TOPPANO.addContainerEvent = function() {
+    var click = TOPPANO.ui.containerEvent.click;
+
+    $('#container').on('mousedown touchstart', function(event) {
+        click.lastMouseDown = new Date().getTime();
+    }).on('mouseup touchend', function(event) {
+        if(new Date().getTime() < (click.lastMouseDown + click.longClickDelay)) {
+            click.count++;
+            if(click.count === 1) {
+                click.timer = setTimeout(function() {
+                    // Single click: show/hide all UI.
+                    $('#logo').toggleClass('ui-hidden');
+                    $('#menu').toggleClass('ui-hidden');
+                    click.count = 0;
+                }, click.dblclickDelay);
+            } else {
+                // Double click: turn on/off fullscreen.
+                // TODO: Fullscreen support for IOS Safari, Android Browser...
+                if(screenfull.enabled) {
+                    screenfull.toggle();
+                } else {
+                    if($.fullscreen.isFullScreen()) {
+                        $.fullscreen.exit();
+                    } else {
+                        $('body').fullscreen();
+                    }
+                }
+                clearTimeout(click.timer);
+                click.count = 0;
+            }
+        }
+    });
 };
 
 // Initialize Facebook SDK.
@@ -75,6 +111,16 @@ TOPPANO.ui = {
         linkMinWidth: 240,
         linkMinHeight: 160,
         currentClickedIcon: null
+    },
+    containerEvent: {
+        click: {
+            dblclickDelay: 300, // Delay for differentiate between single and double click
+            count: 0,
+            timer: null,
+            longClickDelay: 150, // Delay for differentiate between short and long click
+            lastMouseDown: 0,
+            duration: 0
+        }
     },
     // Facebook SDK parameters
     fbSdkParams: {
