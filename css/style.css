@@ -128,15 +128,6 @@ textarea:focus, input:focus {
     width: 0;
     height: 100%;
 }
-.sidebar-expanded .sidebar-content-wrapper.sidebar-contentsize-large {
-    width: 240px;
-}
-.sidebar-expanded .sidebar-content-wrapper.sidebar-contentsize-small {
-    width: 210px;
-}
-.sidebar-expanded .sidebar-content-wrapper.sidebar-contentsize-none {
-    width: 0;
-}
 .sidebar-content {
     display: none;
     width: 100%;

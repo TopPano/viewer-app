@@ -102,11 +102,6 @@ TOPPANO.initQMark = function(){
 TOPPANO.ui = {
     // variables for Menu
     menuUI: {
-        width: {
-            'large': 240,
-            'small': 210,
-            'none': 0,
-        },
         linkMinWidth: 240,
         linkMinHeight: 160,
         currentClickedIcon: null

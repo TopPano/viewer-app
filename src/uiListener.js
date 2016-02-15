@@ -20,33 +20,25 @@ TOPPANO.onMenuIconClick = function(event) {
 };
 
 TOPPANO.changeContents = function(from, to) {
-    var fromWidth = !from ? 0 : TOPPANO.getContentWidth(from),
-        toWidth = !to ? 0 : TOPPANO.getContentWidth(to);
+    // Assume that at least one of them is defined.
+    var menu = from ? from.parent().parent() : to.parent().parent();
+    var contentWrapper = $('.sidebar-content-wrapper', menu);
+    var fromClass = !from ? '' : from.attr('data-target-content'),
+        fromWidth = !from ? 0 : $('.' + fromClass, menu).attr('data-content-width');
+    var toClass = !to ? '' : to.attr('data-target-content'),
+        toWidth = !to ? 0 : $('.' + toClass, menu).attr('data-content-width');
 
     if((fromWidth - toWidth) === 0) {
-        TOPPANO.toggleMenuClickedIcon(from, 'start');
-        TOPPANO.toggleMenuClickedIcon(to, 'start');
+        TOPPANO.toggleMenuClickedIcon('start', contentWrapper, from, fromClass);
+        TOPPANO.toggleMenuClickedIcon('start', contentWrapper, to, toClass);
     } else {
-        TOPPANO.toggleMenuClickedIcon(from, 'start');
-        TOPPANO.toggleMenuClickedIcon(to, 'end');
+        TOPPANO.toggleMenuClickedIcon('start', contentWrapper, from, fromClass);
+        TOPPANO.toggleMenuClickedIcon('end', contentWrapper, to, toClass, toWidth);
     }
 };
 
-TOPPANO.getContentWidth = function(icon) {
-    var menu = icon.parent().parent();
-    var contentClass = icon.attr('data-target-content');
-    var contentSize = $('.' + contentClass, menu).attr('data-content-size');
-
-    return TOPPANO.ui.menuUI.width[contentSize];
-};
-
-TOPPANO.toggleMenuClickedIcon = function(icon, whenToggleContent) {
+TOPPANO.toggleMenuClickedIcon = function(whenToggleContent, contentWrapper, icon, contentClass, contentWidth) {
     if(icon) {
-        var menu = icon.parent().parent();
-        var contentWrapper = $('.sidebar-content-wrapper', menu);
-        var contentClass = icon.attr('data-target-content');
-        var contentSize = $('.' + contentClass, menu).attr('data-content-size');
-
         if(whenToggleContent === 'start') {
             $('.' + contentClass).toggle();
         } else if(whenToggleContent === 'end') {
@@ -55,7 +47,9 @@ TOPPANO.toggleMenuClickedIcon = function(icon, whenToggleContent) {
             });
         }
         icon.toggleClass('sidebar-icon-clicked');
-        contentWrapper.toggleClass('sidebar-contentsize-' + contentSize);
+    }
+    if(typeof contentWidth !== 'undefined') {
+        contentWrapper.width(contentWidth);
     }
 };
 
