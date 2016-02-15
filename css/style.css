@@ -36,17 +36,13 @@ body {
 .sidebar.ui-hidden {
     right: -350px;
 }
-/* Only sidebar button is shown. */
+/* Only iconlist is shown. */
 .sidebar-collapsed {
-}
-/* Sidebar button and icon list are shown. */
-.sidebar-partial-expanded {
 }
 /* All sub-components are shown. */
 .sidebar-expanded {
 }
 /* Common sytles for sub-components*/
-.sidebar-btn,
 .sidebar-iconlist,
 .sidebar-content-wrapper,
 .sidebar-content-info,
@@ -84,6 +80,8 @@ textarea:focus, input:focus {
 .sidebar-title {
     position: absolute;
     top: 10px;
+    left: 0;
+    width: 40px;
     text-align: center;
     font-size: 0.813rem; /* 13px */
     cursor: default;
@@ -93,42 +91,11 @@ textarea:focus, input:focus {
     -ms-transition: left 100ms ease;
     transition: left 100ms ease;
 }
-.sidebar-collapsed .sidebar-title {
-    left: 0;
-    width: 50px;
-}
-.sidebar-partial-expanded .sidebar-title,
-.sidebar-expanded .sidebar-title {
-    left: 50px;
-    width: 40px;
-}
-/* sidebar-btn: A button used to collpase/expand the sidebar */
-.sidebar-btn {
-    width: 50px;
-    height: 100%;
-    background-repeat: no-repeat;
-    background-position: center center;
-    cursor: pointer;
-}
-.sidebar.sidebar-collapsed .sidebar-btn {
-    background-image: url("images/sidebar/sidebar-btn-collapsed.png");
-}
-.sidebar.sidebar-partial-expanded .sidebar-btn,
-.sidebar.sidebar-expanded .sidebar-btn {
-    background-image: url("images/sidebar/sidebar-btn-expanded.png");
-}
 /* sidebar-iconlist: a bar to show icons */
 .sidebar-iconlist {
     height: 100%;
-    padding: 30px 0 0 0;
-}
-.sidebar-collapsed .sidebar-iconlist {
-    width: 0;
-}
-.sidebar-partial-expanded .sidebar-iconlist,
-.sidebar-expanded .sidebar-iconlist {
-    width: 55px;
     padding: 30px 15px 0 0;
+    width: 55px;
 }
 .sidebar-iconlist .sidebar-icon {
     width: 40px;

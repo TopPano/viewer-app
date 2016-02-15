@@ -1,34 +1,19 @@
-TOPPANO.onMenuBtnClick = function(event) {
-    var menu = $(this).parent();
-
-    if(menu.hasClass('sidebar-collapsed')) {
-        menu.addClass('sidebar-partial-expanded');
-    } else if(menu.hasClass('sidebar-partial-expanded')) {
-        menu.removeClass('sidebar-partial-expanded');
-    } else {
-        TOPPANO.changeContents(TOPPANO.ui.menuUI.currentClickedIcon, null);
-        menu.removeClass('sidebar-expanded');
-        TOPPANO.ui.menuUI.currentClickedIcon = null;
-    }
-    menu.toggleClass('sidebar-collapsed');
-};
-
 TOPPANO.onMenuIconClick = function(event) {
     var menu = $(this).parent().parent();
     var clickedIcon = $(this);
 
-    if(menu.hasClass('sidebar-partial-expanded')) {
-        // Menu is partially expanded.
+    if(menu.hasClass('sidebar-collapsed')) {
+        // Menu is collapsed.
         TOPPANO.changeContents(null, clickedIcon);
-        menu.removeClass('sidebar-partial-expanded').addClass('sidebar-expanded');
+        menu.removeClass('sidebar-collapsed').addClass('sidebar-expanded');
         TOPPANO.ui.menuUI.currentClickedIcon = clickedIcon;
     } else if(TOPPANO.ui.menuUI.currentClickedIcon.attr('class') === clickedIcon.attr('class')) {
-        // Menu is fully expanded and the same icon is clicked.
+        // Menu is expanded and the same icon is clicked.
         TOPPANO.changeContents(clickedIcon, null);
-        menu.removeClass('sidebar-expanded').addClass('sidebar-partial-expanded');
+        menu.removeClass('sidebar-expanded').addClass('sidebar-collapsed');
         TOPPANO.ui.menuUI.currentClickedIcon = null;
     } else {
-        // Menu is fully expanded and a different icon is clicked.
+        // Menu is expanded and a different icon is clicked.
         TOPPANO.changeContents(TOPPANO.ui.menuUI.currentClickedIcon, clickedIcon);
         TOPPANO.ui.menuUI.currentClickedIcon = clickedIcon;
     }

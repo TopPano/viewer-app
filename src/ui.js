@@ -11,7 +11,6 @@ TOPPANO.createMenu = function(menu) {
     TOPPANO.initTwitter();
     TOPPANO.initQMark();
     $('#menu .sidebar-content-info-message').html(menu['info']['message']);
-    $('#menu .sidebar-btn').on('click', TOPPANO.onMenuBtnClick);
     $('#menu .sidebar-icon').on('click', TOPPANO.onMenuIconClick);
     $('#menu .sidebar-content-share-width').on('input', TOPPANO.onEmbeddedLinkChange);
     $('#menu .sidebar-content-share-height').on('input', TOPPANO.onEmbeddedLinkChange);
