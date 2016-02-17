@@ -1,72 +1,127 @@
 TOPPANO.onMenuIconClick = function(event) {
+    // TODO: Lock menu when it is in transition.
     var menu = $(this).parent().parent();
     var clickedIcon = $(this);
 
     if(menu.hasClass('sidebar-collapsed')) {
         // Menu is collapsed.
-        TOPPANO.changeContents(null, clickedIcon);
+        TOPPANO.changeContents(null, clickedIcon, 'width');
         menu.removeClass('sidebar-collapsed').addClass('sidebar-expanded');
         TOPPANO.ui.menuUI.currentClickedIcon = clickedIcon;
     } else if(TOPPANO.ui.menuUI.currentClickedIcon.attr('class') === clickedIcon.attr('class')) {
         // Menu is expanded and the same icon is clicked.
-        TOPPANO.changeContents(clickedIcon, null);
+        TOPPANO.changeContents(clickedIcon, null, 'height');
         menu.removeClass('sidebar-expanded').addClass('sidebar-collapsed');
         TOPPANO.ui.menuUI.currentClickedIcon = null;
     } else {
         // Menu is expanded and a different icon is clicked.
-        TOPPANO.changeContents(TOPPANO.ui.menuUI.currentClickedIcon, clickedIcon);
+        TOPPANO.changeContents(TOPPANO.ui.menuUI.currentClickedIcon, clickedIcon, 'height');
         TOPPANO.ui.menuUI.currentClickedIcon = clickedIcon;
     }
 };
 
-TOPPANO.changeContents = function(from, to) {
+TOPPANO.changeContents = function(from, to, changeFirst) {
     // Assume that at least one of them is defined.
     var menu = from ? from.parent().parent() : to.parent().parent();
     var contentWrapper = $('.sidebar-content-wrapper', menu);
     var fromClass = !from ? '' : from.attr('data-target-content'),
-        fromWidth = !from ? 0 : $('.' + fromClass, menu).attr('data-content-width');
+        fromWidth = !from ? 0 : parseInt($('.' + fromClass, menu).css('width')),
+        fromHeight = parseInt(menu.css('height'));
     var toClass = !to ? '' : to.attr('data-target-content'),
-        toWidth = !to ? 0 : $('.' + toClass, menu).attr('data-content-width');
+        toWidth = !to ? 0 : parseInt($('.' + toClass, menu).css('width')),
+        toHeight = TOPPANO.changeContentHeight(toClass, menu);
 
-    if((fromWidth - toWidth) === 0) {
-        TOPPANO.toggleMenuClickedIcon('start', contentWrapper, from, fromClass);
-        TOPPANO.toggleMenuClickedIcon('start', contentWrapper, to, toClass);
+    TOPPANO.toggleMenuIcon(from);
+    TOPPANO.toggleMenuIcon(to);
+    TOPPANO.toggleMenuContent(fromClass, menu);
+    if(changeFirst === 'width') {
+        TOPPANO.changeContentWrapperWidth(contentWrapper, fromWidth, toWidth, function() {
+            TOPPANO.changeMenuHeight(menu, fromHeight, toHeight, function() {
+                TOPPANO.toggleMenuContent(toClass, menu);
+            });
+        });
     } else {
-        TOPPANO.toggleMenuClickedIcon('start', contentWrapper, from, fromClass);
-        TOPPANO.toggleMenuClickedIcon('end', contentWrapper, to, toClass, toWidth);
+        TOPPANO.changeMenuHeight(menu, fromHeight, toHeight, function() {
+            TOPPANO.changeContentWrapperWidth(contentWrapper, fromWidth, toWidth, function() {
+                TOPPANO.toggleMenuContent(toClass, menu);
+            });
+        });
     }
 };
 
-TOPPANO.toggleMenuClickedIcon = function(whenToggleContent, contentWrapper, icon, contentClass, contentWidth) {
+TOPPANO.changeContentHeight = function(contentClass, menu) {
+    var minHeight = parseInt(menu.css('min-height')),
+        height = 0;
+
+    switch(contentClass) {
+        case 'sidebar-content-info':
+            var message = $('.sidebar-content-info-message', menu);
+            var messageMinHeight = message.css('min-height'),
+                messageHeight = message.prop('scrollHeight');
+            messageHeight = (messageHeight < messageMinHeight) ? messageMinHeight : messageHeight;
+            message.css('height', messageHeight + 'px');
+            height = parseInt($('.' + contentClass).css('height'));
+            break;
+        case 'sidebar-content-tag':
+            height = 0;
+            break;
+        case 'sidebar-content-share':
+            // TODO: The property 'scrollHeight' may not decrease when link value length decreases.
+            var link = $('.sidebar-content-share-link', menu),
+                wrapper = link.parent();
+            var wrapperMinHeight = wrapper.css('min-height'),
+                wrapperHeight = link.prop('scrollHeight')
+                    + parseInt(wrapper.css('padding-top')) + parseInt(wrapper.css('padding-bottom'));
+            wrapperHeight = (wrapperHeight < wrapperMinHeight) ? wrapperMinHeight : wrapperHeight;
+            wrapper.css('height', wrapperHeight + 'px');
+            height = parseInt($('.' + contentClass).css('height'));
+            break;
+    }
+
+    return (height < minHeight) ? minHeight: height;
+};
+
+TOPPANO.toggleMenuIcon = function(icon) {
     if(icon) {
-        if(whenToggleContent === 'start') {
-            $('.' + contentClass).toggle();
-        } else if(whenToggleContent === 'end') {
-            contentWrapper.one(TOPPANO.getTransitionEndEventName(), function(event) {
-                $('.' + contentClass).toggle();
-            });
-        }
         icon.toggleClass('sidebar-icon-clicked');
     }
-    if(typeof contentWidth !== 'undefined') {
-        contentWrapper.width(contentWidth);
+};
+
+TOPPANO.toggleMenuContent = function(contentClass) {
+    if(contentClass !== '') {
+        $('.' + contentClass, menu).toggleClass('sidebar-content-shown');
     }
 };
 
-TOPPANO.getTransitionEndEventName = function() {
-    var t;
-    var el = document.createElement('fakeelement');
-    var transitions = {
-      'transition': 'transitionend',
-      'OTransition': 'oTransitionEnd',
-      'MozTransition': 'transitionend',
-      'WebkitTransition': 'webkitTransitionEnd'
-    }
-
-    for(t in transitions){
-        if( el.style[t] !== undefined ){
-            return transitions[t];
+TOPPANO.changeContentWrapperWidth = function(contentWrapper, fromWidth, toWidth, callback) {
+    if((fromWidth - toWidth) === 0) {
+        if(typeof(callback) == 'function') {
+            callback();
         }
+    } else {
+        contentWrapper.one(TOPPANO.ui.common.transitionEndEvent, function(event) {
+            event.stopPropagation();
+            if(typeof(callback) == 'function') {
+                callback();
+            }
+        });
+        contentWrapper.css('width', toWidth + 'px');
+    }
+};
+
+TOPPANO.changeMenuHeight = function(menu, fromHeight, toHeight, callback) {
+    if((fromHeight - toHeight) === 0) {
+        if(typeof(callback) == 'function') {
+            callback();
+        }
+    } else {
+        menu.one(TOPPANO.ui.common.transitionEndEvent, function(event) {
+            event.stopPropagation();
+            if(typeof(callback) == 'function') {
+                callback();
+            }
+        });
+        menu.css('height', toHeight + 'px');
     }
 };
 
@@ -177,8 +232,9 @@ TOPPANO.onQMarkClick = function(){
 
 // Listener for embedded link width or height field changes.
 TOPPANO.onEmbeddedLinkChange = function(event) {
-    var width = parseInt($('#menu .sidebar-content-share-width').val());
-    var height = parseInt($('#menu .sidebar-content-share-height').val());
+    var menu = $('#menu');
+    var width = parseInt($('.sidebar-content-share-width', menu).val());
+    var height = parseInt($('.sidebar-content-share-height', menu).val());
     var minWidth = TOPPANO.ui.menuUI.linkMinWidth;
     var minHeight = TOPPANO.ui.menuUI.linkMinHeight;
     var currentUrl = window.location.href;
@@ -187,7 +243,15 @@ TOPPANO.onEmbeddedLinkChange = function(event) {
         '" height="' + ((isNaN(height) || height < minHeight) ? minHeight : height) +
         '" src="' + currentUrl +
         '" style="border: none" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
-    $('#menu textarea.sidebar-content-share-link').val(link);
+    $('textarea.sidebar-content-share-link', menu).val(link);
+
+    if(menu.hasClass('sidebar-expanded')) {
+        var oldMenuHeight = parseInt(menu.css('height'));
+        var newMenuHeight = TOPPANO.changeContentHeight('sidebar-content-share', menu);
+        TOPPANO.changeMenuHeight(menu, oldMenuHeight, newMenuHeight, function() {
+            console.log('kerker');
+        });
+    }
 };
 
 // Convert a base64-encoded image to a Blob.

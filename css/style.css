@@ -25,13 +25,14 @@ body {
     -o-transform: translateY(-50%);
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
+    min-height: 210px;
     height: 210px;
     background-color: rgba(0, 0, 0, 0.5);
-    -webkit-transition: right 300ms ease;
-    -moz-transition: right 300ms ease;
-    -o-transition: right 300ms ease;
-    -ms-transition: right 300ms ease;
-    transition: right 300ms ease;
+    -webkit-transition: right 300ms ease, height 100ms ease;
+    -moz-transition: right 300ms ease, height 100ms ease;
+    -o-transition: right 300ms ease, height 100ms ease;
+    -ms-transition: right 300ms ease, height 100ms ease;
+    transition: right 300ms ease, height 100ms ease;
 }
 .sidebar.ui-hidden {
     right: -350px;
@@ -56,11 +57,11 @@ body {
 }
 .sidebar-iconlist,
 .sidebar-content-wrapper {
-    -webkit-transition: width 100ms ease, padding 100ms ease;
-    -moz-transition: width 100ms ease, padding 100ms ease;
-    -o-transition: width 100ms ease, padding 100ms ease;
-    -ms-transition: width 100ms ease, padding 100ms ease;
-    transition: width 100ms ease, padding 100ms ease;
+    -webkit-transition: width 100ms ease;
+    -moz-transition: width 100ms ease;
+    -o-transition: width 100ms ease;
+    -ms-transition: width 100ms ease;
+    transition: width 100ms ease;
 }
 .sidebar-text-singleline {
     white-space: nowrap;
@@ -73,7 +74,14 @@ body {
     white-space: -o-pre-wrap;
     word-wrap: break-word;
 }
-textarea:focus, input:focus {
+.sidebar textarea {
+    border: none;
+    background: none;
+    resize: none;
+    overflow: hidden;
+}
+.sidebar textarea:focus,
+.sidebar input:focus {
     outline: none;
 }
 /* sidebar-title: a label that shows the title of sidebar. */
@@ -129,12 +137,22 @@ textarea:focus, input:focus {
     height: 100%;
 }
 .sidebar-content {
-    display: none;
-    width: 100%;
-    height: 100%;
+    position: absolute;
+    opacity: 0;
+    visibility: hidden;
+    -webkit-transition: opacity 500ms ease;
+    -moz-transition: opacity 500ms ease;
+    -o-transition: opacity 500ms ease;
+    -ms-transition: opacity 500ms ease;
+    transition: opacity 500ms ease;
+}
+.sidebar-content.sidebar-content-shown {
+    visibility: visible;
+    opacity: 1;
 }
 /* Customized content: sidebar-content-info */
 .sidebar-content-info {
+    width: 240px;
     padding: 15px 15px 15px 0;
 }
 .sidebar-content-info img,
@@ -160,8 +178,9 @@ textarea:focus, input:focus {
     height: 60px;
     padding-left: 15px;
 }
-.sidebar-content-info .sidebar-content-info-message {
+.sidebar-content-info textarea.sidebar-content-info-message {
     width: 100%;
+    min-height: 120px;
     height: 120px;
     padding-top: 15px;
     font-size: 0.813rem; /* 13px */
@@ -180,8 +199,13 @@ textarea:focus, input:focus {
 .sidebar-content-info .sidebar-content-info-title .sidebar-content-info-date {
     font-size: 0.813rem; /* 13px */
 }
+/* Customized content: sidebar-content-tag (no content) */
+.sidebar-content-tag {
+    width: 0;
+}
 /* Customized content: sidebar-content-share */
 .sidebar-content-share {
+    width: 210px;
     padding: 10px 15px 15px 0;
 }
 .sidebar-content-share * {
@@ -201,6 +225,7 @@ textarea:focus, input:focus {
 }
 .sidebar-content-share .sidebar-content-share-linkwrapper {
     width: 100%;
+    min-height: 82px;
     height: 82px;
     padding: 10px;
     background-color: rgba(0, 0, 0, 0.25);
@@ -208,12 +233,8 @@ textarea:focus, input:focus {
 .sidebar-content-share .sidebar-content-share-linkwrapper textarea.sidebar-content-share-link {
     width: 100%;
     height: 100%;
-    border: none;
     font-size: 0.813rem; /* 13px */
     color: white;
-    background: none;
-    resize: none;
-    overflow: hidden;
 }
 .sidebar-content-share .sidebar-content-share-iconlist .sidebar-content-share-icon {
     display: inline-block;

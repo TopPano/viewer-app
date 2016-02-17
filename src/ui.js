@@ -7,10 +7,11 @@ TOPPANO.createUI = function(model) {
 
 // Create a sidebar menu.
 TOPPANO.createMenu = function(menu) {
+    TOPPANO.initCommon();
     TOPPANO.initFB();
     TOPPANO.initTwitter();
     TOPPANO.initQMark();
-    $('#menu .sidebar-content-info-message').html(menu['info']['message']);
+    $('#menu .sidebar-content-info-message').val(menu['info']['message']);
     $('#menu .sidebar-icon').on('click', TOPPANO.onMenuIconClick);
     $('#menu .sidebar-content-share-width').on('input', TOPPANO.onEmbeddedLinkChange);
     $('#menu .sidebar-content-share-height').on('input', TOPPANO.onEmbeddedLinkChange);
@@ -58,6 +59,11 @@ TOPPANO.addContainerEvent = function() {
     });
 };
 
+// Initialize common variables for ui.
+TOPPANO.initCommon = function() {
+    TOPPANO.ui.common.transitionEndEvent = TOPPANO.getTransitionEndEventName();
+}
+
 // Initialize Facebook SDK.
 TOPPANO.initFB = function() {
     $.ajaxSetup({ cache: true });
@@ -92,11 +98,27 @@ TOPPANO.initTwitter = function() {
     $('#menu .sidebar-content-share-twitter').on('click', TOPPANO.onTwitterShareBtnClick);
 };
 
-
 // initial question mark at top right side
 TOPPANO.initQMark = function(){
     $('#q_mark_img').on('click', TOPPANO.onQMarkClick);
 }
+
+TOPPANO.getTransitionEndEventName = function() {
+    var t;
+    var el = document.createElement('fakeelement');
+    var transitions = {
+      'transition': 'transitionend',
+      'OTransition': 'oTransitionEnd',
+      'MozTransition': 'transitionend',
+      'WebkitTransition': 'webkitTransitionEnd'
+    }
+
+    for(t in transitions){
+        if( el.style[t] !== undefined ){
+            return transitions[t];
+        }
+    }
+};
 
 // Global ui variables initialization.
 TOPPANO.ui = {
@@ -124,6 +146,9 @@ TOPPANO.ui = {
     // Google API parameters
     googleApiParams: {
         shortUrlKey: 'AIzaSyDh1jky-M2BSe5Dnq2CdZiqadfB7t0Qan4'
+    },
+    common: {
+        transitionEndEvent: 'transitionend'
     }
 };
 
