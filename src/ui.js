@@ -16,6 +16,11 @@ TOPPANO.createMenu = function(menu) {
     $('#menu .sidebar-content-share-width').on('input', TOPPANO.onEmbeddedLinkChange);
     $('#menu .sidebar-content-share-height').on('input', TOPPANO.onEmbeddedLinkChange);
     TOPPANO.onEmbeddedLinkChange();
+    new Clipboard('#menu .sidebar-content-share-link', {
+        text: function(trigger) {
+            return trigger.value;
+        }
+    });
 };
 
 // Create a like button.
