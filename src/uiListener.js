@@ -248,9 +248,7 @@ TOPPANO.onEmbeddedLinkChange = function(event) {
     if(menu.hasClass('sidebar-expanded')) {
         var oldMenuHeight = parseInt(menu.css('height'));
         var newMenuHeight = TOPPANO.changeContentHeight('sidebar-content-share', menu);
-        TOPPANO.changeMenuHeight(menu, oldMenuHeight, newMenuHeight, function() {
-            console.log('kerker');
-        });
+        TOPPANO.changeMenuHeight(menu, oldMenuHeight, newMenuHeight);
     }
 };
 

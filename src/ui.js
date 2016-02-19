@@ -145,7 +145,7 @@ TOPPANO.ui = {
     },
     // Facebook SDK parameters
     fbSdkParams: {
-        appId: '226223091041998',
+        appId: '589634317860022',
         version: 'v2.5'
     },
     // Google API parameters

@@ -9,7 +9,7 @@ var map = {
     zoom: 70,
     canvas: 'container',
     isfbShare: true,
-    isState: true,
+    isState: false,
     showObj: true
 };
 
