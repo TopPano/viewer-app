@@ -168,6 +168,7 @@ TOPPANO.onFBShareBtnClick = function(event) {
     FB.login(function(response) {
         if(response['authResponse']) {
             var accessToken = FB.getAuthResponse()['accessToken'];
+            var currentUrl = TOPPANO.gv.currentUrl;
             var snapshot = TOPPANO.base64toBlob(TOPPANO.getSnapshot(800, 600));
             var data = new FormData();
 
@@ -195,7 +196,6 @@ TOPPANO.onFBShareBtnClick = function(event) {
                 });
             }).done(function(response) {
                 var shortUrl = response['id'];
-                var currentUrl = window.location.href;
 
                 // 4. Share to Facebook by using Dialog API.
                 //    The shorter URL of uploaded snapshot is used a the preview image.
@@ -231,19 +231,18 @@ TOPPANO.onQMarkClick = function(){
 }
 
 // Listener for embedded link width or height field changes.
-TOPPANO.onEmbeddedLinkChange = function(event) {
+TOPPANO.onEmbeddedLinkChange = function() {
     var menu = $('#menu');
     var width = parseInt($('.sidebar-content-share-width', menu).val());
     var height = parseInt($('.sidebar-content-share-height', menu).val());
     var minWidth = TOPPANO.ui.menuUI.linkMinWidth;
     var minHeight = TOPPANO.ui.menuUI.linkMinHeight;
-    var currentUrl = window.location.href;
-    var link =
+    var code =
         '<iframe width="' + ((isNaN(width) || width < minWidth) ? minWidth : width) +
         '" height="' + ((isNaN(height) || height < minHeight) ? minHeight : height) +
-        '" src="' + currentUrl +
+        '" src="' + TOPPANO.gv.currentUrl +
         '" style="border: none" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
-    $('textarea.sidebar-content-share-link', menu).val(link);
+    $('textarea.sidebar-content-share-link', menu).val(code);
 
     if(menu.hasClass('sidebar-expanded')) {
         var oldMenuHeight = parseInt(menu.css('height'));

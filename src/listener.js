@@ -319,9 +319,6 @@ function set_on_scrolling_scene(){
         if (TOPPANO.gv.interact.timer !== null) {
             clearTimeout(TOPPANO.gv.interact.timer);
         }
-        TOPPANO.gv.interact.timer = setTimeout(function() {
-            TOPPANO.updateURL();
-        }, 50);
     };
     
     // for IE & chrome

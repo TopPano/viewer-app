@@ -136,6 +136,7 @@ TOPPANO.gv = {
         onPointerDownLat: 0,
         timer: null
     },
+    currentLink: '',
     urlHash: window.location.hash,
     defaultMap: './image/tile/0-0.jpeg',
     apiUrl: 'http://my.verpix.me:3000/api',

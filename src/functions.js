@@ -38,6 +38,7 @@ TOPPANO.modelInit = function() {
                      if (TOPPANO.gv.objects.showObj) {
                         TOPPANO.addWaterDrop(first_node_ID);
                      }
+                     TOPPANO.readInitCamParams();
                  });
     }).done(function() {
         TOPPANO.createUI(model);
@@ -106,7 +107,6 @@ function loadImg(node_ID, file_url){
                                               );
     return _dfr.promise();
 }
-
 
 // loading tiles images
 TOPPANO.loadAllImg = function(nodes_meta) {
@@ -183,6 +183,24 @@ TOPPANO.buildScene = function(node_ID){
         TOPPANO.gv.scene.add(mesh);
     }
 }
+
+// Read the initial camera parameters from url query string.
+TOPPANO.readInitCamParams = function() {
+    var fov = parseInt(getUrlParam('fov')),
+        lat = parseInt(getUrlParam('lat'));
+        lng = parseInt(getUrlParam('lng'));
+
+    if(!isNaN(fov)) {
+        TOPPANO.gv.cam.camera.fov = Math.max(TOPPANO.gv.para.fov.min, Math.min(TOPPANO.gv.para.fov.max, fov));
+    }
+    if(!isNaN(lat)) {
+        TOPPANO.gv.cam.lat = Math.max(-85, Math.min(85, lat));
+    }
+    if(!isNaN(lng)) {
+        TOPPANO.gv.cam.lng = (lng + 360) % 360;
+    }
+    console.log(TOPPANO.gv.cam.lat, TOPPANO.gv.cam.lng);
+};
 
 // add listeners
 TOPPANO.addListener = function() {
@@ -562,14 +580,6 @@ TOPPANO.getSnapshot = function(width, height) {
     return snapshot;
 };
 
-
-// update the URL query
-TOPPANO.updateURL = function() {
-    window.location.hash = TOPPANO.gv.cam.camera.fov + ',' + TOPPANO.gv.cam.lat + ',' +
-        (TOPPANO.gv.cam.lng + TOPPANO.gv.headingOffset) + ',' + TOPPANO.gv.scene1.panoID;
-};
-
-
 // render scene
 TOPPANO.renderScene = function() {
     if (TOPPANO.gv.isTransitioning) {
@@ -582,7 +592,6 @@ TOPPANO.renderScene = function() {
             }
             TOPPANO.gv.objects.transitionObj = [];
             //TOPPANO.addTransition();
-            TOPPANO.updateURL();
             requestAnimationFrame(TOPPANO.update);
             return 0;
         }
@@ -663,6 +672,17 @@ TOPPANO.update = function() {
     }
 
     TOPPANO.renderScene();
+    TOPPANO.updateCurrentUrl();
+};
+
+TOPPANO.updateCurrentUrl = function() {
+    TOPPANO.gv.currentUrl =
+        window.location.origin + '/' +
+        '?post=' + TOPPANO.gv.modelID +
+        '&fov=' + parseInt(TOPPANO.gv.cam.camera.fov) +
+        '&lat=' + parseInt(TOPPANO.gv.cam.lat) +
+        '&lng=' + parseInt(TOPPANO.gv.cam.lng);
+    TOPPANO.onEmbeddedLinkChange();
 };
 
 // print out ERROR messages
