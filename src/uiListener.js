@@ -1,22 +1,25 @@
 TOPPANO.onMenuIconClick = function(event) {
-    // TODO: Lock menu when it is in transition.
-    var menu = $(this).parent().parent();
-    var clickedIcon = $(this);
+    if(!TOPPANO.ui.menuUI.isLocked) {
+        TOPPANO.ui.menuUI.isLocked = true;
 
-    if(menu.hasClass('sidebar-collapsed')) {
-        // Menu is collapsed.
-        TOPPANO.changeContents(null, clickedIcon, 'width');
-        menu.removeClass('sidebar-collapsed').addClass('sidebar-expanded');
-        TOPPANO.ui.menuUI.currentClickedIcon = clickedIcon;
-    } else if(TOPPANO.ui.menuUI.currentClickedIcon.attr('class') === clickedIcon.attr('class')) {
-        // Menu is expanded and the same icon is clicked.
-        TOPPANO.changeContents(clickedIcon, null, 'height');
-        menu.removeClass('sidebar-expanded').addClass('sidebar-collapsed');
-        TOPPANO.ui.menuUI.currentClickedIcon = null;
-    } else {
-        // Menu is expanded and a different icon is clicked.
-        TOPPANO.changeContents(TOPPANO.ui.menuUI.currentClickedIcon, clickedIcon, 'height');
-        TOPPANO.ui.menuUI.currentClickedIcon = clickedIcon;
+        var menu = $(this).parent().parent();
+        var clickedIcon = $(this);
+
+        if(menu.hasClass('sidebar-collapsed')) {
+            // Menu is collapsed.
+            TOPPANO.changeContents(null, clickedIcon, 'width');
+            menu.removeClass('sidebar-collapsed').addClass('sidebar-expanded');
+            TOPPANO.ui.menuUI.currentClickedIcon = clickedIcon;
+        } else if(TOPPANO.ui.menuUI.currentClickedIcon.attr('class') === clickedIcon.attr('class')) {
+            // Menu is expanded and the same icon is clicked.
+            TOPPANO.changeContents(clickedIcon, null, 'height');
+            menu.removeClass('sidebar-expanded').addClass('sidebar-collapsed');
+            TOPPANO.ui.menuUI.currentClickedIcon = null;
+        } else {
+            // Menu is expanded and a different icon is clicked.
+            TOPPANO.changeContents(TOPPANO.ui.menuUI.currentClickedIcon, clickedIcon, 'height');
+            TOPPANO.ui.menuUI.currentClickedIcon = clickedIcon;
+        }
     }
 };
 
@@ -38,12 +41,14 @@ TOPPANO.changeContents = function(from, to, changeFirst) {
         TOPPANO.changeContentWrapperWidth(contentWrapper, fromWidth, toWidth, function() {
             TOPPANO.changeMenuHeight(menu, fromHeight, toHeight, function() {
                 TOPPANO.toggleMenuContent(toClass, menu);
+                TOPPANO.ui.menuUI.isLocked = false;
             });
         });
     } else {
         TOPPANO.changeMenuHeight(menu, fromHeight, toHeight, function() {
             TOPPANO.changeContentWrapperWidth(contentWrapper, fromWidth, toWidth, function() {
                 TOPPANO.toggleMenuContent(toClass, menu);
+                TOPPANO.ui.menuUI.isLocked = false;
             });
         });
     }
@@ -95,32 +100,32 @@ TOPPANO.toggleMenuContent = function(contentClass) {
 
 TOPPANO.changeContentWrapperWidth = function(contentWrapper, fromWidth, toWidth, callback) {
     if((fromWidth - toWidth) === 0) {
-        if(typeof(callback) == 'function') {
+        if(typeof(callback) === 'function') {
             callback();
         }
     } else {
-        contentWrapper.one(TOPPANO.ui.common.transitionEndEvent, function(event) {
-            event.stopPropagation();
-            if(typeof(callback) == 'function') {
+        if(typeof(callback) === 'function') {
+            contentWrapper.one(TOPPANO.ui.common.transitionEndEvent, function(event) {
+                event.stopPropagation();
                 callback();
-            }
-        });
+            });
+        }
         contentWrapper.css('width', toWidth + 'px');
     }
 };
 
 TOPPANO.changeMenuHeight = function(menu, fromHeight, toHeight, callback) {
     if((fromHeight - toHeight) === 0) {
-        if(typeof(callback) == 'function') {
+        if(typeof(callback) === 'function') {
             callback();
         }
     } else {
-        menu.one(TOPPANO.ui.common.transitionEndEvent, function(event) {
-            event.stopPropagation();
-            if(typeof(callback) == 'function') {
+        if(typeof(callback) === 'function') {
+            menu.one(TOPPANO.ui.common.transitionEndEvent, function(event) {
+                event.stopPropagation();
                 callback();
-            }
-        });
+            });
+        }
         menu.css('height', toHeight + 'px');
     }
 };
@@ -244,7 +249,7 @@ TOPPANO.onEmbeddedLinkChange = function() {
         '" style="border: none" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
     $('textarea.sidebar-content-share-link', menu).val(code);
 
-    if(menu.hasClass('sidebar-expanded')) {
+    if(menu.hasClass('sidebar-expanded') && $('.sidebar-content-share', menu).hasClass('sidebar-content-shown')) {
         var oldMenuHeight = parseInt(menu.css('height'));
         var newMenuHeight = TOPPANO.changeContentHeight('sidebar-content-share', menu);
         TOPPANO.changeMenuHeight(menu, oldMenuHeight, newMenuHeight);

@@ -131,6 +131,7 @@ TOPPANO.ui = {
     menuUI: {
         linkMinWidth: 240,
         linkMinHeight: 160,
+        isLocked: false,
         currentClickedIcon: null
     },
     containerEvent: {
