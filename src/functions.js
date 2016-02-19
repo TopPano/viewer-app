@@ -199,7 +199,6 @@ TOPPANO.readInitCamParams = function() {
     if(!isNaN(lng)) {
         TOPPANO.gv.cam.lng = (lng + 360) % 360;
     }
-    console.log(TOPPANO.gv.cam.lat, TOPPANO.gv.cam.lng);
 };
 
 // add listeners
