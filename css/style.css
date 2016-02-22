@@ -55,7 +55,6 @@ body {
     display: inline-block;
     float: left;
 }
-.sidebar-iconlist,
 .sidebar-content-wrapper {
     -webkit-transition: width 100ms ease;
     -moz-transition: width 100ms ease;

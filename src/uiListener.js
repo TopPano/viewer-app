@@ -7,17 +7,17 @@ TOPPANO.onMenuIconClick = function(event) {
 
         if(menu.hasClass('sidebar-collapsed')) {
             // Menu is collapsed.
-            TOPPANO.changeContents(null, clickedIcon, 'width');
+            TOPPANO.changeContents(null, clickedIcon);
             menu.removeClass('sidebar-collapsed').addClass('sidebar-expanded');
             TOPPANO.ui.menuUI.currentClickedIcon = clickedIcon;
         } else if(TOPPANO.ui.menuUI.currentClickedIcon.attr('class') === clickedIcon.attr('class')) {
             // Menu is expanded and the same icon is clicked.
-            TOPPANO.changeContents(clickedIcon, null, 'height');
+            TOPPANO.changeContents(clickedIcon, null);
             menu.removeClass('sidebar-expanded').addClass('sidebar-collapsed');
             TOPPANO.ui.menuUI.currentClickedIcon = null;
         } else {
             // Menu is expanded and a different icon is clicked.
-            TOPPANO.changeContents(TOPPANO.ui.menuUI.currentClickedIcon, clickedIcon, 'height');
+            TOPPANO.changeContents(TOPPANO.ui.menuUI.currentClickedIcon, clickedIcon);
             TOPPANO.ui.menuUI.currentClickedIcon = clickedIcon;
         }
     }
@@ -37,21 +37,10 @@ TOPPANO.changeContents = function(from, to, changeFirst) {
     TOPPANO.toggleMenuIcon(from);
     TOPPANO.toggleMenuIcon(to);
     TOPPANO.toggleMenuContent(fromClass, menu);
-    if(changeFirst === 'width') {
-        TOPPANO.changeContentWrapperWidth(contentWrapper, fromWidth, toWidth, function() {
-            TOPPANO.changeMenuHeight(menu, fromHeight, toHeight, function() {
-                TOPPANO.toggleMenuContent(toClass, menu);
-                TOPPANO.ui.menuUI.isLocked = false;
-            });
-        });
-    } else {
-        TOPPANO.changeMenuHeight(menu, fromHeight, toHeight, function() {
-            TOPPANO.changeContentWrapperWidth(contentWrapper, fromWidth, toWidth, function() {
-                TOPPANO.toggleMenuContent(toClass, menu);
-                TOPPANO.ui.menuUI.isLocked = false;
-            });
-        });
-    }
+    TOPPANO.changeMenuSize(menu, contentWrapper, fromWidth, fromHeight, toWidth, toHeight, function() {
+        TOPPANO.toggleMenuContent(toClass, menu);
+        TOPPANO.ui.menuUI.isLocked = false;
+    });
 };
 
 TOPPANO.changeContentHeight = function(contentClass, menu) {
@@ -98,35 +87,30 @@ TOPPANO.toggleMenuContent = function(contentClass) {
     }
 };
 
-TOPPANO.changeContentWrapperWidth = function(contentWrapper, fromWidth, toWidth, callback) {
-    if((fromWidth - toWidth) === 0) {
-        if(typeof(callback) === 'function') {
-            callback();
-        }
-    } else {
-        if(typeof(callback) === 'function') {
-            contentWrapper.one(TOPPANO.ui.common.transitionEndEvent, function(event) {
+TOPPANO.changeMenuSize = function(menu, contentWrapper, fromWidth, fromHeight, toWidth, toHeight, callback) {
+    if((fromHeight - toHeight) !== 0) {
+        menu.on(TOPPANO.ui.common.transitionEndEvent, function(event) {
+            if(event.originalEvent.propertyName === 'height') {
+                menu.off(TOPPANO.ui.common.transitionEndEvent);
                 event.stopPropagation();
                 callback();
-            });
-        }
-        contentWrapper.css('width', toWidth + 'px');
-    }
-};
-
-TOPPANO.changeMenuHeight = function(menu, fromHeight, toHeight, callback) {
-    if((fromHeight - toHeight) === 0) {
-        if(typeof(callback) === 'function') {
-            callback();
-        }
-    } else {
-        if(typeof(callback) === 'function') {
-            menu.one(TOPPANO.ui.common.transitionEndEvent, function(event) {
-                event.stopPropagation();
-                callback();
-            });
+            }
+        });
+        if((fromWidth - toWidth) !== 0) {
+            contentWrapper.css('width', toWidth + 'px');
         }
         menu.css('height', toHeight + 'px');
+    } else if((fromWidth - toWidth) !== 0) {
+        contentWrapper.on(TOPPANO.ui.common.transitionEndEvent, function(event) {
+            if(event.originalEvent.propertyName === 'width') {
+                contentWrapper.off(TOPPANO.ui.common.transitionEndEvent);
+                event.stopPropagation();
+                callback();
+            }
+        });
+        contentWrapper.css('width', toWidth + 'px');
+    } else {
+        callback();
     }
 };
 
@@ -174,7 +158,7 @@ TOPPANO.onFBShareBtnClick = function(event) {
         if(response['authResponse']) {
             var accessToken = FB.getAuthResponse()['accessToken'];
             var currentUrl = TOPPANO.gv.currentUrl;
-            var snapshot = TOPPANO.base64toBlob(TOPPANO.getSnapshot(800, 600));
+            var snapshot = TOPPANO.base64toBlob(TOPPANO.getSnapshot($(window).width(), $(window).height()));
             var data = new FormData();
 
             data.append('access_token', accessToken);
@@ -249,10 +233,15 @@ TOPPANO.onEmbeddedLinkChange = function() {
         '" style="border: none" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
     $('textarea.sidebar-content-share-link', menu).val(code);
 
-    if(menu.hasClass('sidebar-expanded') && $('.sidebar-content-share', menu).hasClass('sidebar-content-shown')) {
+    if($('.sidebar-content-share', menu).hasClass('sidebar-content-shown') && !TOPPANO.ui.menuUI.isLocked) {
         var oldMenuHeight = parseInt(menu.css('height'));
         var newMenuHeight = TOPPANO.changeContentHeight('sidebar-content-share', menu);
-        TOPPANO.changeMenuHeight(menu, oldMenuHeight, newMenuHeight);
+        if((oldMenuHeight - newMenuHeight) !== 0) {
+            TOPPANO.ui.menuUI.isLocked = true;
+            TOPPANO.changeMenuSize(menu, null, 0, oldMenuHeight, 0, newMenuHeight, function() {
+                TOPPANO.ui.menuUI.isLocked = false;
+            });
+        }
     }
 };
 
