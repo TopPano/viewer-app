@@ -87,7 +87,7 @@ body {
 .sidebar-title {
     position: absolute;
     top: 10px;
-    left: 0;
+    left: 15px;
     width: 40px;
     text-align: center;
     font-size: 0.813rem; /* 13px */
@@ -101,8 +101,8 @@ body {
 /* sidebar-iconlist: a bar to show icons */
 .sidebar-iconlist {
     height: 100%;
-    padding: 30px 15px 0 0;
-    width: 55px;
+    padding: 30px 15px 0 15px;
+    width: 70px;
 }
 .sidebar-iconlist .sidebar-icon {
     width: 40px;
