@@ -159,6 +159,7 @@ TOPPANO.onFBShareBtnClick = function(event) {
             var accessToken = FB.getAuthResponse()['accessToken'];
             var currentUrl = TOPPANO.gv.currentUrl;
             var snapshot = TOPPANO.base64toBlob(TOPPANO.getSnapshot($(window).width(), $(window).height()));
+            var description = $('#menu .sidebar-content-info-message').val();
             var data = new FormData();
 
             data.append('access_token', accessToken);
@@ -193,9 +194,8 @@ TOPPANO.onFBShareBtnClick = function(event) {
                     method: 'feed',
                     display: 'iframe',
                     link: currentUrl,
-                    name: 'Jellyfish',
+                    name: description,
                     picture: shortUrl,
-                    description: 'The most beautiful jellyfish!'
                 }, function(response){
                     // 5. TODO: Show message when posting is completed successfully.
                 });
