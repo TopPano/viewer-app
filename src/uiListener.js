@@ -164,7 +164,7 @@ TOPPANO.onFBShareBtnClick = function(event) {
 
             data.append('access_token', accessToken);
             data.append('source', snapshot);
-            data.append('message', 'HAHAHA');
+            //data.append('message', 'HAHAHA');
             // 2. Upload the snapshot to user's Facebook by using multipart/form-data post.
             $.ajax({
                 url: 'https://graph.facebook.com/me/photos?access_token=' + accessToken,
@@ -217,7 +217,75 @@ TOPPANO.onTwitterShareBtnClick = function() {
 
 TOPPANO.onQMarkClick = function(){
     $('#how_to_use').bPopup();
-}
+};
+
+TOPPANO.onSignupConfirmBtnClick = function(event) {
+    var signup = $('#signup');
+    var username = $('.signup-username', signup).val(),
+        email = $('.signup-email', signup).val(),
+        password = $('.signup-password', signup).val();
+
+    TOPPANO.userSignup(username, email, password);
+};
+
+TOPPANO.onLoginConfirmBtnClick = function(event) {
+    var login = $('#login');
+    var email = $('.login-email', login).val(),
+        password = $('.login-password', login).val();
+
+    TOPPANO.userLogin(email, password);
+};
+
+TOPPANO.onLogoutConfirmBtnClick = function(event) {
+};
+
+TOPPANO.userSignup = function(username, email, password) {
+    var url = TOPPANO.gv.apiUrl + '/users';
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: JSON.stringify({
+            username: username,
+            email: email,
+            password: password
+        }),
+        contentType: 'application/json'
+    }).done(function(response) {
+        TOPPANO.userLogin(email, password);
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        // TODO: Error handling.
+    });
+};
+
+TOPPANO.userLogin = function(email, password) {
+    var url = TOPPANO.gv.apiUrl + '/users/login';
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: JSON.stringify({
+            email: email,
+            password: password
+        }),
+        contentType: 'application/json'
+    }).done(function(response) {
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        // TODO: Error handling.
+    });
+};
+
+TOPPANO.userLogout = function(token) {
+    var url = TOPPANO.gv.apiUrl + '/users/logout?access_token=' + token;
+
+    $.ajax({
+        url: url,
+        type: 'POST'
+    }).done(function(response) {
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        // TODO: Error handling.
+    });
+};
 
 // Listener for embedded link width or height field changes.
 TOPPANO.onEmbeddedLinkChange = function() {
