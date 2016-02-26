@@ -11,7 +11,7 @@ TOPPANO.createMenu = function(menu) {
     TOPPANO.initFB();
     TOPPANO.initTwitter();
     TOPPANO.initQMark();
-    TOPPANO.initUser();
+    TOPPANO.ui.user.init();
     $('#menu .sidebar-content-info-message').val(menu['info']['message']);
     $('#menu .sidebar-icon').on('click', TOPPANO.onMenuIconClick);
     $('#menu .sidebar-content-share-width').on('input', TOPPANO.onEmbeddedLinkChange);
@@ -108,28 +108,6 @@ TOPPANO.initTwitter = function() {
 TOPPANO.initQMark = function(){
     $('#q_mark_img').on('click', TOPPANO.onQMarkClick);
 }
-
-// Initialize functions about user.
-TOPPANO.initUser = function() {
-    TOPPANO.initSignup();
-    TOPPANO.initLogin();
-    TOPPANO.initLogout();
-};
-
-// Initialize signup panel.
-TOPPANO.initSignup = function() {
-    $('#signup .signup-confirm-btn').on('click', TOPPANO.onSignupConfirmBtnClick);
-};
-
-// Initialize login panel.
-TOPPANO.initLogin = function() {
-    $('#login .login-confirm-btn').on('click', TOPPANO.onLoginConfirmBtnClick);
-};
-
-// Initialize logout panel.
-TOPPANO.initLogout = function() {
-    $('#logout .logout-confirm-btn').on('click', TOPPANO.onLogoutConfirmBtnClick);
-};
 
 TOPPANO.getTransitionEndEventName = function() {
     var t;
