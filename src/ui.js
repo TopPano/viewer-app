@@ -1,7 +1,7 @@
 // The enter function for creating all ui components.
 TOPPANO.createUI = function(model) {
-    TOPPANO.createMenu(model['menu']);
-    TOPPANO.createLikeBtn(model['likebtn']);
+    TOPPANO.createMenu(model.menu);
+    TOPPANO.ui.user.init(model.user);
     TOPPANO.addContainerEvent();
 };
 
@@ -11,7 +11,6 @@ TOPPANO.createMenu = function(menu) {
     TOPPANO.initFB();
     TOPPANO.initTwitter();
     TOPPANO.initQMark();
-    TOPPANO.ui.user.init();
     $('#menu .sidebar-content-info-message').val(menu['info']['message']);
     $('#menu .sidebar-icon').on('click', TOPPANO.onMenuIconClick);
     $('#menu .sidebar-content-share-width').on('input', TOPPANO.onEmbeddedLinkChange);
@@ -22,12 +21,6 @@ TOPPANO.createMenu = function(menu) {
             return trigger.value;
         }
     });
-};
-
-// Create a like button.
-TOPPANO.createLikeBtn = function(likebtn) {
-    $('#like-btn .likebtn-count').html(likebtn['likes']);
-    $('#like-btn .likebtn-icon').on('click', TOPPANO.onLikeIconClick);
 };
 
 // Add events of container that are related to UI.

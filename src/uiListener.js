@@ -114,35 +114,6 @@ TOPPANO.changeMenuSize = function(menu, contentWrapper, fromWidth, fromHeight, t
     }
 };
 
-TOPPANO.onLikeIconClick = function() {
-    var icon = $(this);
-    var count = $('.likebtn-count', icon.parent());
-    var likes = parseInt(count.html());
-    var url = TOPPANO.gv.apiUrl + '/posts/' + TOPPANO.gv.modelID;
-
-    if(icon.hasClass('likebtn-icon-clicked')) {
-        url += '/unlike'
-        likes--;
-    } else {
-        url += '/like'
-        likes++;
-    }
-    $.ajax({
-        url: url,
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({
-            // TODO: Fill the correct user ID.
-            'userId': 'jelly-fish-ma'
-        })
-    }).done(function(response) {
-        count.html(likes);
-        icon.toggleClass('likebtn-icon-clicked');
-    }).fail(function(jqXHR, textStatus, errorThrown) {
-        // TODO: Error handling.
-    });
-};
-
 // Listener for clicking Facebook sharing button.
 TOPPANO.onFBShareBtnClick = function(event) {
     // Steps for sharing to Facebook:

@@ -29,6 +29,7 @@
     <body>
         <div id="logo" class="logo-bar">
             <img id="logo_img" src="./images/logo.png"></img>
+            <div class="logo-bar-username text-singleline"></div>
             <img id='q_mark_img' src="./images/question_mark.png"></img>
             <div id="like-btn" class="likebtn">
                 <div class="likebtn-icon"></div>
@@ -51,8 +52,8 @@
                 <div class="sidebar-content sidebar-content-info">
                     <img src="http://cdn.imgs.tuts.dragoart.com/how-to-draw-a-cartoon-jellyfish_1_000000002605_7.jpg" alt="Author Picture"></img>
                     <div class="sidebar-content-info-title">
-                        <div class="sidebar-content-info-author sidebar-text-singleline">Jellyfish Ma</div>
-                        <div class="sidebar-content-info-date sidebar-text-singleline">2016/05/20 00:00</div>
+                        <div class="sidebar-content-info-author text-singleline">Jellyfish Ma</div>
+                        <div class="sidebar-content-info-date text-singleline">2016/05/20 00:00</div>
                     </div>
                     <textarea class="sidebar-content-info-message" disabled></textarea>
                 </div>
@@ -72,14 +73,14 @@
             </div>
         </div>
 
-        <div id="signup" class="signup" style="position: absolute; left: 0; top: 100px; display: block;">
+        <div id="signup" class="signup" style="position: absolute; left: 0; top: 100px; display: none;">
             <input type="text" class="signup-username" placeholder="Name"><br />
             <input type="text" class="signup-email" placeholder="E-mail"><br />
             <input type="password" class="signup-password" placeholder="Password"><br />
             <button type="button" class="signup-confirm-btn">SIGN UP</button>
         </div>
 
-        <div id="login" class="login" style="position: absolute; left: 0; top: 300px; display: block;">
+        <div id="login" class="login" style="position: absolute; left: 0; top: 300px; display: none;">
             <input type="text" class="login-email" placeholder="E-mail"><br />
             <input type="password" class="login-password" placeholder="Password"><br />
             <button type="button" class="login-confirm-btn">LOG IN</button>

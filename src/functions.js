@@ -24,8 +24,10 @@ TOPPANO.modelInit = function() {
                     'message': modelMeta['message']
                 }
             };
-            model['likebtn'] = {
-                'likes': modelMeta['likes']
+            model['user'] = {
+                'likes': modelMeta['likes'],
+                // TODO: Check has like or not from API.
+                'hasLike': false
             };
 
             TOPPANO.gv.nodes_meta = Object.assign({}, modelMeta.nodes);
