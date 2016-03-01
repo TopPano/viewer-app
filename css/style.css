@@ -243,7 +243,7 @@ body {
     display: inline-block;
     width: 53px;
     height: 53px;
-    margin: 0 10px;
+    margin: 0 3px;
     background-size: contain;
     cursor: pointer;
 }
@@ -252,6 +252,9 @@ body {
 }
 .sidebar-content-share .sidebar-content-share-iconlist .sidebar-content-share-twitter {
     background-image: url("images/sidebar/sidebar-content-share-twitter.png");
+}
+.sidebar-content-share .sidebar-content-share-iconlist .sidebar-content-share-copy {
+    background-image: url("images/sidebar/sidebar-content-share-copy.png");
 }
 .sidebar-content-share .sidebar-content-share-size * {
     display: inline-block;

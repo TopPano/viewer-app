@@ -16,9 +16,9 @@ TOPPANO.createMenu = function(menu) {
     $('#menu .sidebar-content-share-width').on('input', TOPPANO.onEmbeddedLinkChange);
     $('#menu .sidebar-content-share-height').on('input', TOPPANO.onEmbeddedLinkChange);
     TOPPANO.onEmbeddedLinkChange();
-    new Clipboard('#menu .sidebar-content-share-link', {
+    new Clipboard('#menu .sidebar-content-share-copy', {
         text: function(trigger) {
-            return trigger.value;
+            return $('#menu .sidebar-content-share-link').val();
         }
     });
 };
