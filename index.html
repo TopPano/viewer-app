@@ -5,6 +5,7 @@
         <title>Toppano - Panorama Viewer Test</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1, user-scalable=no ">
         <link rel="stylesheet" href="./css/style.css">
+        <link rel="stylesheet" href="./css/magnific-popup.css">
         <script src="./src/lib/three.min.js"></script>
         <script src="./src/lib/detect.min.js"></script>
         <script src="./src/lib/CanvasRenderer.js"></script>
@@ -22,7 +23,7 @@
         <script src="./src/lib/screenfull.min.js"></script>
         <script src="./src/lib/clipboard.min.js"></script>
         <script src="./src/lib/jquery.fullscreen-0.4.1.min.js"></script>
-        <script src="./src/lib/jquery.bpopup.min.js"></script>
+        <script src="./src/lib/jquery.magnific-popup.min.js"></script>
         <script src="./src/lib/js.cookie.min.js"></script>
         <script src="./application.js"></script>
     </head>
@@ -30,16 +31,13 @@
         <div id="logo" class="logo-bar">
             <img id="logo_img" src="./images/logo.png"></img>
             <div class="logo-bar-username text-singleline"></div>
-            <img id='q_mark_img' src="./images/question_mark.png"></img>
+            <div class='logo-bar-help' data-mfp-src='./images/how_to_use.png'></div>
             <div id="like-btn" class="likebtn">
                 <div class="likebtn-icon"></div>
                 <div class="likebtn-count-wrapper"><div class="likebtn-count"></div></div>
             </div>
         </div>
 
-        <div id='how_to_use'>
-            <img src='./images/how_to_use.png' style='opacity:0.7;'></img>
-        </div>
 
         <div id="menu" class="sidebar sidebar-collapsed">
             <div class="sidebar-title">MENU</div>

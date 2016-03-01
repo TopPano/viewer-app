@@ -349,17 +349,14 @@ body {
     text-align: right;
     text-decoration: underline;
 }
-.logo-bar #q_mark_img {
+.logo-bar .logo-bar-help {
     position: absolute;
     top: 8px;
     right: 10px;
     width: 40px;
     height: 40px;
+    background-image: url("images/logobar/logobar-help.png");
     cursor: pointer;
-}
-
-#how_to_use{
-    display: none;
 }
 
 /* progress bar shape and position and turnoff the default setting of each browser*/

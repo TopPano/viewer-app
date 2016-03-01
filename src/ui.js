@@ -99,7 +99,14 @@ TOPPANO.initTwitter = function() {
 
 // initial question mark at top right side
 TOPPANO.initQMark = function(){
-    $('#q_mark_img').on('click', TOPPANO.onQMarkClick);
+    $('#logo .logo-bar-help').magnificPopup({
+        type: 'image',
+        showCloseBtn: false,
+        image: {
+            cursor: 'mfp-auto-cur',
+            verticalFit: true
+        },
+    });
 }
 
 TOPPANO.getTransitionEndEventName = function() {
