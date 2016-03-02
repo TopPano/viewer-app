@@ -162,7 +162,7 @@ TOPPANO.buildScene = function(node_ID){
     var i;
     var opacity;
     
-    TOPPANO.gv.headingOffset = TOPPANO.gv.nodes_meta[TOPPANO.gv.current_node_ID].heading;
+    TOPPANO.gv.headingOffset = TOPPANO.gv.nodes_meta[TOPPANO.gv.current_node_ID].lng;
     if(TOPPANO.gv.isTransitioning){
         opacity = 0;
     }
@@ -753,6 +753,7 @@ function getUrlParam(name) {
 
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
         results = regex.exec(location.search);
-    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    return results === null ? "" : decodeURIComponent(results[1]);
+    //return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 

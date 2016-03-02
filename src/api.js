@@ -139,7 +139,7 @@ TOPPANO.gv = {
     currentLink: '',
     urlHash: window.location.hash,
     defaultMap: './image/tile/0-0.jpeg',
-    apiUrl: 'http://my.verpix.me:3000/api',
+    apiUrl: 'http://dev.verpix.net:3000/api'
    };
 
 
