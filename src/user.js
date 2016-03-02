@@ -1,7 +1,7 @@
 TOPPANO.ui.user = TOPPANO.ui.user || {
     init: function(user) {
         if(this.hasLogin()) {
-            this.setUsername(Cookies.get('userId'));
+            this.setUsername(Cookies.get('userId'), Cookies.get('token'));
         }
         this.initSignup();
         this.initLogin();
@@ -9,21 +9,21 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
     },
 
     initSignup: function() {
-        $('#signup .signup-confirm-btn').on('click', $.proxy(function(e) {
-            var signup = $('#signup');
-            var username = $('.signup-username', signup).val(),
-                email = $('.signup-email', signup).val(),
-                password = $('.signup-password', signup).val();
+        $('#account-signup .account-btn').on('click', $.proxy(function(e) {
+            var signup = $('#account-signup');
+            var username = $('.account-signup-username', signup).val(),
+                email = $('.account-signup-email', signup).val(),
+                password = $('.account-signup-password', signup).val();
 
             this.signup(username, email, password);
         }, this));
     },
 
     initLogin: function() {
-        $('#login .login-confirm-btn').on('click', $.proxy(function(e) {
-            var login = $('#login');
-            var email = $('.login-email', login).val(),
-                password = $('.login-password', login).val();
+        $('#account-login .account-btn').on('click', $.proxy(function(e) {
+            var login = $('#account-login');
+            var email = $('.account-login-email', login).val(),
+                password = $('.account-login-password', login).val();
 
             this.login(email, password);
         }, this));
@@ -75,17 +75,18 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
             }),
             contentType: 'application/json'
         }).done($.proxy(function(response) {
-            var token = response.id,
+            var userId = response.userId,
+                token = response.id,
                 expires = new Date(response.created);
 
             expires.setSeconds(expires.getSeconds() + response.ttl);
+            Cookies.set('userId', userId, { expires: expires });
             Cookies.set('token', token, { expires: expires });
-            Cookies.set('userId', response.userId, { expires: expires });
             this.hideSignupLogin();
-            this.setUsername(response.userId);
+            this.setUsername(userId, token);
             // TODO: Update hasLike after user login.
             // TODO: Use callback instead of using likePost directly.
-            this.likePost(response.userId);
+            this.likePost(userId);
         }, this)).fail(function(jqXHR, textStatus, errorThrown) {
             // TODO: Error handling.
         });
@@ -123,17 +124,30 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
     },
 
     showSignupLogin: function() {
-        $('#signup').show();
-        $('#login').show();
+        $.magnificPopup.open({
+            items: {
+                src: '#account-login',
+                type: 'inline',
+            },
+            showCloseBtn: false
+        });
     },
 
     hideSignupLogin: function() {
-        $('#signup').hide();
-        $('#login').hide();
+        $.magnificPopup.close();
     },
 
-    setUsername: function(username) {
-        $('#logo .logo-bar-username').html(username);
+    setUsername: function(userId, token) {
+        var url = TOPPANO.gv.apiUrl + '/users/' + userId  + '?access_token=' + token;
+        
+        $.ajax({
+            url: url,
+            type: 'GET'
+        }).done(function(response) {
+            $('#logo .logo-bar-username').html(response.username);
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            // TODO: Error handling.
+        });
     },
 
     setLikesCount: function(likes) {

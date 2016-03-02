@@ -6,9 +6,7 @@
   height: 100%;
   z-index: 1042;
   overflow: hidden;
-  position: fixed;
-  background: #0b0b0b;
-  opacity: 0.8; }
+  position: fixed; }
 
 .mfp-wrap {
   top: 0;
