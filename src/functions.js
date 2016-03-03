@@ -6,8 +6,11 @@
 TOPPANO.modelInit = function() {
     var modelId = TOPPANO.gv.modelID = getUrlParam('post');
     var model = {};
+    var url = TOPPANO.ui.user.isLogin() ?
+        (TOPPANO.gv.apiUrl + '/posts/' + modelId + '?access_token=' + Cookies.get('token')) :
+        (TOPPANO.gv.apiUrl + '/posts/' + modelId);
 
-    $.get(TOPPANO.gv.apiUrl + '/posts/' + modelId).then(
+    $.get(url).then(
         function(modelMeta) {
             model['summary'] = {
                 'name': modelMeta['name'],
@@ -21,13 +24,17 @@ TOPPANO.modelInit = function() {
             });
             model['menu'] = {
                 'info': {
+                    'author': modelMeta['ownerInfo']['username'],
+                    'date': modelMeta['created'],
+                    'authorPicture': modelMeta['ownerInfo']['profilePhotoUrl'],
                     'message': modelMeta['message']
                 }
             };
             model['user'] = {
-                'likes': modelMeta['likes'],
-                // TODO: Check has like or not from API.
-                'hasLike': false
+                'likes':{
+                    'count':  modelMeta['likes']['count'],
+                    'isLiked': modelMeta['likes']['isLiked']
+                }
             };
 
             TOPPANO.gv.nodes_meta = Object.assign({}, modelMeta.nodes);

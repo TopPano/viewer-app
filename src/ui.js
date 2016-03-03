@@ -2,6 +2,7 @@
 TOPPANO.createUI = function(model) {
     TOPPANO.createMenu(model.menu);
     TOPPANO.ui.user.init(model.user);
+    TOPPANO.initQMark();
     TOPPANO.addContainerEvent();
 };
 
@@ -10,8 +11,10 @@ TOPPANO.createMenu = function(menu) {
     TOPPANO.initCommon();
     TOPPANO.initFB();
     TOPPANO.initTwitter();
-    TOPPANO.initQMark();
-    $('#menu .sidebar-content-info-message').val(menu['info']['message']);
+    $('#menu .sidebar-content-info img').attr('src', menu.info.authorPicture);
+    $('#menu .sidebar-content-info-author').html(menu.info.author);
+    $('#menu .sidebar-content-info-date').html(TOPPANO.transDateFormat(menu.info.date));
+    $('#menu .sidebar-content-info-message').val(menu.info.message);
     $('#menu .sidebar-icon').on('click', TOPPANO.onMenuIconClick);
     $('#menu .sidebar-content-share-width').on('input', TOPPANO.onEmbeddedLinkChange);
     $('#menu .sidebar-content-share-height').on('input', TOPPANO.onEmbeddedLinkChange);
@@ -124,6 +127,16 @@ TOPPANO.getTransitionEndEventName = function() {
             return transitions[t];
         }
     }
+};
+
+// Transfrom the date to our format.
+TOPPANO.transDateFormat = function(dateRaw) {
+    var date = new Date(dateRaw);
+    return date.getFullYear() + '/' +
+        date.getMonth() + '/' +
+        date.getDay() + ' ' +
+        date.getHours() + ':' +
+        date.getMinutes();
 };
 
 // Global ui variables initialization.

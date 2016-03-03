@@ -1,11 +1,11 @@
 TOPPANO.ui.user = TOPPANO.ui.user || {
     init: function(user) {
-        if(this.hasLogin()) {
+        if(this.isLogin()) {
             this.setUsername(Cookies.get('userId'), Cookies.get('token'));
         }
         this.initSignup();
         this.initLogin();
-        this.initLike(user.likes, user.hasLike);
+        this.initLike(user.likes.count, user.likes.isLiked);
     },
 
     initSignup: function() {
@@ -29,14 +29,14 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
         }, this));
     },
 
-    initLike: function(likes, hasLike) {
-        this.setLikesCount(likes);
-        if(hasLike) {
+    initLike: function(count, isLiked) {
+        this.setLikesCount(count);
+        if(isLiked) {
             $('#like-btn .likebtn-icon').addClass('likebtn-icon-clicked');
         }
         $('#like-btn .likebtn-icon').on('click', $.proxy(function(e) {
             var userId = Cookies.get('userId');
-            if(!this.hasLogin()) {
+            if(!this.isLogin()) {
                 this.showSignupLogin();
             } else {
                 this.likePost(userId);
@@ -84,9 +84,16 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
             Cookies.set('token', token, { expires: expires });
             this.hideSignupLogin();
             this.setUsername(userId, token);
-            // TODO: Update hasLike after user login.
-            // TODO: Use callback instead of using likePost directly.
-            this.likePost(userId);
+            $.ajax({
+                url: TOPPANO.gv.apiUrl + '/posts/' + TOPPANO.gv.modelID + '?access_token=' + token,
+                type: 'GET'
+            }).done(function(response) {
+                if(response.likes.isLiked) {
+                    $('#like-btn .likebtn-icon').addClass('likebtn-icon-clicked');
+                }
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                // TODO: Error handling.
+            });
         }, this)).fail(function(jqXHR, textStatus, errorThrown) {
             // TODO: Error handling.
         });
@@ -94,15 +101,15 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
 
     likePost: function(userId) {
         var icon = $('#like-btn .likebtn-icon');
-        var likes = this.getLikesCount();
+        var count = this.getLikesCount();
         var url = TOPPANO.gv.apiUrl + '/posts/' + TOPPANO.gv.modelID;
 
         if(icon.hasClass('likebtn-icon-clicked')) {
             url += '/unlike'
-            likes--;
+            count--;
         } else {
             url += '/like'
-            likes++;
+            count++;
         }
         $.ajax({
             url: url,
@@ -112,14 +119,14 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
                 userId: userId
             })
         }).done($.proxy(function(response) {
-            this.setLikesCount(likes);
+            this.setLikesCount(count);
             icon.toggleClass('likebtn-icon-clicked');
         }, this)).fail(function(jqXHR, textStatus, errorThrown) {
             // TODO: Error handling.
         });
     },
 
-    hasLogin: function() {
+    isLogin: function() {
         return Cookies.get('token') && Cookies.get('userId');
     },
 
@@ -150,13 +157,13 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
         });
     },
 
-    setLikesCount: function(likes) {
-        $('#like-btn .likebtn-count').html((likes === 0) ? '' : likes);
+    setLikesCount: function(count) {
+        $('#like-btn .likebtn-count').html((count === 0) ? '' : count);
     },
 
     getLikesCount: function() {
-        var likes = parseInt($('#like-btn .likebtn-count').html());
-        return isNaN(likes) ? 0 : likes;
-    },
+        var count = parseInt($('#like-btn .likebtn-count').html());
+        return isNaN(count) ? 0 : count;
+    }
 };
 
