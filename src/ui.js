@@ -11,7 +11,9 @@ TOPPANO.createMenu = function(menu) {
     TOPPANO.initCommon();
     TOPPANO.initFB();
     TOPPANO.initTwitter();
-    $('#menu .sidebar-content-info img').attr('src', menu.info.authorPicture);
+    if(menu.info.authorPicture) {
+        $('#menu .sidebar-content-info img').attr('src', menu.info.authorPicture);
+    }
     $('#menu .sidebar-content-info-author').html(menu.info.author);
     $('#menu .sidebar-content-info-date').html(TOPPANO.transDateFormat(menu.info.date));
     $('#menu .sidebar-content-info-message').val(menu.info.message);
