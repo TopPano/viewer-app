@@ -15,7 +15,9 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
                 email = $('.account-signup-email', signup).val(),
                 password = $('.account-signup-password', signup).val();
 
-            this.signup(username, email, password);
+            if(this.checkSignupInput(username, email, password)) {
+                this.signup(username, email, password);
+            }
         }, this));
     },
 
@@ -25,7 +27,9 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
             var email = $('.account-login-email', login).val(),
                 password = $('.account-login-password', login).val();
 
-            this.login(email, password);
+            if(this.checkLoginInput(email, password)) {
+                this.login(email, password);
+            }
         }, this));
         $('#account-login .account-btn.account-btn-to-signup').on('click', $.proxy(function(e) {
             this.showDialog('signup');
@@ -61,9 +65,14 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
             contentType: 'application/json'
         }).done($.proxy(function(response) {
             this.login(email, password);
-        }, this)).fail(function(jqXHR, textStatus, errorThrown) {
-            // TODO: Error handling.
-        });
+        }, this)).fail($.proxy(function(jqXHR, textStatus, errorThrown) {
+            if(jqXHR.status === 422) {
+                // 422 (Unprocessable Entity)
+                this.showErr(this.ERR.AJAX.EXISTED, 'signup');
+            } else {
+                this.showErr(this.ERR.AJAX.OTHERS, 'signup');
+            }
+        }, this));
     },
 
     login: function(email, password) {
@@ -97,9 +106,14 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 // TODO: Error handling.
             });
-        }, this)).fail(function(jqXHR, textStatus, errorThrown) {
-            // TODO: Error handling.
-        });
+        }, this)).fail($.proxy(function(jqXHR, textStatus, errorThrown) {
+            if(jqXHR.status === 401) {
+                // 401 (Unauthorized).
+                this.showErr(this.ERR.AJAX.UNAUTHORIZED, 'login');
+            } else {
+                this.showErr(this.ERR.AJAX.OTHERS, 'login');
+            }
+        }, this));
     },
 
     likePost: function(userId) {
@@ -133,6 +147,21 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
         return Cookies.get('token') && Cookies.get('userId');
     },
 
+    isValidEmail: function(email) {
+        // TODO: Check the email format is valid or not.
+        return true;
+    },
+
+    showErr: function(errMsg, backDialog) {
+        var errDialog = $('#account-err');
+
+        $('.account-text', errDialog).html(errMsg);
+        $('.account-btn', errDialog).off().on('click', $.proxy(function() {
+            this.showDialog(backDialog);
+        }, this));
+        this.showDialog('err');
+    },
+
     showDialog: function(dialog) {
         var options = {
             items: {
@@ -142,7 +171,7 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
             showCloseBtn: false
         };
 
-        $('#account-' + dialog + ' input').val('');
+        $('#account-' + dialog + ' input[type="password"]').val('');
         if(!$.magnificPopup.instance.isOpen) {
             $.magnificPopup.open(options);
         } else {
@@ -156,6 +185,44 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
 
     hideDialog: function() {
         $.magnificPopup.close();
+    },
+
+    checkSignupInput: function(username, email, password) {
+        if(!username) {
+            // Username is empty string.
+            this.showErr(this.ERR.USERNAME.EMPTY, 'signup');
+            return false;
+        } else if(!email) {
+            // Email is empty string.
+            this.showErr(this.ERR.EMAIL.EMPTY, 'signup');
+            return false;
+        } else if(!password) {
+            // Password is empty string.
+            this.showErr(this.ERR.PASSWORD.EMPTY, 'signup');
+            return false;
+        } else if(!this.isValidEmail(email)) {
+            // Invalid Email.
+            this.showErr(this.ERR.EMAIL.INVALID, 'signup');
+            return false;
+        }
+        return true;
+    },
+
+    checkLoginInput: function(email, password) {
+        if(!email) {
+            // Email is empty string.
+            this.showErr(this.ERR.EMAIL.EMPTY, 'login');
+            return false;
+        } else if(!password) {
+            // Password is empty string.
+            this.showErr(this.ERR.PASSWORD.EMPTY, 'login');
+            return false;
+        } else if(!this.isValidEmail(email)) {
+            // Invalid Email.
+            this.showErr(this.ERR.EMAIL.INVALID, 'login');
+            return false;
+        }
+        return true;
     },
 
     setUsername: function(userId, token) {
@@ -178,6 +245,24 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
     getLikesCount: function() {
         var count = parseInt($('#like-btn .likebtn-count').html());
         return isNaN(count) ? 0 : count;
+    },
+
+    ERR: {
+        USERNAME: {
+            EMPTY: 'Please enter your name.'
+        },
+        EMAIL: {
+            EMPTY: 'Please enter your email.',
+            INVALID: 'The email address is not valid.<br />Please try another address.',
+        },
+        PASSWORD: {
+            EMPTY: 'Please enter your password.'
+        },
+        AJAX: {
+            EXISTED: 'The email address already exists.<br />Please try another address.',
+            UNAUTHORIZED: 'The email and password don\'t match.<br />Please enter again.',
+            OTHERS: 'Something wrong with server.<br />Please try again later.'
+        }
     }
 };
 
