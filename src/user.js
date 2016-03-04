@@ -20,12 +20,15 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
     },
 
     initLogin: function() {
-        $('#account-login .account-btn').on('click', $.proxy(function(e) {
+        $('#account-login .account-dialog-content .account-btn').on('click', $.proxy(function(e) {
             var login = $('#account-login');
             var email = $('.account-login-email', login).val(),
                 password = $('.account-login-password', login).val();
 
             this.login(email, password);
+        }, this));
+        $('#account-login .account-btn.account-btn-to-signup').on('click', $.proxy(function(e) {
+            this.showDialog('signup');
         }, this));
     },
 
@@ -37,7 +40,7 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
         $('#like-btn .likebtn-icon').on('click', $.proxy(function(e) {
             var userId = Cookies.get('userId');
             if(!this.isLogin()) {
-                this.showSignupLogin();
+                this.showDialog('login');
             } else {
                 this.likePost(userId);
             }
@@ -82,7 +85,7 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
             expires.setSeconds(expires.getSeconds() + response.ttl);
             Cookies.set('userId', userId, { expires: expires });
             Cookies.set('token', token, { expires: expires });
-            this.hideSignupLogin();
+            this.hideDialog();
             this.setUsername(userId, token);
             $.ajax({
                 url: TOPPANO.gv.apiUrl + '/posts/' + TOPPANO.gv.modelID + '?access_token=' + token,
@@ -130,17 +133,28 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
         return Cookies.get('token') && Cookies.get('userId');
     },
 
-    showSignupLogin: function() {
-        $.magnificPopup.open({
+    showDialog: function(dialog) {
+        var options = {
             items: {
-                src: '#account-login',
-                type: 'inline',
+                src: '#account-' + dialog,
+                type: 'inline'
             },
             showCloseBtn: false
-        });
+        };
+
+        $('#account-' + dialog + ' input').val('');
+        if(!$.magnificPopup.instance.isOpen) {
+            $.magnificPopup.open(options);
+        } else {
+            this.hideDialog();
+            // TODO: Use setTimeout is not the stablest method, please fix it.
+            setTimeout(function() {
+                $.magnificPopup.open(options);
+            }, 50);
+        }
     },
 
-    hideSignupLogin: function() {
+    hideDialog: function() {
         $.magnificPopup.close();
     },
 

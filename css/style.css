@@ -382,11 +382,17 @@ input:focus {
 .account-dialog * {
     display: block;
     margin: auto;
+    font-size: 0.938rem; /* 15px */
 }
 .account-dialog .account-dialog-content {
     width: 320px;
     padding: 20px 0;
     background-color: rgba(255, 255, 255, 0.5);
+}
+.account-dialog .account-text {
+    margin-bottom: 15px;
+    text-align: center;
+    line-height: 20px;
 }
 .account-dialog input {
     width: 305px;
@@ -395,7 +401,6 @@ input:focus {
     border: none;
     padding: 0 25px;
     color: white;
-    font-size: 0.938rem; /* 15px */
     background-image: url("images/account/account-input.png");
     background-repeat: no-repeat;
     background-position: center center;
@@ -409,11 +414,17 @@ input:focus {
     cursor: pointer;
     background-image: url("images/account/account-btn.png");
 }
+.account-dialog .account-btn.account-btn-to-signup {
+    background-image: url("images/account/account-btn-to-signup.png");
+}
 .account-signup {
     background-image: url("images/account/account-signup-bg.png");
 }
 .account-login {
     background-image: url("images/account/account-login-bg.png");
+}
+.account-err {
+    background-image: url("images/account/account-err-bg.png");
 }
 
 /* progress bar shape and position and turnoff the default setting of each browser*/
