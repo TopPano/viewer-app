@@ -31,10 +31,19 @@ TOPPANO.createMenu = function(menu) {
 // Add events of container that are related to UI.
 TOPPANO.addContainerEvent = function() {
     var click = TOPPANO.ui.containerEvent.click;
+    var startEvent, endEvent;
 
-    $('#container').on('mousedown touchstart', function(event) {
+    if(TOPPANO.gv.isMobile) {
+        startEvent = 'touchstart';
+        endEvent = 'touchend';
+    } else {
+        startEvent = 'mousedown';
+        endEvent = 'mouseup';
+    }
+
+    $('#container').on(startEvent, function(event) {
         click.lastMouseDown = new Date().getTime();
-    }).on('mouseup touchend', function(event) {
+    }).on(endEvent, function(event) {
         if(new Date().getTime() < (click.lastMouseDown + click.longClickDelay)) {
             click.count++;
             if(click.count === 1) {

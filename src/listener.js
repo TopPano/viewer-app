@@ -145,7 +145,7 @@ function set_on_rotating_scene(){
     // determine if on the mobile or PC web
 
     var start_event, move_event, end_event;
-    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) 
+    if (TOPPANO.gv.isMobile)
     {
         start_event = 'touchstart';
         move_event = 'touchmove';
@@ -463,10 +463,5 @@ TOPPANO.onWindowResize = function() {
         TOPPANO.gv.container.bound.right = window.innerWidth;
         TOPPANO.gv.control.bound.bottom = TOPPANO.gv.container.bound.bottom-$("#node-gallery").height();
         TOPPANO.gv.control.bound.right = TOPPANO.gv.container.bound.right;
-
-        var canvas = document.getElementById('myCanvas');
-        if (canvas.style.opacity > 0) {
-            TOPPANO.drawCanvas();
-        }
     }
 };

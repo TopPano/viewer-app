@@ -37,7 +37,7 @@ TOPPANO.modelInit = function() {
                 }
             };
 
-            TOPPANO.gv.nodes_meta = Object.assign({}, modelMeta.nodes);
+            TOPPANO.gv.nodes_meta = $.extend({}, modelMeta.nodes);
             // load all imgs and build the first scene 
             TOPPANO.loadAllImg(TOPPANO.gv.nodes_meta).pipe(function () {console.log("start build scene!!");}).
                  pipe(function(){
@@ -99,10 +99,13 @@ TOPPANO.threeInit = function(map) {
 
 // Optimization function for mobile devices.
 TOPPANO.optimizeMobile = function() {
-    // Prevent scrolling the entire page.
-    $(document).on('touchmove', function(event) {
-        event.preventDefault();
-    });
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        TOPPANO.gv.isMobile = true;
+        // Prevent scrolling the entire page.
+        $(document).on('touchmove', function(event) {
+            event.preventDefault();
+        });
+    }
 };
 
 function loadImg(node_ID, file_url){
@@ -230,15 +233,13 @@ TOPPANO.addListener = function() {
     }, false);
     window.addEventListener('resize', TOPPANO.onWindowResize, false);
     
-    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+    if(TOPPANO.gv.isMobile) {
         console.log("DeviceMotionEvent supported");
         window.ondeviceorientation =  TOPPANO.onDeviceOrientation;
     } 
     else{
         console.log("DeviceMotionEvent not supported");
     }
-
-
 };
 
 // reading URL info
