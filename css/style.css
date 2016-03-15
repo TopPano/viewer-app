@@ -1,15 +1,23 @@
 html {
     font-family: Helvetica;
     font-size: 100%; /* 16px as 1rem */
+    color: white;
 }
 
 body {
-    font-size: 1em;
-    color: white;
-    background-color: #000000;
-    background-color: white;
-    margin: 0px;
+    margin: 0;
     overflow: hidden;
+}
+
+#app-wrapper {
+    min-height: 100%;
+    min-width: 100%;
+    max-height: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
 }
 
 /**

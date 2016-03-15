@@ -164,7 +164,6 @@ function set_on_rotating_scene(){
                               {
                                   event = event.originalEvent.touches[0];
                               }
-                              event.preventDefault();
                               TOPPANO.gv.interact.onPointerDownPointerX = event.clientX;
                               TOPPANO.gv.interact.onPointerDownPointerY = event.clientY;
                               TOPPANO.gv.interact.onPointerDownLon = TOPPANO.gv.cam.lng;

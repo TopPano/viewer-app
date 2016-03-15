@@ -97,6 +97,13 @@ TOPPANO.threeInit = function(map) {
    $('#progress-div progress').val(current_progress+8);
 };
 
+// Optimization function for mobile devices.
+TOPPANO.optimizeMobile = function() {
+    // Prevent scrolling the entire page.
+    $(document).on('touchmove', function(event) {
+        event.preventDefault();
+    });
+};
 
 function loadImg(node_ID, file_url){
     var _dfr = $.Deferred();

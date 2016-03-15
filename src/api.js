@@ -9,6 +9,9 @@ var TOPPANO = TOPPANO || {};
 TOPPANO.initMap = function(map) {
 
     window.onload = function(){
+        // Optimization for mobile devices.
+        TOPPANO.optimizeMobile();
+
         // init threejs scene and camera
         TOPPANO.threeInit(map);
        
@@ -17,13 +20,9 @@ TOPPANO.initMap = function(map) {
 
         TOPPANO.update();
 
-        
         /* increase progress bar */
         setTimeout(function(){$('#progress-div progress').val(94);},500);
         setTimeout(function(){$('#progress-div progress').val(100);},1000);
-
-        // draw snapshot canvas
-//        TOPPANO.snapshotCanvasInit();
     };
 };
 

@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <title>Verpix</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1, user-scalable=no ">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
         <link rel="shortcut icon" type="image/png" href="images/favicon.png"/>
         <link rel="stylesheet" href="./css/style.css">
         <link rel="stylesheet" href="./css/magnific-popup.css">
@@ -29,77 +29,80 @@
         <script src="./application.js"></script>
     </head>
     <body>
-        <div id="logo" class="logo-bar">
-            <img id="logo_img" src="./images/logo.png"></img>
-            <div class="logo-bar-username text-singleline"></div>
-            <div class='logo-bar-help' data-mfp-src='./images/how_to_use.png'></div>
-            <div id="like-btn" class="likebtn">
-                <div class="likebtn-icon"></div>
-                <div class="likebtn-count-wrapper"><div class="likebtn-count"></div></div>
-            </div>
-        </div>
+        <div id="app-wrapper">
+            <div id="container"></div>
 
-        <div id="account" class="account">
-            <div id="account-signup" class="account-signup account-dialog">
-                <div class="account-dialog-content">
-                    <input type="text" class="account-signup-username" placeholder="Name">
-                    <input type="email" class="account-signup-email" placeholder="Email">
-                    <input type="password" class="account-signup-password" placeholder="Password">
-                    <div class="account-btn">JOIN</div>
+            <div id="logo" class="logo-bar">
+                <img id="logo_img" src="./images/logo.png"></img>
+                <div class="logo-bar-username text-singleline"></div>
+                <div class='logo-bar-help' data-mfp-src='./images/how_to_use.png'></div>
+                <div id="like-btn" class="likebtn">
+                    <div class="likebtn-icon"></div>
+                    <div class="likebtn-count-wrapper"><div class="likebtn-count"></div></div>
                 </div>
             </div>
-            <div id="account-login" class="account-login account-dialog">
-                <div class="account-dialog-content">
-                    <input type="email" class="account-login-email" placeholder="Email">
-                    <input type="password" class="account-login-password" placeholder="Password">
-                    <div class="account-btn">LOG IN</div>
-                </div>
-                <div class="account-btn account-btn-to-signup">JOIN NOW</div>
-            </div>
-            <div id="account-err" class="account-err account-dialog">
-                <div class="account-dialog-content">
-                    <div class="account-text"></div>
-                    <div class="account-btn">GO BACK</div>
-                </div>
-            </div>
-        </div>
 
-        <div id="menu" class="sidebar sidebar-collapsed">
-            <div class="sidebar-title">MENU</div>
-            <div class="sidebar-iconlist">
-                <div class="sidebar-icon sidebar-icon-info" data-target-content="sidebar-content-info"></div>
-                <div class="sidebar-icon sidebar-icon-tag" data-target-content="sidebar-content-tag"></div>
-                <div class="sidebar-icon sidebar-icon-share" data-target-content="sidebar-content-share"></div>
-            </div>
-            <div class="sidebar-content-wrapper">
-                <div class="sidebar-content sidebar-content-info">
-                    <img src="images/author-picture-default.png" alt="Author Picture"></img>
-                    <div class="sidebar-content-info-title">
-                        <div class="sidebar-content-info-author text-singleline"></div>
-                        <div class="sidebar-content-info-date text-singleline"></div>
+            <div id="account" class="account">
+                <div id="account-signup" class="account-signup account-dialog">
+                    <div class="account-dialog-content">
+                        <input type="text" class="account-signup-username" placeholder="Name">
+                        <input type="email" class="account-signup-email" placeholder="Email">
+                        <input type="password" class="account-signup-password" placeholder="Password">
+                        <div class="account-btn">JOIN</div>
                     </div>
-                    <textarea class="sidebar-content-info-message" disabled></textarea>
                 </div>
-                <div class="sidebar-content sidebar-content-tag"></div>
-                <div class="sidebar-content sidebar-content-share">
-                    <div class="sidebar-content-share-iconlist">
-                        <div class="sidebar-content-share-icon sidebar-content-share-facebook"></div>
-                        <div class="sidebar-content-share-icon sidebar-content-share-twitter"></div>
-                        <div class="sidebar-content-share-icon sidebar-content-share-copy"></div>
+                <div id="account-login" class="account-login account-dialog">
+                    <div class="account-dialog-content">
+                        <input type="email" class="account-login-email" placeholder="Email">
+                        <input type="password" class="account-login-password" placeholder="Password">
+                        <div class="account-btn">LOG IN</div>
                     </div>
-                    <div class="sidebar-content-share-size">
-                        <input type="text" class="sidebar-content-share-width" value="240" placeholder="width">
-                        <div class="sidebar-content-share-multiply">X</div>
-                        <input type="text" class="sidebar-content-share-height" value="160" placeholder="height">
+                    <div class="account-btn account-btn-to-signup">JOIN NOW</div>
+                </div>
+                <div id="account-err" class="account-err account-dialog">
+                    <div class="account-dialog-content">
+                        <div class="account-text"></div>
+                        <div class="account-btn">GO BACK</div>
                     </div>
-                    <div class="sidebar-content-share-linkwrapper"><textarea class="sidebar-content-share-link" disabled></textarea></div>
                 </div>
             </div>
-        </div>
 
-        <div id="container"></div>
-        <div id='progress-div'>
-            <progress class='progress-bar' value="0" max="100"></progress>
+            <div id="menu" class="sidebar sidebar-collapsed">
+                <div class="sidebar-title">MENU</div>
+                <div class="sidebar-iconlist">
+                    <div class="sidebar-icon sidebar-icon-info" data-target-content="sidebar-content-info"></div>
+                    <div class="sidebar-icon sidebar-icon-tag" data-target-content="sidebar-content-tag"></div>
+                    <div class="sidebar-icon sidebar-icon-share" data-target-content="sidebar-content-share"></div>
+                </div>
+                <div class="sidebar-content-wrapper">
+                    <div class="sidebar-content sidebar-content-info">
+                        <img src="images/author-picture-default.png" alt="Author Picture"></img>
+                        <div class="sidebar-content-info-title">
+                            <div class="sidebar-content-info-author text-singleline"></div>
+                            <div class="sidebar-content-info-date text-singleline"></div>
+                        </div>
+                        <textarea class="sidebar-content-info-message" disabled></textarea>
+                    </div>
+                    <div class="sidebar-content sidebar-content-tag"></div>
+                    <div class="sidebar-content sidebar-content-share">
+                        <div class="sidebar-content-share-iconlist">
+                            <div class="sidebar-content-share-icon sidebar-content-share-facebook"></div>
+                            <div class="sidebar-content-share-icon sidebar-content-share-twitter"></div>
+                            <div class="sidebar-content-share-icon sidebar-content-share-copy"></div>
+                        </div>
+                        <div class="sidebar-content-share-size">
+                            <input type="text" class="sidebar-content-share-width" value="240" placeholder="width">
+                            <div class="sidebar-content-share-multiply">X</div>
+                            <input type="text" class="sidebar-content-share-height" value="160" placeholder="height">
+                        </div>
+                        <div class="sidebar-content-share-linkwrapper"><textarea class="sidebar-content-share-link" disabled></textarea></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id='progress-div'>
+                <progress class='progress-bar' value="0" max="100"></progress>
+            </div>
         </div>
     </body>
 </html>
