@@ -234,7 +234,7 @@ TOPPANO.addListener = function() {
     }, false);
     window.addEventListener('resize', TOPPANO.onWindowResize, false);
     
-    if(TOPPANO.gv.isMobile) {
+    if(TOPPANO.gv.isMobile && getUrlParam('gyro') !== 'off') {
         console.log("DeviceMotionEvent supported");
         window.ondeviceorientation =  TOPPANO.onDeviceOrientation;
     } 
