@@ -12,6 +12,9 @@ TOPPANO.initMap = function(map) {
         // Optimization for mobile devices.
         TOPPANO.optimizeMobile();
 
+        // Create UI Layout
+        TOPPANO.createUILayout();
+
         // init threejs scene and camera
         TOPPANO.threeInit(map);
        

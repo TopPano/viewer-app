@@ -50,7 +50,8 @@ TOPPANO.modelInit = function() {
                      TOPPANO.readInitCamParams();
                  });
     }).done(function() {
-        TOPPANO.createUI(model);
+        // Fill UI contents
+        TOPPANO.fillUIContents(model);
         // add listener
         TOPPANO.addListener();
     });
