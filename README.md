@@ -7,7 +7,7 @@
 Install [Grunt](http://gruntjs.com/)
 
 ```bash
-$ cd view-app
+$ cd viewer-app
 $ npm install -g grunt-cli
 ```
 
@@ -16,6 +16,14 @@ $ npm install -g grunt-cli
 ```bash
 $ npm install
 $ grunt
+```
+
+### Grunt-Watch
+
+Run the command and grunt will automatically lints (static code analyze), minimize javascript and css files.
+
+```bash
+$ grunt dev
 ```
 
 ### Start Server
