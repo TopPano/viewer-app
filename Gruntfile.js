@@ -50,7 +50,7 @@ module.exports = function(grunt) {
                 options: {
                 },
                 files: {
-                    'dist/all.min.css': [ 'css/*.css', 'css/lib/*.css' ]
+                    'dist/all.min.css': [ 'dist/style.css', 'css/lib/*.css' ]
                 }
             }
         },
@@ -76,8 +76,8 @@ module.exports = function(grunt) {
                         require('precss')()
                     ]
                 },
-                src: 'dist/all.min.css',
-                dest: 'dist/all.min.css'
+                src: 'css/style.css',
+                dest: 'dist/style.css'
             }
         },
 
@@ -114,7 +114,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-shell');
 
     grunt.registerTask('js', [ 'eslint', 'uglify' ]);
-    grunt.registerTask('css', [ 'postcss:lint', 'cssmin', 'postcss:transform', 'shell:moveimgs' ]);
+    grunt.registerTask('css', [ 'postcss', 'cssmin', 'shell:moveimgs' ]);
     grunt.registerTask('clean', [ 'shell:clean' ]);
     grunt.registerTask('default', [ 'clean', 'js', 'css' ]);
     grunt.registerTask('dev', [ 'watch' ]);

@@ -1,0 +1,12 @@
+/**
+  * Common styles
+  */
+textarea:focus,
+input:focus {
+  outline: none;
+}
+
+.text-singleline {
+  white-space: nowrap;
+}
+

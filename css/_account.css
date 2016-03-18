@@ -1,0 +1,76 @@
+.account {
+  display: none;
+}
+
+.account-dialog,
+.account-dialog * {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.account-dialog {
+  width: 365px;
+  margin: 0 auto;
+  padding: 86px 0 15px 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  background-repeat: no-repeat;
+  background-size: auto;
+}
+
+.account-dialog * {
+  display: block;
+  margin: auto;
+  font-size: 0.938rem; /* 15px */
+}
+
+.account-dialog .account-dialog-content {
+  width: 320px;
+  padding: 20px 0;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.account-dialog .account-text {
+  margin-bottom: 15px;
+  text-align: center;
+  line-height: 20px;
+}
+
+.account-dialog input {
+  width: 305px;
+  height: 55px;
+  background: none;
+  border: none;
+  padding: 0 25px;
+  color: white;
+  background-image: url("images/account/account-input.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.account-dialog .account-btn {
+  width: 273px;
+  height: 45px;
+  margin-top: 10px;
+  line-height: 45px;
+  text-align: center;
+  cursor: pointer;
+  background-image: url("images/account/account-btn.png");
+}
+
+.account-dialog .account-btn.account-btn-to-signup {
+  background-image: url("images/account/account-btn-to-signup.png");
+}
+
+.account-signup {
+  background-image: url("images/account/account-signup-bg.png");
+}
+
+.account-login {
+  background-image: url("images/account/account-login-bg.png");
+}
+
+.account-err {
+  background-image: url("images/account/account-err-bg.png");
+}
+
