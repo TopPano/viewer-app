@@ -1,4 +1,3 @@
-
 module.exports = function(grunt) {
     grunt.initConfig({
         eslint: {
@@ -51,24 +50,42 @@ module.exports = function(grunt) {
                 options: {
                 },
                 files: {
-                    'dist/all.min.css': [ 'css/*.css' ]
+                    'dist/all.min.css': [ 'css/*.css', 'css/lib/*.css' ]
                 }
             }
         },
 
         postcss: {
-            options: {
-                processors: [
-                    require('postcss-cssnext')()
-                ]
+            lint: {
+                options: {
+                    processors: [
+                        require('stylelint')({
+                            config: {
+                                'extends': 'stylelint-config-standard'
+                            }
+                        })
+                    ]
+                },
+                src: 'css/*.css',
+                dest: 'dist/.tmp.css'
             },
-            dist: {
-                src: 'dist/all.min.css'
+            transform: {
+                options: {
+                    processors: [
+                        require('postcss-cssnext')(),
+                        require('precss')()
+                    ]
+                },
+                src: 'dist/all.min.css',
+                dest: 'dist/all.min.css'
             }
         },
 
         shell: {
-            target: {
+            clean: {
+                command: 'rm -rf dist/*'
+            },
+            moveimgs: {
                 command: 'cp -r css/images dist/'
             }
         },
@@ -97,8 +114,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-shell');
 
     grunt.registerTask('js', [ 'eslint', 'uglify' ]);
-    grunt.registerTask('css', [ 'cssmin', 'postcss', 'shell' ]);
-    grunt.registerTask('default', [ 'js', 'css' ]);
+    grunt.registerTask('css', [ 'postcss:lint', 'cssmin', 'postcss:transform', 'shell:moveimgs' ]);
+    grunt.registerTask('clean', [ 'shell:clean' ]);
+    grunt.registerTask('default', [ 'clean', 'js', 'css' ]);
     grunt.registerTask('dev', [ 'watch' ]);
 };
 
