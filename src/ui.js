@@ -72,6 +72,11 @@ TOPPANO.createUILayout = function() {
                 <progress class="progress-bar" value="0" max="100"></progress> \
             </div> \
         ');
+        if(TOPPANO.gv.isMobile) {
+            $('#app-wrapper *').addClass('ui-mobile');
+        } else {
+            $('#app-wrapper *').addClass('ui-desktop');
+        }
     }
 };
 
