@@ -76,12 +76,35 @@ TOPPANO.createUILayout = function() {
             </div>';
 
         if(TOPPANO.gv.mobile.isMobile) {
+            var supportsOrientationChange = 'onorientationchange' in window,
+                orientationEvent = supportsOrientationChange ? 'orientationchange' : 'resize';
+
             $(sidebarIconlist).insertAfter('#menu .sidebar-content-wrapper');
             $('#app-wrapper *').addClass('ui-mobile');
+
+            TOPPANO.setMobileOrientation();
+            // Detect orientation change.
+            $(window).on(orientationEvent, function(event) {
+                TOPPANO.setMobileOrientation();
+            });
         } else {
             $(sidebarIconlist).insertBefore('#menu .sidebar-content-wrapper');
             $('#app-wrapper *').addClass('ui-desktop');
         }
+    }
+};
+
+// Get mobile device orientation.
+TOPPANO.setMobileOrientation = function() {
+    switch(window.orientation) {
+        case -90:
+        case 90:
+            TOPPANO.gv.mobile.orientation = 'landscape';
+            $('#app-wrapper *').removeClass('ui-orient-portrait').addClass('ui-orient-landscape');
+            break;
+        default:
+            TOPPANO.gv.mobile.orientation = 'portrait';
+            $('#app-wrapper *').removeClass('ui-orient-landscape').addClass('ui-orient-portrait');
     }
 };
 

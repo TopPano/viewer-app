@@ -101,32 +101,11 @@ TOPPANO.threeInit = function(map) {
 // Optimization function for mobile devices.
 TOPPANO.optimizeMobile = function() {
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-        var supportsOrientationChange = 'onorientationchange' in window,
-            orientationEvent = supportsOrientationChange ? 'orientationchange' : 'resize';
-
         TOPPANO.gv.mobile.isMobile = true;
-        TOPPANO.getMobileOrientation();
         // Prevent scrolling the entire page.
         $(document).on('touchmove', function(event) {
             event.preventDefault();
         });
-        // Detect orientation change.
-        $(window).on(orientationEvent, function(event) {
-            TOPPANO.getMobileOrientation();
-        });
-    }
-};
-
-TOPPANO.getMobileOrientation = function() {
-    switch(window.orientation) {
-        case -90:
-        case 90:
-            TOPPANO.gv.mobile.orientation = 'landscape';
-            $('#app-wrapper *').removeClass('ui-orient-portrait').addClass('ui-orient-landscape');
-            break;
-        default:
-            TOPPANO.gv.mobile.orientation = 'portrait';
-            $('#app-wrapper *').removeClass('ui-orient-landscape').addClass('ui-orient-portrait');
     }
 };
 

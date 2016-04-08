@@ -72,7 +72,7 @@ TOPPANO.changeContentHeight = function(contentClass, menu) {
             break;
     }
 
-    if(TOPPANO.gv.mobile.isMobile) {
+    if(TOPPANO.isMobilePortrait()) {
         return height + minHeight;
     } else {
         return (height < minHeight) ? minHeight: height;
@@ -94,7 +94,7 @@ TOPPANO.toggleMenuContent = function(contentClass) {
 TOPPANO.changeMenuSize = function(menu, contentWrapper, fromWidth, fromHeight, toWidth, toHeight, callback) {
     var heightChanger, widthChanger;
 
-    if(TOPPANO.gv.mobile.isMobile) {
+    if(TOPPANO.isMobilePortrait()) {
         heightChanger = contentWrapper;
         widthChanger = menu;
     } else {
@@ -103,7 +103,7 @@ TOPPANO.changeMenuSize = function(menu, contentWrapper, fromWidth, fromHeight, t
     }
 
     if((fromHeight - toHeight) !== 0) {
-        if(TOPPANO.gv.mobile.isMobile) {
+        if(TOPPANO.isMobilePortrait()) {
             toHeight -= parseInt(menu.css('min-height'));
         }
         heightChanger.on(TOPPANO.ui.common.transitionEndEvent, function(event) {
@@ -129,6 +129,11 @@ TOPPANO.changeMenuSize = function(menu, contentWrapper, fromWidth, fromHeight, t
     } else {
         callback();
     }
+};
+
+// Check is it portrait orientation on mobile device ?
+TOPPANO.isMobilePortrait = function() {
+    return TOPPANO.gv.mobile.isMobile && TOPPANO.gv.mobile.orientation === 'portrait';
 };
 
 // Listener for clicking Facebook sharing button.
