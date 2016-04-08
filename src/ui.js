@@ -75,7 +75,7 @@ TOPPANO.createUILayout = function() {
                 <div class="sidebar-icon sidebar-icon-share" data-target-content="sidebar-content-share"></div> \
             </div>';
 
-        if(TOPPANO.gv.isMobile) {
+        if(TOPPANO.gv.mobile.isMobile) {
             $(sidebarIconlist).insertAfter('#menu .sidebar-content-wrapper');
             $('#app-wrapper *').addClass('ui-mobile');
         } else {
@@ -123,7 +123,7 @@ TOPPANO.addContainerEvent = function() {
     var click = TOPPANO.ui.containerEvent.click;
     var startEvent, endEvent;
 
-    if(TOPPANO.gv.isMobile) {
+    if(TOPPANO.gv.mobile.isMobile) {
         startEvent = 'touchstart';
         endEvent = 'touchend';
     } else {

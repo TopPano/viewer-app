@@ -145,7 +145,7 @@ function set_on_rotating_scene(){
     // determine if on the mobile or PC web
 
     var start_event, move_event, end_event;
-    if (TOPPANO.gv.isMobile)
+    if (TOPPANO.gv.mobile.isMobile)
     {
         start_event = 'touchstart';
         move_event = 'touchmove';

@@ -72,7 +72,7 @@ TOPPANO.changeContentHeight = function(contentClass, menu) {
             break;
     }
 
-    if(TOPPANO.gv.isMobile) {
+    if(TOPPANO.gv.mobile.isMobile) {
         return height + minHeight;
     } else {
         return (height < minHeight) ? minHeight: height;
@@ -94,7 +94,7 @@ TOPPANO.toggleMenuContent = function(contentClass) {
 TOPPANO.changeMenuSize = function(menu, contentWrapper, fromWidth, fromHeight, toWidth, toHeight, callback) {
     var heightChanger, widthChanger;
 
-    if(TOPPANO.gv.isMobile) {
+    if(TOPPANO.gv.mobile.isMobile) {
         heightChanger = contentWrapper;
         widthChanger = menu;
     } else {
@@ -103,7 +103,7 @@ TOPPANO.changeMenuSize = function(menu, contentWrapper, fromWidth, fromHeight, t
     }
 
     if((fromHeight - toHeight) !== 0) {
-        if(TOPPANO.gv.isMobile) {
+        if(TOPPANO.gv.mobile.isMobile) {
             toHeight -= parseInt(menu.css('min-height'));
         }
         heightChanger.on(TOPPANO.ui.common.transitionEndEvent, function(event) {

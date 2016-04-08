@@ -136,11 +136,15 @@ TOPPANO.gv = {
         onPointerDownLat: 0,
         timer: null
     },
+    // variables for mobile support
+    mobile: {
+        isMobile: false,
+        orientation: 'none'
+    },
     currentLink: '',
     urlHash: window.location.hash,
     defaultMap: './image/tile/0-0.jpeg',
-    apiUrl: 'http://dev.verpix.net:3000/api',
-    isMobile: false
+    apiUrl: 'http://dev.verpix.net:3000/api'
    };
 
 
