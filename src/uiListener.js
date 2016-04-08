@@ -23,7 +23,7 @@ TOPPANO.onMenuIconClick = function(event) {
     }
 };
 
-TOPPANO.changeContents = function(from, to, changeFirst) {
+TOPPANO.changeContents = function(from, to) {
     // Assume that at least one of them is defined.
     var menu = from ? from.parent().parent() : to.parent().parent();
     var contentWrapper = $('.sidebar-content-wrapper', menu);
@@ -72,7 +72,11 @@ TOPPANO.changeContentHeight = function(contentClass, menu) {
             break;
     }
 
-    return (height < minHeight) ? minHeight: height;
+    if(TOPPANO.gv.isMobile) {
+        return height + minHeight;
+    } else {
+        return (height < minHeight) ? minHeight: height;
+    }
 };
 
 TOPPANO.toggleMenuIcon = function(icon) {
@@ -88,27 +92,40 @@ TOPPANO.toggleMenuContent = function(contentClass) {
 };
 
 TOPPANO.changeMenuSize = function(menu, contentWrapper, fromWidth, fromHeight, toWidth, toHeight, callback) {
+    var heightChanger, widthChanger;
+
+    if(TOPPANO.gv.isMobile) {
+        heightChanger = contentWrapper;
+        widthChanger = menu;
+    } else {
+        heightChanger = menu;
+        widthChanger = contentWrapper;
+    }
+
     if((fromHeight - toHeight) !== 0) {
-        menu.on(TOPPANO.ui.common.transitionEndEvent, function(event) {
+        if(TOPPANO.gv.isMobile) {
+            toHeight -= parseInt(menu.css('min-height'));
+        }
+        heightChanger.on(TOPPANO.ui.common.transitionEndEvent, function(event) {
             if(event.originalEvent.propertyName === 'height') {
-                menu.off(TOPPANO.ui.common.transitionEndEvent);
+                heightChanger.off(TOPPANO.ui.common.transitionEndEvent);
                 event.stopPropagation();
                 callback();
             }
         });
         if((fromWidth - toWidth) !== 0) {
-            contentWrapper.css('width', toWidth + 'px');
+            widthChanger.css('width', toWidth + 'px');
         }
-        menu.css('height', toHeight + 'px');
+        heightChanger.css('height', toHeight + 'px');
     } else if((fromWidth - toWidth) !== 0) {
-        contentWrapper.on(TOPPANO.ui.common.transitionEndEvent, function(event) {
+        widthChanger.on(TOPPANO.ui.common.transitionEndEvent, function(event) {
             if(event.originalEvent.propertyName === 'width') {
-                contentWrapper.off(TOPPANO.ui.common.transitionEndEvent);
+                widthChanger.off(TOPPANO.ui.common.transitionEndEvent);
                 event.stopPropagation();
                 callback();
             }
         });
-        contentWrapper.css('width', toWidth + 'px');
+        widthChanger.css('width', toWidth + 'px');
     } else {
         callback();
     }
@@ -189,6 +206,7 @@ TOPPANO.onTwitterShareBtnClick = function() {
 // Listener for embedded link width or height field changes.
 TOPPANO.onEmbeddedLinkChange = function() {
     var menu = $('#menu');
+    var contentWrapper = $('.sidebar-content-wrapper', menu);
     var width = parseInt($('.sidebar-content-share-width', menu).val());
     var height = parseInt($('.sidebar-content-share-height', menu).val());
     var minWidth = TOPPANO.ui.menuUI.linkMinWidth;
@@ -205,7 +223,7 @@ TOPPANO.onEmbeddedLinkChange = function() {
         var newMenuHeight = TOPPANO.changeContentHeight('sidebar-content-share', menu);
         if((oldMenuHeight - newMenuHeight) !== 0) {
             TOPPANO.ui.menuUI.isLocked = true;
-            TOPPANO.changeMenuSize(menu, null, 0, oldMenuHeight, 0, newMenuHeight, function() {
+            TOPPANO.changeMenuSize(menu, contentWrapper, 0, oldMenuHeight, 0, newMenuHeight, function() {
                 TOPPANO.ui.menuUI.isLocked = false;
             });
         }

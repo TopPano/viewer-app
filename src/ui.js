@@ -37,12 +37,6 @@ TOPPANO.createUILayout = function() {
                 </div> \
             </div> \
             <div id="menu" class="sidebar sidebar-collapsed"> \
-                <div class="sidebar-title">MENU</div> \
-                <div class="sidebar-iconlist"> \
-                    <div class="sidebar-icon sidebar-icon-info" data-target-content="sidebar-content-info"></div> \
-                    <div class="sidebar-icon sidebar-icon-tag" data-target-content="sidebar-content-tag"></div> \
-                    <div class="sidebar-icon sidebar-icon-share" data-target-content="sidebar-content-share"></div> \
-                </div> \
                 <div class="sidebar-content-wrapper"> \
                     <div class="sidebar-content sidebar-content-info"> \
                         <img src="images/author-picture-default.png" alt="Author Picture"></img> \
@@ -72,9 +66,20 @@ TOPPANO.createUILayout = function() {
                 <progress class="progress-bar" value="0" max="100"></progress> \
             </div> \
         ');
+
+        var sidebarIconlist = ' \
+            <div class="sidebar-title">MENU</div> \
+            <div class="sidebar-iconlist"> \
+                <div class="sidebar-icon sidebar-icon-info" data-target-content="sidebar-content-info"></div> \
+                <div class="sidebar-icon sidebar-icon-tag" data-target-content="sidebar-content-tag"></div> \
+                <div class="sidebar-icon sidebar-icon-share" data-target-content="sidebar-content-share"></div> \
+            </div>';
+
         if(TOPPANO.gv.isMobile) {
+            $(sidebarIconlist).insertAfter('#menu .sidebar-content-wrapper');
             $('#app-wrapper *').addClass('ui-mobile');
         } else {
+            $(sidebarIconlist).insertBefore('#menu .sidebar-content-wrapper');
             $('#app-wrapper *').addClass('ui-desktop');
         }
     }
