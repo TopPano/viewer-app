@@ -11,7 +11,7 @@
     height: 55px;
     transition: top 300ms ease;
     &.ui-hidden {
-      top: -150px;
+      top: -100%;
     }
   }
   &.ui-mobile.ui-orient-landscape {
@@ -19,7 +19,7 @@
     height: 100%;
     transition: left 300ms ease;
     &.ui-hidden {
-      left: -150px;
+      left: -100%;
     }
   }
 

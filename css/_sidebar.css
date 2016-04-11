@@ -11,7 +11,7 @@
     transform: translateY(-50%);
     transition: right 300ms ease;
     &.ui-hidden {
-      right: -350px;
+      right: -100%;
     }
   }
   &.ui-mobile.ui-orient-portrait {
@@ -20,7 +20,7 @@
     transform: translateX(-50%);
     transition: bottom 300ms ease;
     &.ui-hidden {
-      bottom: -350px;
+      bottom: -100%;
     }
   }
 }
