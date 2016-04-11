@@ -106,6 +106,13 @@ TOPPANO.setMobileOrientation = function() {
             TOPPANO.gv.mobile.orientation = 'portrait';
             $('#app-wrapper *').removeClass('ui-orient-landscape').addClass('ui-orient-portrait');
     }
+
+    if($('#menu').hasClass('sidebar-expanded')) {
+        TOPPANO.ui.menuUI.isLocked = true;
+        TOPPANO.changeMenuSize(TOPPANO.ui.menuUI.currentClickedIcon, function() {
+            TOPPANO.ui.menuUI.isLocked = false;
+        });
+    }
 };
 
 // Fill the contents and listeners of all UI components
@@ -269,6 +276,7 @@ TOPPANO.ui = {
     menuUI: {
         linkMinWidth: 240,
         linkMinHeight: 160,
+        changeSizeDuration: 300,
         isLocked: false,
         currentClickedIcon: null
     },

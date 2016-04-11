@@ -25,26 +25,22 @@ TOPPANO.onMenuIconClick = function(event) {
 
 TOPPANO.changeContents = function(from, to) {
     // Assume that at least one of them is defined.
-    var menu = from ? from.parent().parent() : to.parent().parent();
-    var contentWrapper = $('.sidebar-content-wrapper', menu);
-    var fromClass = !from ? '' : from.attr('data-target-content'),
-        fromWidth = !from ? 0 : parseInt($('.' + fromClass, menu).css('width')),
-        fromHeight = parseInt(menu.css('height'));
-    var toClass = !to ? '' : to.attr('data-target-content'),
-        toWidth = !to ? 0 : parseInt($('.' + toClass, menu).css('width')),
-        toHeight = TOPPANO.changeContentHeight(toClass, menu);
+    var menu = from ? from.parent().parent() : to.parent().parent(),
+        contentWrapper = $('.sidebar-content-wrapper', menu),
+        fromClass = !from ? '' : from.attr('data-target-content'),
+        toClass = !to ? '' : to.attr('data-target-content');
 
     TOPPANO.toggleMenuIcon(from);
     TOPPANO.toggleMenuIcon(to);
-    TOPPANO.toggleMenuContent(fromClass, menu);
-    TOPPANO.changeMenuSize(menu, contentWrapper, fromWidth, fromHeight, toWidth, toHeight, function() {
-        TOPPANO.toggleMenuContent(toClass, menu);
+    TOPPANO.toggleMenuContent(fromClass);
+    TOPPANO.changeMenuSize(to, function() {
+        TOPPANO.toggleMenuContent(toClass);
         TOPPANO.ui.menuUI.isLocked = false;
     });
 };
 
-TOPPANO.changeContentHeight = function(contentClass, menu) {
-    var minHeight = parseInt(menu.css('min-height')),
+TOPPANO.changeContentHeight = function(contentClass) {
+    var menu = $('#menu'),
         height = 0;
 
     switch(contentClass) {
@@ -72,11 +68,7 @@ TOPPANO.changeContentHeight = function(contentClass, menu) {
             break;
     }
 
-    if(TOPPANO.isMobilePortrait()) {
-        return height + minHeight;
-    } else {
-        return (height < minHeight) ? minHeight: height;
-    }
+    return height;
 };
 
 TOPPANO.toggleMenuIcon = function(icon) {
@@ -87,48 +79,22 @@ TOPPANO.toggleMenuIcon = function(icon) {
 
 TOPPANO.toggleMenuContent = function(contentClass) {
     if(contentClass !== '') {
-        $('.' + contentClass, menu).toggleClass('sidebar-content-shown');
+        $('#menu .' + contentClass).toggleClass('sidebar-content-shown');
     }
 };
 
-TOPPANO.changeMenuSize = function(menu, contentWrapper, fromWidth, fromHeight, toWidth, toHeight, callback) {
-    var heightChanger, widthChanger;
+TOPPANO.changeMenuSize = function(to, callback) {
+    var contentWrapper = $('#menu .sidebar-content-wrapper'),
+        toClass = !to ? '' : to.attr('data-target-content'),
+        toWidth = !to ? 0 : parseInt($('#menu .' + toClass).css('width')),
+        toHeight = TOPPANO.changeContentHeight(toClass, menu);
 
-    if(TOPPANO.isMobilePortrait()) {
-        heightChanger = contentWrapper;
-        widthChanger = menu;
-    } else {
-        heightChanger = menu;
-        widthChanger = contentWrapper;
-    }
-
-    if((fromHeight - toHeight) !== 0) {
-        if(TOPPANO.isMobilePortrait()) {
-            toHeight -= parseInt(menu.css('min-height'));
-        }
-        heightChanger.on(TOPPANO.ui.common.transitionEndEvent, function(event) {
-            if(event.originalEvent.propertyName === 'height') {
-                heightChanger.off(TOPPANO.ui.common.transitionEndEvent);
-                event.stopPropagation();
-                callback();
-            }
-        });
-        if((fromWidth - toWidth) !== 0) {
-            widthChanger.css('width', toWidth + 'px');
-        }
-        heightChanger.css('height', toHeight + 'px');
-    } else if((fromWidth - toWidth) !== 0) {
-        widthChanger.on(TOPPANO.ui.common.transitionEndEvent, function(event) {
-            if(event.originalEvent.propertyName === 'width') {
-                widthChanger.off(TOPPANO.ui.common.transitionEndEvent);
-                event.stopPropagation();
-                callback();
-            }
-        });
-        widthChanger.css('width', toWidth + 'px');
-    } else {
-        callback();
-    }
+    contentWrapper.animate({
+        height: toHeight,
+        width: toWidth
+    }, TOPPANO.ui.menuUI.changeSizeDuration, 'swing', function() {
+      callback()
+    });
 };
 
 // Check is it portrait orientation on mobile device ?
@@ -211,7 +177,6 @@ TOPPANO.onTwitterShareBtnClick = function() {
 // Listener for embedded link width or height field changes.
 TOPPANO.onEmbeddedLinkChange = function() {
     var menu = $('#menu');
-    var contentWrapper = $('.sidebar-content-wrapper', menu);
     var width = parseInt($('.sidebar-content-share-width', menu).val());
     var height = parseInt($('.sidebar-content-share-height', menu).val());
     var minWidth = TOPPANO.ui.menuUI.linkMinWidth;
@@ -226,9 +191,13 @@ TOPPANO.onEmbeddedLinkChange = function() {
     if($('.sidebar-content-share', menu).hasClass('sidebar-content-shown') && !TOPPANO.ui.menuUI.isLocked) {
         var oldMenuHeight = parseInt(menu.css('height'));
         var newMenuHeight = TOPPANO.changeContentHeight('sidebar-content-share', menu);
+
+        if(TOPPANO.isMobilePortrait()) {
+            oldMenuHeight -= parseInt($('.sidebar-iconlist', menu).css('height'));
+        }
         if((oldMenuHeight - newMenuHeight) !== 0) {
             TOPPANO.ui.menuUI.isLocked = true;
-            TOPPANO.changeMenuSize(menu, contentWrapper, 0, oldMenuHeight, 0, newMenuHeight, function() {
+            TOPPANO.changeMenuSize(TOPPANO.ui.menuUI.currentClickedIcon, function() {
                 TOPPANO.ui.menuUI.isLocked = false;
             });
         }
