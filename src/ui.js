@@ -3,9 +3,9 @@ TOPPANO.createUILayout = function() {
     var ui = getUrlParam('ui');
     if(ui !== 'off') {
         $('#app-wrapper').append(' \
-            <div id="logo" class="logo-bar"> \
-                <img id="logo_img" src="./images/logo.png"></img> \
-                <div class="logo-bar-username text-singleline"></div> \
+            <div id="logo-bar" class="logobar"> \
+                <img class="logobar-logo" src="./images/logo.png" alt="Verpix"></img> \
+                <div class="logobar-username text-singleline"></div> \
             </div> \
             <div id="account" class="account"> \
                 <div id="account-signup" class="account-signup account-dialog"> \
@@ -93,8 +93,8 @@ TOPPANO.createUILayout = function() {
             });
         } else {
             $(sidebarIconlist).insertBefore('#menu .sidebar-content-wrapper');
-            $(likebtn).appendTo('#logo');
-            $(helpbtn).appendTo('#logo');
+            $(likebtn).appendTo('#logo-bar');
+            $(helpbtn).appendTo('#logo-bar');
             $('#app-wrapper *').addClass('ui-desktop');
         }
     }
@@ -175,7 +175,7 @@ TOPPANO.addContainerEvent = function() {
             if(click.count === 1) {
                 click.timer = setTimeout(function() {
                     // Single click: show/hide all UI.
-                    $('#logo').toggleClass('ui-hidden');
+                    $('#logo-bar').toggleClass('ui-hidden');
                     $('#menu').toggleClass('ui-hidden');
                     click.count = 0;
                 }, click.dblclickDelay);

@@ -1,40 +1,65 @@
 /* A bar for showing logo */
-.logo-bar {
+.logobar {
   background: black;
-  width: 100%;
-  height: 55px;
   position: absolute;
   top: 0;
   left: 0;
-  -webkit-transition: top 300ms ease;
-  -moz-transition: top 300ms ease;
-  -o-transition: top 300ms ease;
-  -ms-transition: top 300ms ease;
-  transition: top 300ms ease;
-}
 
-.logo-bar.ui-hidden {
-  top: -150px;
-}
+  &.ui-desktop,
+  &.ui-mobile.ui-orient-portrait {
+    width: 100%;
+    height: 55px;
+    transition: top 300ms ease;
+    &.ui-hidden {
+      top: -150px;
+    }
+  }
+  &.ui-mobile.ui-orient-landscape {
+    width: 55px;
+    height: 100%;
+    transition: left 300ms ease;
+    &.ui-hidden {
+      left: -150px;
+    }
+  }
 
-.logo-bar #logo_img {
-  -webkit-transform: translateX(-50%);
-  -moz-transform: translateX(-50%);
-  -o-transform: translateX(-50%);
-  -ms-transform: translateX(-50%);
-  transform: translateX(-50%);
-  position: absolute;
-  top: 10px;
-  left: 50%;
-}
+  img.logobar-logo {
+    position: absolute;
+    &.ui-desktop,
+    &.ui-mobile.ui-orient-portrait {
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    &.ui-mobile.ui-orient-landscape {
+      left: 10px;
+      top: 50%;
+      transform: rotate(-90deg) translateY(-100%);
+      transform-origin: center 0;
+    }
+  }
 
-.logo-bar .logo-bar-username {
-  position: absolute;
-  top: 0;
-  right: 70px;
-  line-height: 55px;
-  font-size: 1.125rem; /* 18px */
-  text-align: right;
-  text-decoration: underline;
+  .logobar-username {
+    position: absolute;
+    line-height: 55px;
+    font-size: 1.125rem; /* 18px */
+    text-align: right;
+    text-decoration: underline;
+
+    &.ui-desktop {
+      top: 0;
+      right: 70px;
+    }
+    &.ui-mobile.ui-orient-portrait {
+      top: 0;
+      right: 10px;
+    }
+    &.ui-mobile.ui-orient-landscape {
+      top: 10px;
+      left: 0;
+      transform: rotate(-90deg) translateX(-100%);
+      transform-origin: top left;
+    }
+  }
 }
 
