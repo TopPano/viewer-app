@@ -22,6 +22,7 @@ body {
 
 @import "common";
 @import "logobar";
+@import "helpbtn";
 @import "likebtn";
 @import "account";
 @import "sidebar";

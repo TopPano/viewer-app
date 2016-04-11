@@ -3,33 +3,47 @@
   position: absolute;
   width: 40px;
   height: 50px;
-  top: 60px;
-  right: 10px;
-}
 
-.likebtn .likebtn-icon {
-  width: 40px;
-  height: 40px;
-  background-image: url("images/likebtn/likebtn-icon.png");
-  cursor: pointer;
-}
+  /* desktop: belongs to logobar */
+  &.ui-desktop {
+    top: 60px;
+    right: 10px;
+  }
 
-.likebtn .likebtn-icon.likebtn-icon-clicked {
-  background-image: url("images/likebtn/likebtn-icon-clicked.png");
-}
+  /* mobile: belongs to sidebar */
+  &.ui-mobile {
+    &.ui-orient-landscape {
+      right: 15px;
+      top: -60px;
+    }
+    &.ui-orient-portrait {
+      bottom: 8px;
+      right: -50px;
+    }
+  }
 
-.likebtn .likebtn-count-wrapper {
-  position: relative;
-  display: inline-block;
-  left: 50%;
-}
+  .likebtn-icon {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    background-image: url("images/likebtn/likebtn-icon.png");
+    &.likebtn-icon-clicked {
+      background-image: url("images/likebtn/likebtn-icon-clicked.png");
+    }
+  }
 
-.likebtn .likebtn-count {
-  height: 10px;
-  line-height: 10px;
-  font-size: 0.813rem; /* 13px */
-  white-space: nowrap;
-  margin-left: -50%;
-  cursor: default;
+  .likebtn-count-wrapper {
+    position: relative;
+    display: inline-block;
+    left: 50%;
+    .likebtn-count {
+      height: 10px;
+      line-height: 10px;
+      font-size: 0.813rem; /* 13px */
+      white-space: nowrap;
+      margin-left: -50%;
+      cursor: default;
+    }
+  }
 }
 

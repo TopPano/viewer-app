@@ -6,11 +6,6 @@ TOPPANO.createUILayout = function() {
             <div id="logo" class="logo-bar"> \
                 <img id="logo_img" src="./images/logo.png"></img> \
                 <div class="logo-bar-username text-singleline"></div> \
-                <div class="logo-bar-help" data-mfp-src="./images/how_to_use.png"></div> \
-                <div id="like-btn" class="likebtn"> \
-                    <div class="likebtn-icon"></div> \
-                    <div class="likebtn-count-wrapper"><div class="likebtn-count"></div></div> \
-                </div> \
             </div> \
             <div id="account" class="account"> \
                 <div id="account-signup" class="account-signup account-dialog"> \
@@ -74,12 +69,21 @@ TOPPANO.createUILayout = function() {
                 <div class="sidebar-icon sidebar-icon-tag" data-target-content="sidebar-content-tag"></div> \
                 <div class="sidebar-icon sidebar-icon-share" data-target-content="sidebar-content-share"></div> \
             </div>';
+        var likebtn = ' \
+            <div id="like-btn" class="likebtn"> \
+                <div class="likebtn-icon"></div> \
+                <div class="likebtn-count-wrapper"><div class="likebtn-count"></div></div> \
+            </div>';
+        var helpbtn = ' \
+            <div id="help-btn" class="helpbtn" data-mfp-src="./images/how_to_use.png"></div>';
 
         if(TOPPANO.gv.mobile.isMobile) {
             var supportsOrientationChange = 'onorientationchange' in window,
                 orientationEvent = supportsOrientationChange ? 'orientationchange' : 'resize';
 
             $(sidebarIconlist).insertAfter('#menu .sidebar-content-wrapper');
+            $(likebtn).appendTo('#menu');
+            $(helpbtn).appendTo('#menu');
             $('#app-wrapper *').addClass('ui-mobile');
 
             TOPPANO.setMobileOrientation();
@@ -89,6 +93,8 @@ TOPPANO.createUILayout = function() {
             });
         } else {
             $(sidebarIconlist).insertBefore('#menu .sidebar-content-wrapper');
+            $(likebtn).appendTo('#logo');
+            $(helpbtn).appendTo('#logo');
             $('#app-wrapper *').addClass('ui-desktop');
         }
     }
@@ -233,7 +239,7 @@ TOPPANO.initTwitter = function() {
 
 // initial question mark at top right side
 TOPPANO.initQMark = function(){
-    $('#logo .logo-bar-help').magnificPopup({
+    $('#help-btn').magnificPopup({
         type: 'image',
         showCloseBtn: false,
         image: {
