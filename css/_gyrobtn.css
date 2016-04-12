@@ -1,0 +1,14 @@
+.gyrobtn {
+  width: 60px;
+  height: 60px;
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  cursor: pointer;
+  background-image: url("images/gyrobtn/gyrobtn-off.svg");
+  background-size: contain;
+  &.gyrobtn-on {
+    background-image: url("images/gyrobtn/gyrobtn-on.svg");
+  }
+}
+

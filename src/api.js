@@ -152,5 +152,6 @@ TOPPANO.gyro = {
     screen_rot_angle:0, 
     lat: 0,
     lng: 0,
-    setup: false
+    setup: false,
+    isOn: false
 }; 

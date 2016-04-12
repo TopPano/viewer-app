@@ -335,6 +335,13 @@ TOPPANO.setCursorHandler = function(){
     set_on_scrolling_scene();
 };
 
+TOPPANO.setGyro = function(isOn) {
+    if(isOn) {
+        window.ondeviceorientation = TOPPANO.onDeviceOrientation;
+    } else {
+        window.ondeviceorientation = null;
+    }
+};
 
 TOPPANO.onDeviceOrientation = function(event){
     var degtorad = Math.PI / 180;

@@ -76,6 +76,8 @@ TOPPANO.createUILayout = function() {
             </div>';
         var helpbtn = ' \
             <div id="help-btn" class="helpbtn" data-mfp-src="./images/how_to_use.png"></div>';
+        var gyrobtn = ' \
+            <div id="gyro-btn" class="gyrobtn"></div>';
 
         if(TOPPANO.gv.mobile.isMobile) {
             var supportsOrientationChange = 'onorientationchange' in window,
@@ -84,6 +86,10 @@ TOPPANO.createUILayout = function() {
             $(sidebarIconlist).insertAfter('#menu .sidebar-content-wrapper');
             $(likebtn).appendTo('#menu');
             $(helpbtn).appendTo('#menu');
+            $(gyrobtn).appendTo('#app-wrapper');
+            if(TOPPANO.gyro.isOn) {
+                $('#gyro-btn').addClass('gyrobtn-on');
+            }
             $('#app-wrapper *').addClass('ui-mobile');
 
             TOPPANO.setMobileOrientation();
@@ -129,6 +135,9 @@ TOPPANO.fillUIContents = function(post) {
         TOPPANO.ui.user.init(post.user);
         TOPPANO.initQMark();
         TOPPANO.addContainerEvent();
+        if(TOPPANO.gv.mobile.isMobile) {
+            TOPPANO.initGyroBtn();
+        }
     }
 };
 
@@ -237,7 +246,7 @@ TOPPANO.initTwitter = function() {
     $('#menu .sidebar-content-share-twitter').on('click', TOPPANO.onTwitterShareBtnClick);
 };
 
-// initial question mark at top right side
+// Initialize help button which popups a help image.
 TOPPANO.initQMark = function(){
     $('#help-btn').magnificPopup({
         type: 'image',
@@ -247,7 +256,15 @@ TOPPANO.initQMark = function(){
             verticalFit: true
         },
     });
-}
+};
+
+// Initialize gyro button which turns on/off gyroscpe.
+TOPPANO.initGyroBtn = function() {
+    if(TOPPANO.gyro.isOn) {
+        TOPPANO.setGyro(true);
+    }
+    $('#gyro-btn').on('click', TOPPANO.onGyroBtnClick);
+};
 
 TOPPANO.getTransitionEndEventName = function() {
     var t;

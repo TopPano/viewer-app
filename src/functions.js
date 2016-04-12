@@ -102,6 +102,8 @@ TOPPANO.threeInit = function(map) {
 TOPPANO.optimizeMobile = function() {
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         TOPPANO.gv.mobile.isMobile = true;
+        TOPPANO.gyro.isOn = (getUrlParam('gyro') === 'on');
+
         // Prevent scrolling the entire page.
         $(document).on('touchmove', function(event) {
             event.preventDefault();
@@ -233,14 +235,6 @@ TOPPANO.addListener = function() {
         TOPPANO.onDocumentDrop(event);
     }, false);
     window.addEventListener('resize', TOPPANO.onWindowResize, false);
-    
-    if(TOPPANO.gv.mobile.isMobile && getUrlParam('gyro') !== 'off') {
-        console.log("DeviceMotionEvent supported");
-        window.ondeviceorientation =  TOPPANO.onDeviceOrientation;
-    } 
-    else{
-        console.log("DeviceMotionEvent not supported");
-    }
 };
 
 // reading URL info

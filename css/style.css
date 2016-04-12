@@ -24,6 +24,7 @@ body {
 @import "logobar";
 @import "helpbtn";
 @import "likebtn";
+@import "gyrobtn";
 @import "account";
 @import "sidebar";
 @import "progress";
