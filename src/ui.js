@@ -79,6 +79,8 @@ TOPPANO.createUILayout = function() {
         var gyrobtn = ' \
             <div id="gyro-btn" class="gyrobtn"></div>';
 
+        $(TOPPANO.ui.help.getHtml()).appendTo('#app-wrapper');
+
         if(TOPPANO.gv.mobile.isMobile) {
             var supportsOrientationChange = 'onorientationchange' in window,
                 orientationEvent = supportsOrientationChange ? 'orientationchange' : 'resize';
@@ -133,7 +135,7 @@ TOPPANO.fillUIContents = function(post) {
     if(ui !== 'off') {
         TOPPANO.createMenu(post.menu);
         TOPPANO.ui.user.init(post.user);
-        TOPPANO.initQMark();
+        TOPPANO.ui.help.init();
         TOPPANO.addContainerEvent();
         if(TOPPANO.gv.mobile.isMobile) {
             TOPPANO.initGyroBtn();
@@ -244,18 +246,6 @@ TOPPANO.initTwitter = function() {
         return t;
     }(document, "script", "twitter-wjs"));
     $('#menu .sidebar-content-share-twitter').on('click', TOPPANO.onTwitterShareBtnClick);
-};
-
-// Initialize help button which popups a help image.
-TOPPANO.initQMark = function(){
-    $('#help-btn').magnificPopup({
-        type: 'image',
-        showCloseBtn: false,
-        image: {
-            cursor: 'mfp-auto-cur',
-            verticalFit: true
-        },
-    });
 };
 
 // Initialize gyro button which turns on/off gyroscpe.

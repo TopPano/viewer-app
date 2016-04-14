@@ -1,0 +1,71 @@
+/* Styles for help dialog and help button */
+
+.help-dialog {
+  box-sizing: border-box;
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 400px;
+  height: 400px;
+  max-width: 100%;
+  margin: 0 auto;
+
+  * {
+    box-sizing: border-box;
+  }
+  .help-item {
+    width: 50%;
+    height: 50%;
+    padding: 10px;
+    float: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    img.help-item-img {
+      display: block;
+      max-width: 100%;
+      max-height: 80%;
+      margin: 0 auto;
+    }
+    .help-item-desc {
+      max-height: 20%;
+      padding-top: 10px;
+      text-align: center;
+    }
+  }
+}
+
+@media (max-height: 400px) {
+  .help-dialog {
+    height: 250px;
+    .help-item {
+      width: 25%;
+      height: 100%;
+    }
+  }
+}
+
+.helpbtn {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background-image: url("images/help/helpbtn.png");
+  cursor: pointer;
+
+  /* desktop: belongs to logobar */
+  &.ui-desktop {
+    top: 8px;
+    right: 10px;
+  }
+
+  /* mobile: belongs to sidebar */
+  &.ui-mobile {
+    &.ui-orient-landscape {
+      right: 15px;
+      bottom: -50px;
+    }
+    &.ui-orient-portrait {
+      bottom: 15px;
+      left: -50px;
+    }
+  }
+}
+

@@ -38,6 +38,7 @@ module.exports = function(grunt) {
                         'src/view.js',
                         'src/ui.js',
                         'src/uiListener.js',
+                        'src/help.js',
                         'src/user.js',
                         'src/application.js'
                     ]
