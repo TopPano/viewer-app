@@ -310,7 +310,7 @@ TOPPANO.ui = {
     },
     // Google API parameters
     googleApiParams: {
-        shortUrlKey: 'AIzaSyDh1jky-M2BSe5Dnq2CdZiqadfB7t0Qan4'
+        shortUrlKey: 'AIzaSyDMWU0bIoW4FS1OvfCT_X8OCBfe6CLOsCw'
     },
     common: {
         transitionEndEvent: 'transitionend'
