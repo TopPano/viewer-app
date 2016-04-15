@@ -25,6 +25,9 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
                 this.signup(username, email, password);
             }
         }, this));
+        $('#account-signup .account-dialog-facebook').on('click', $.proxy(function(e) {
+            this.facebookLogin()
+        }, this));
     },
 
     initLogin: function() {
@@ -39,6 +42,9 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
         }, this));
         $('#account-login .account-btn.account-btn-to-signup').on('click', $.proxy(function(e) {
             this.showDialog('signup');
+        }, this));
+        $('#account-login .account-dialog-facebook').on('click', $.proxy(function(e) {
+            this.facebookLogin()
         }, this));
     },
 
@@ -93,25 +99,7 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
             }),
             contentType: 'application/json'
         }).done($.proxy(function(response) {
-            var userId = response.userId,
-                token = response.id,
-                expires = new Date(response.created);
-
-            expires.setSeconds(expires.getSeconds() + response.ttl);
-            Cookies.set('userId', userId, { expires: expires });
-            Cookies.set('token', token, { expires: expires });
-            this.hideDialog();
-            this.setUsername(userId, token);
-            $.ajax({
-                url: TOPPANO.gv.apiUrl + '/posts/' + TOPPANO.gv.modelID + '?access_token=' + token,
-                type: 'GET'
-            }).done(function(response) {
-                if(response.likes.isLiked) {
-                    $('#like-btn .likebtn-icon').addClass('likebtn-icon-clicked');
-                }
-            }).fail(function(jqXHR, textStatus, errorThrown) {
-                // TODO: Error handling.
-            });
+            this.update(response, true);
         }, this)).fail($.proxy(function(jqXHR, textStatus, errorThrown) {
             if(jqXHR.status === 401) {
                 // 401 (Unauthorized).
@@ -120,6 +108,57 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
                 this.showErr(this.ERR.AJAX.OTHERS, 'login');
             }
         }, this));
+    },
+
+    facebookLogin: function() {
+        // Login to user's Facebook and get access token.
+        FB.login($.proxy(function(fbResponse) {
+            if(fbResponse['authResponse']) {
+                // Use the returned access token to login our service.
+                var accessToken = FB.getAuthResponse()['accessToken'];
+                $.ajax({
+                    url: TOPPANO.gv.apiUrl + '/users/auth/facebook/token?access_token=' + accessToken,
+                    type: 'GET'
+                }).done($.proxy(function(response) {
+                    this.update(response, false);
+                }, this)).fail(function(jqXHR, textStatus, errorThrown) {
+                    // TODO: Error handling.
+                });
+            } else {
+                // TODO: Hnadle response['authResponse'] is not defined.
+            }
+        }, this), { scope: 'public_profile,email,publish_actions,user_likes' });
+    },
+
+    // Update informatin after login successfully.
+    update: function(response, usedEmail) {
+        var userId, token;
+
+        if(usedEmail) {
+            userId = response.userId;
+            token = response.id;
+        } else {
+            // Use Facebook login.
+            userId = response.auth.userId;
+            token = response.auth.id;
+        }
+        expires = new Date(response.created);
+
+        expires.setSeconds(expires.getSeconds() + response.ttl);
+        Cookies.set('userId', userId, { expires: expires });
+        Cookies.set('token', token, { expires: expires });
+        this.hideDialog();
+        this.setUsername(userId, token);
+        $.ajax({
+            url: TOPPANO.gv.apiUrl + '/posts/' + TOPPANO.gv.modelID + '?access_token=' + token,
+            type: 'GET'
+        }).done(function(response) {
+            if(response.likes.isLiked) {
+                $('#like-btn .likebtn-icon').addClass('likebtn-icon-clicked');
+            }
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            // TODO: Error handling.
+        });
     },
 
     likePost: function(userId) {
