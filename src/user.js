@@ -15,7 +15,7 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
     },
 
     initSignup: function() {
-        $('#account-signup .account-btn').on('click', $.proxy(function(e) {
+        $('#account-signup .account-dialog-content .account-btn').on('click', $.proxy(function(e) {
             var signup = $('#account-signup');
             var username = $('.account-signup-username', signup).val(),
                 email = $('.account-signup-email', signup).val(),
@@ -25,7 +25,7 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
                 this.signup(username, email, password);
             }
         }, this));
-        $('#account-signup .account-dialog-facebook').on('click', $.proxy(function(e) {
+        $('#account-signup .account-btn-facebook').on('click', $.proxy(function(e) {
             this.facebookLogin()
         }, this));
     },
@@ -43,7 +43,7 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
         $('#account-login .account-btn.account-btn-to-signup').on('click', $.proxy(function(e) {
             this.showDialog('signup');
         }, this));
-        $('#account-login .account-dialog-facebook').on('click', $.proxy(function(e) {
+        $('#account-login .account-btn-facebook').on('click', $.proxy(function(e) {
             this.facebookLogin()
         }, this));
     },

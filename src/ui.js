@@ -9,7 +9,8 @@ TOPPANO.createUILayout = function() {
             </div> \
             <div id="account" class="account"> \
                 <div id="account-signup" class="account-signup account-dialog"> \
-                    <div class="account-dialog-facebook" style="width: 272px; height: 66px">facebook login</div> \
+                    <div class="account-btn account-btn-facebook">Join with Facebook</div> \
+                    <div class="account-text">or Join with Email</div> \
                     <div class="account-dialog-content"> \
                         <input type="text" class="account-signup-username" placeholder="Name"> \
                         <input type="email" class="account-signup-email" placeholder="Email"> \
@@ -18,7 +19,8 @@ TOPPANO.createUILayout = function() {
                     </div> \
                 </div> \
                 <div id="account-login" class="account-login account-dialog"> \
-                    <div class="account-dialog-facebook" style="width: 272px; height: 66px">facebook login</div> \
+                    <div class="account-btn account-btn-facebook">Login with Facebook</div> \
+                    <div class="account-text">or Log in with Email</div> \
                     <div class="account-dialog-content"> \
                         <input type="email" class="account-login-email" placeholder="Email"> \
                         <input type="password" class="account-login-password" placeholder="Password"> \
