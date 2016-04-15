@@ -182,7 +182,7 @@ TOPPANO.buildScene = function(node_ID){
     var i;
     var opacity;
     
-    TOPPANO.gv.headingOffset = TOPPANO.gv.nodes_meta[TOPPANO.gv.current_node_ID].lng;
+    TOPPANO.gv.headingOffset = 0;
     if(TOPPANO.gv.isTransitioning){
         opacity = 0;
     }
