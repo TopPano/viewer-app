@@ -186,8 +186,7 @@ TOPPANO.addContainerEvent = function() {
             if(click.count === 1) {
                 click.timer = setTimeout(function() {
                     // Single click: show/hide all UI.
-                    $('#logo-bar').toggleClass('ui-hidden');
-                    $('#menu').toggleClass('ui-hidden');
+                    TOPPANO.ui.utils.toggleUI();
                     click.count = 0;
                 }, click.dblclickDelay);
             } else {

@@ -40,6 +40,7 @@ module.exports = function(grunt) {
                         'src/uiListener.js',
                         'src/help.js',
                         'src/user.js',
+                        'src/uiUtils.js',
                         'src/application.js'
                     ]
                 }

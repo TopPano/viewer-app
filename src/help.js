@@ -1,8 +1,7 @@
 TOPPANO.ui.help = TOPPANO.ui.help || {
     init: function() {
         $('#help-btn').on('click', function(event) {
-            var startWindowScroll = 0;
-            $.magnificPopup.open({
+            TOPPANO.ui.utils.openDialog({
                 items: {
                     src: '#help-dialog',
                     type: 'inline'
@@ -11,7 +10,7 @@ TOPPANO.ui.help = TOPPANO.ui.help || {
             });
         });
         $('#help-dialog').on('click', function(event) {
-          $.magnificPopup.instance.close();
+            TOPPANO.ui.utils.closeDialog();
         });
     },
 
