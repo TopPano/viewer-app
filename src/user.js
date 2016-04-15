@@ -1,5 +1,11 @@
 TOPPANO.ui.user = TOPPANO.ui.user || {
     init: function(user) {
+        $('.account-dialog').not('.account-dialog-content').on('click', function(event) {
+            // Only the original target (dialog body) triggers closing dialog function.
+            if(event.target === this) {
+                TOPPANO.ui.utils.closeDialog();
+            }
+        });
         if(this.isLogin()) {
             this.setUsername(Cookies.get('userId'), Cookies.get('token'));
         }
@@ -172,19 +178,19 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
         };
 
         $('#account-' + dialog + ' input[type="password"]').val('');
-        if(!$.magnificPopup.instance.isOpen) {
-            $.magnificPopup.open(options);
+        if(!TOPPANO.ui.utils.isDialogOpened()) {
+            TOPPANO.ui.utils.openDialog(options);
         } else {
             this.hideDialog();
             // TODO: Use setTimeout is not the stablest method, please fix it.
             setTimeout(function() {
-                $.magnificPopup.open(options);
+                TOPPANO.ui.utils.openDialog(options);
             }, 50);
         }
     },
 
     hideDialog: function() {
-        $.magnificPopup.close();
+        TOPPANO.ui.utils.closeDialog();
     },
 
     checkSignupInput: function(username, email, password) {

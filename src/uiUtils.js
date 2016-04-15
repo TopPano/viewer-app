@@ -14,19 +14,21 @@ TOPPANO.ui.utils = TOPPANO.ui.utils || {
         $.magnificPopup.instance.close();
     },
 
+    isDialogOpened: function() {
+        return $.magnificPopup.instance.isOpen;
+    },
+
     toggleUI: function() {
         $('#logo-bar').toggleClass('ui-hidden');
         $('#menu').toggleClass('ui-hidden');
     },
 
     showUI: function() {
-        console.log('show')
         $('#logo-bar').removeClass('ui-hidden');
         $('#menu').removeClass('ui-hidden');
     },
 
     hideUI: function() {
-        console.log('hide');
         $('#logo-bar').addClass('ui-hidden');
         $('#menu').addClass('ui-hidden');
     }
