@@ -238,7 +238,7 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
             url: url,
             type: 'GET'
         }).done(function(response) {
-            $('#logo .logo-bar-username').html(response.username);
+            $('#logo-bar .logobar-username').html(response.username);
         }).fail(function(jqXHR, textStatus, errorThrown) {
             // TODO: Error handling.
         });
