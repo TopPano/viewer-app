@@ -40,6 +40,7 @@ module.exports = function(grunt) {
                         'src/uiListener.js',
                         'src/help.js',
                         'src/user.js',
+                        'src/likelist.js',
                         'src/uiUtils.js',
                         'src/application.js'
                     ]
@@ -119,6 +120,6 @@ module.exports = function(grunt) {
     grunt.registerTask('css', [ 'postcss', 'cssmin', 'shell:moveimgs' ]);
     grunt.registerTask('clean', [ 'shell:clean' ]);
     grunt.registerTask('default', [ 'clean', 'js', 'css' ]);
-    grunt.registerTask('dev', [ 'watch' ]);
+    grunt.registerTask('dev', [ 'default', 'watch' ]);
 };
 

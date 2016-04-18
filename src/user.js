@@ -49,6 +49,7 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
     },
 
     initLike: function(count, isLiked) {
+        TOPPANO.ui.likelist.init();
         this.setLikesCount(count);
         if(isLiked) {
             $('#like-btn .likebtn-icon').addClass('likebtn-icon-clicked');
@@ -67,7 +68,7 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
                 this.showDialog('login');
             } else {
                 var token = Cookies.get('token');
-                this.showLikeList(userId, token);
+                TOPPANO.ui.likelist.open(userId, token);
             }
         }, this));
     },
@@ -194,17 +195,6 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
             icon.toggleClass('likebtn-icon-clicked');
         }, this)).fail(function(jqXHR, textStatus, errorThrown) {
             // TODO: Error handling.
-        });
-    },
-
-    // Show people who like this post.
-    showLikeList: function(userId, token) {
-        TOPPANO.ui.utils.openDialog({
-            items: {
-                src: '#likelist',
-                type: 'inline'
-            },
-            showCloseBtn: false
         });
     },
 

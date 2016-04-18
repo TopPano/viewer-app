@@ -64,6 +64,9 @@
       &.likelist-item-following {
         background-image: url("images/likelist/likelist-btn-clicked.png");
       }
+      &.likelist-item-follow-hidden {
+        display: none;
+      }
     }
   }
 }
