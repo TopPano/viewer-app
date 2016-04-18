@@ -35,6 +35,19 @@ TOPPANO.createUILayout = function() {
                     </div> \
                 </div> \
             </div> \
+            <div id="likelist" class="likelist mfp-hide"> \
+                <div class="likelist-title">People who like this</div> \
+                <div class="likelist-item"> \
+                    <img class="likelist-item-profile" src="images/author-picture-default.png" alt=""> \
+                    <div class="likelist-item-name">Hawk Lin</div> \
+                    <div class="likelist-item-follow">follow</div> \
+                </div> \
+                <div class="likelist-item"> \
+                    <img class="likelist-item-profile" src="images/author-picture-default.png" alt=""> \
+                    <div class="likelist-item-name">Richard Chou</div> \
+                    <div class="likelist-item-follow likelist-item-following">following</div> \
+                </div> \
+            </div> \
             <div id="menu" class="sidebar sidebar-collapsed"> \
                 <div class="sidebar-content-wrapper"> \
                     <div class="sidebar-content sidebar-content-info"> \

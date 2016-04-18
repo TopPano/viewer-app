@@ -61,6 +61,15 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
                 this.likePost(userId);
             }
         }, this));
+        $('#like-btn .likebtn-count').on('click', $.proxy(function(e) {
+            var userId = Cookies.get('userId');
+            if(!this.isLogin()) {
+                this.showDialog('login');
+            } else {
+                var token = Cookies.get('token');
+                this.showLikeList(userId, token);
+            }
+        }, this));
     },
 
     signup: function(username, email, password) {
@@ -185,6 +194,17 @@ TOPPANO.ui.user = TOPPANO.ui.user || {
             icon.toggleClass('likebtn-icon-clicked');
         }, this)).fail(function(jqXHR, textStatus, errorThrown) {
             // TODO: Error handling.
+        });
+    },
+
+    // Show people who like this post.
+    showLikeList: function(userId, token) {
+        TOPPANO.ui.utils.openDialog({
+            items: {
+                src: '#likelist',
+                type: 'inline'
+            },
+            showCloseBtn: false
         });
     },
 

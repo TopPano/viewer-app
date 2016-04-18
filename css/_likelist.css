@@ -1,0 +1,70 @@
+/* Styles for likelist: a list displays people who liked the post. */
+
+.likelist {
+  box-sizing: border-box;
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 360px;
+  height: auto;
+  max-width: 100%;
+  padding: 20px;
+  margin: 0 auto;
+  * {
+    box-sizing: border-box;
+  }
+  .likelist-title {
+    font-size: 1.25rem; /* 20px */
+    text-align: center;
+    padding-bottom: 10px;
+    border-bottom: solid 3px #b3b3b3;
+  }
+  .likelist-item {
+    display: block;
+    margin: 10px 0;
+    height: 40px;
+    .likelist-item-profile {
+      float: left;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
+    .likelist-item-name {
+      float: left;
+      line-height: 40px;
+      padding-left: 10px;
+      max-width: 200px;
+      vertical-align: top;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    @media (max-width: 360px) {
+      .likelist-item-name {
+        max-width: 80px;
+      }
+    }
+
+    @media (max-width: 240px) {
+      .likelist-item-name {
+        max-width: 40px;
+      }
+    }
+
+    .likelist-item-follow {
+      float: right;
+      width: 60px;
+      height: 28px;
+      margin: 6px 0;
+      line-height: 28px;
+      font-size: 0.625rem; /* 10px */
+      text-align: center;
+      background-image: url("images/likelist/likelist-btn.png");
+      background-size: 100%;
+      cursor: pointer;
+      &.likelist-item-following {
+        background-image: url("images/likelist/likelist-btn-clicked.png");
+      }
+    }
+  }
+}
+

@@ -42,7 +42,7 @@
       font-size: 0.813rem; /* 13px */
       white-space: nowrap;
       margin-left: -50%;
-      cursor: default;
+      cursor: pointer;
     }
   }
 }
