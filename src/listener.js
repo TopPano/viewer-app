@@ -416,7 +416,7 @@ TOPPANO.onDeviceOrientation = function(event){
     {angle = -angle;}
     
     angle = Math.round(1000*angle)/1000;
-    TOPPANO.gyro.screen_rot_angle = angle;
+    TOPPANO.gyro.screen_rot_angle = angle + window.orientation;
 }
 
 function sleep(milliseconds) {

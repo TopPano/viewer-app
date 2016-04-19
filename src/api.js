@@ -153,5 +153,5 @@ TOPPANO.gyro = {
     lat: 0,
     lng: 0,
     setup: false,
-    isOn: false
+    isOn: false // Only used for iphone/ipad currently.
 }; 

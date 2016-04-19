@@ -102,13 +102,6 @@ TOPPANO.isMobilePortrait = function() {
     return TOPPANO.gv.mobile.isMobile && TOPPANO.gv.mobile.orientation === 'portrait';
 };
 
-// Listener for clicking gyro button (on/off).
-TOPPANO.onGyroBtnClick = function(event) {
-    $(this).toggleClass('gyrobtn-on');
-    TOPPANO.gyro.isOn = !TOPPANO.gyro.isOn;
-    TOPPANO.setGyro(TOPPANO.gyro.isOn);
-};
-
 // Listener for clicking Facebook sharing button.
 TOPPANO.onFBShareBtnClick = function(event) {
     // Steps for sharing to Facebook:

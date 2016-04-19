@@ -80,8 +80,6 @@ TOPPANO.createUILayout = function() {
             </div>';
         var helpbtn = ' \
             <div id="help-btn" class="helpbtn" data-mfp-src="./images/how_to_use.png"></div>';
-        var gyrobtn = ' \
-            <div id="gyro-btn" class="gyrobtn"></div>';
 
         $(TOPPANO.ui.help.getHtml()).appendTo('#app-wrapper');
         $(TOPPANO.ui.likelist.getHtml()).appendTo('#app-wrapper');
@@ -93,9 +91,8 @@ TOPPANO.createUILayout = function() {
             $(sidebarIconlist).insertAfter('#menu .sidebar-content-wrapper');
             $(likebtn).appendTo('#menu');
             $(helpbtn).appendTo('#menu');
-            $(gyrobtn).appendTo('#app-wrapper');
-            if(TOPPANO.gyro.isOn) {
-                $('#gyro-btn').addClass('gyrobtn-on');
+            if(TOPPANO.devices.isIOS()) {
+                $(TOPPANO.ui.gyrobtn.getHtml()).appendTo('#logo-bar');
             }
             $('#app-wrapper *').addClass('ui-mobile');
 
@@ -143,7 +140,9 @@ TOPPANO.fillUIContents = function(post) {
         TOPPANO.ui.help.init();
         TOPPANO.addContainerEvent();
         if(TOPPANO.gv.mobile.isMobile) {
-            TOPPANO.initGyroBtn();
+            if(TOPPANO.devices.isIOS()) {
+                TOPPANO.ui.gyrobtn.init();
+            }
         }
     }
 };
@@ -250,14 +249,6 @@ TOPPANO.initTwitter = function() {
         return t;
     }(document, "script", "twitter-wjs"));
     $('#menu .sidebar-content-share-twitter').on('click', TOPPANO.onTwitterShareBtnClick);
-};
-
-// Initialize gyro button which turns on/off gyroscpe.
-TOPPANO.initGyroBtn = function() {
-    if(TOPPANO.gyro.isOn) {
-        TOPPANO.setGyro(true);
-    }
-    $('#gyro-btn').on('click', TOPPANO.onGyroBtnClick);
 };
 
 TOPPANO.getTransitionEndEventName = function() {

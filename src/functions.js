@@ -102,7 +102,7 @@ TOPPANO.threeInit = function(map) {
 TOPPANO.optimizeMobile = function() {
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         TOPPANO.gv.mobile.isMobile = true;
-        TOPPANO.gyro.isOn = (getUrlParam('gyro') === 'on');
+        //TOPPANO.gyro.isOn = (getUrlParam('gyro') === 'on');
 
         // Prevent scrolling the entire page.
         $(document).on('touchmove', function(event) {

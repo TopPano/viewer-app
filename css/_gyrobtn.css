@@ -1,12 +1,24 @@
+/**
+ * Button for turning on/off gyorscope.
+ * It is appended to logo bar and only shows on iPhone/iPad in current version.
+ */
+
 .gyrobtn {
-  width: 60px;
-  height: 60px;
+  display: none;
+  width: 40px;
+  height: 40px;
   position: absolute;
-  top: 100px;
-  left: 100px;
   cursor: pointer;
   background-image: url("images/gyrobtn/gyrobtn-off.svg");
   background-size: contain;
+  &.ui-mobile.ui-orient-landscape {
+    left: 8px;
+    bottom: 10px;
+  }
+  &.ui-mobile.ui-orient-portrait {
+    top: 8px;
+    left: 10px;
+  }
   &.gyrobtn-on {
     background-image: url("images/gyrobtn/gyrobtn-on.svg");
   }
