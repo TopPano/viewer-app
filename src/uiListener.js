@@ -123,7 +123,7 @@ TOPPANO.onFBShareBtnClick = function(event) {
 
             data.append('access_token', accessToken);
             data.append('source', snapshot);
-            //data.append('message', 'HAHAHA');
+            data.append('privacy', JSON.stringify({ 'value': 'SELF' }));
             // 2. Upload the snapshot to user's Facebook by using multipart/form-data post.
             $.ajax({
                 url: 'https://graph.facebook.com/me/photos?access_token=' + accessToken,
