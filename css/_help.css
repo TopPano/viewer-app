@@ -2,7 +2,6 @@
 
 .help-dialog {
   box-sizing: border-box;
-  background-color: rgba(0, 0, 0, 0.5);
   width: 400px;
   height: 400px;
   max-width: 100%;

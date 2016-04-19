@@ -3,7 +3,7 @@ TOPPANO.createUILayout = function() {
     var ui = getUrlParam('ui');
     if(ui !== 'off') {
         $('#app-wrapper').append(' \
-            <div id="logo-bar" class="logobar"> \
+            <div id="logo-bar" class="logobar ui-hidden"> \
                 <img class="logobar-logo" src="./images/logo.png" alt="Verpix"></img> \
                 <div class="logobar-username text-singleline"></div> \
             </div> \
@@ -35,7 +35,7 @@ TOPPANO.createUILayout = function() {
                     </div> \
                 </div> \
             </div> \
-            <div id="menu" class="sidebar sidebar-collapsed"> \
+            <div id="menu" class="sidebar sidebar-collapsed ui-hidden"> \
                 <div class="sidebar-content-wrapper"> \
                     <div class="sidebar-content sidebar-content-info"> \
                         <img src="images/author-picture-default.png" alt="Author Picture"></img> \
@@ -145,6 +145,8 @@ TOPPANO.fillUIContents = function(post) {
             }
         }
     }
+    // Show help menu.
+    $('#help-btn').trigger('click');
 };
 
 // Create a sidebar menu.
