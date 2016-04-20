@@ -23,6 +23,7 @@ body {
 @import "common";
 @import "logobar";
 @import "help";
+@import "loader";
 @import "likebtn";
 @import "likelist";
 @import "gyrobtn";

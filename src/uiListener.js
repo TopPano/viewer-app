@@ -115,6 +115,9 @@ TOPPANO.onFBShareBtnClick = function(event) {
     //    so we can upload a snapshot to user's Facebook.
     FB.login(function(response) {
         if(response['authResponse']) {
+            // Open loading page before uploading photo.
+            TOPPANO.ui.loader.open();
+
             var accessToken = FB.getAuthResponse()['accessToken'];
             var currentUrl = TOPPANO.gv.currentUrl;
             var snapshot = TOPPANO.base64toBlob(TOPPANO.getSnapshot($(window).width(), $(window).height()));
@@ -144,6 +147,9 @@ TOPPANO.onFBShareBtnClick = function(event) {
                     contentType: 'application/json'
                 });
             }).done(function(response) {
+                // Close loading page after uploading photo successfully.
+                TOPPANO.ui.loader.close();
+
                 var shortUrl = response['id'];
 
                 // 4. Share to Facebook by using Dialog API.

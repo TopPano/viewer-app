@@ -83,6 +83,7 @@ TOPPANO.createUILayout = function() {
 
         $(TOPPANO.ui.help.getHtml()).appendTo('#app-wrapper');
         $(TOPPANO.ui.likelist.getHtml()).appendTo('#app-wrapper');
+        $(TOPPANO.ui.loader.getHtml()).appendTo('#app-wrapper');
 
         if(TOPPANO.gv.mobile.isMobile) {
             var supportsOrientationChange = 'onorientationchange' in window,
@@ -138,6 +139,7 @@ TOPPANO.fillUIContents = function(post) {
         TOPPANO.createMenu(post.menu);
         TOPPANO.ui.user.init(post.user);
         TOPPANO.ui.help.init();
+        TOPPANO.ui.loader.init();
         TOPPANO.addContainerEvent();
         if(TOPPANO.gv.mobile.isMobile) {
             if(TOPPANO.devices.isIOS()) {
