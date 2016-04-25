@@ -186,10 +186,29 @@ TOPPANO.addContainerEvent = function() {
         endEvent = 'mouseup';
     }
 
-    $('#container').on(startEvent, function(event) {
+    $('#container').on(startEvent, function(e) {
         click.lastMouseDown = new Date().getTime();
-    }).on(endEvent, function(event) {
-        if(new Date().getTime() < (click.lastMouseDown + click.longClickDelay)) {
+        if(TOPPANO.gv.mobile.isMobile) {
+            click.startPos.x = e.originalEvent.touches[0].pageX;
+            click.startPos.y = e.originalEvent.touches[0].pageY;
+        } else {
+            click.startPos.x = e.offsetX;
+            click.startPos.y = e.offsetY;
+        }
+    }).on(endEvent, function(e) {
+        var deltaX, deltaY;
+        if(TOPPANO.gv.mobile.isMobile) {
+            click.endPos.x = e.originalEvent.changedTouches[0].pageX;
+            click.endPos.y = e.originalEvent.changedTouches[0].pageY;
+        } else {
+            click.endPos.x = e.offsetX;
+            click.endPos.y = e.offsetY;
+        }
+        deltaX = Math.abs(click.endPos.x - click.startPos.x);
+        deltaY = Math.abs(click.endPos.y - click.startPos.y);
+
+        // Check the click duration is small enough and no move occurs while clicking.
+        if((new Date().getTime() < (click.lastMouseDown + click.longClickDelay)) && (deltaX < 1) && (deltaY < 1)) {
             click.count++;
             if(click.count === 1) {
                 click.timer = setTimeout(function() {
@@ -286,7 +305,8 @@ TOPPANO.ui = {
             timer: null,
             longClickDelay: 150, // Delay for differentiate between short and long click
             lastMouseDown: 0,
-            duration: 0
+            startPos: { x: 0, y: 0 },
+            endPos: { x: 0, y: 0 }
         }
     },
     common: {
