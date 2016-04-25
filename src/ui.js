@@ -154,7 +154,7 @@ TOPPANO.fillUIContents = function(post) {
 // Create a sidebar menu.
 TOPPANO.createMenu = function(menu) {
     TOPPANO.initCommon();
-    TOPPANO.initFB();
+    TOPPANO.ui.share.init();
     TOPPANO.initTwitter();
     if(menu.info.authorPicture) {
         $('#menu .sidebar-content-info img').attr('src', menu.info.authorPicture);
@@ -220,19 +220,6 @@ TOPPANO.addContainerEvent = function() {
 TOPPANO.initCommon = function() {
     TOPPANO.ui.common.transitionEndEvent = TOPPANO.getTransitionEndEventName();
 }
-
-// Initialize Facebook SDK.
-TOPPANO.initFB = function() {
-    $.ajaxSetup({ cache: true });
-    $.getScript('//connect.facebook.net/en_US/sdk.js', function(){
-        FB.init({
-            appId: TOPPANO.ui.fbSdkParams.appId,
-            version: TOPPANO.ui.fbSdkParams.version
-        });
-        // Enable Facebook share button when sdk is loaded completely.
-        $('#menu .sidebar-content-share-facebook').on('click', TOPPANO.onFBShareBtnClick);
-    });
-};
 
 // Initialize Twitter SDK.
 TOPPANO.initTwitter = function() {
@@ -301,15 +288,6 @@ TOPPANO.ui = {
             lastMouseDown: 0,
             duration: 0
         }
-    },
-    // Facebook SDK parameters
-    fbSdkParams: {
-        appId: '589634317860022',
-        version: 'v2.5'
-    },
-    // Google API parameters
-    googleApiParams: {
-        shortUrlKey: 'AIzaSyDMWU0bIoW4FS1OvfCT_X8OCBfe6CLOsCw'
     },
     common: {
         transitionEndEvent: 'transitionend'

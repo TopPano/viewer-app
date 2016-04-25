@@ -566,20 +566,6 @@ TOPPANO.hitSphere = function(event) {
 
 // snapshot function
 TOPPANO.getSnapshot = function(width, height) {
-    /*
-    var fov = TOPPANO.gv.cam.camera.fov,
-    theta = THREE.Math.degToRad(fov / 2),
-    img_width = 0.8 * Math.tan(theta);
-    TOPPANO.gv.cam.camera.fov = Math.atan(img_width) * 180 / Math.PI * 2;
-
-    TOPPANO.gv.cam.camera.updateProjectionMatrix();
-    TOPPANO.gv.renderer.render(TOPPANO.gv.scene, TOPPANO.gv.cam.camera);
-
-    var cap_img = TOPPANO.gv.renderer.domElement.toDataURL('image/jpeg', 0.8);
-
-    TOPPANO.gv.cam.camera.fov = fov;
-    TOPPANO.gv.cam.camera.updateProjectionMatrix();
-    */
     var canvasMini = $('<canvas width="' + width + '" height="' + height + '"></canvas>')
             .attr('type', 'hidden').append('#container');
     var snapshot = '';

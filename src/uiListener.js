@@ -102,75 +102,6 @@ TOPPANO.isMobilePortrait = function() {
     return TOPPANO.gv.mobile.isMobile && TOPPANO.gv.mobile.orientation === 'portrait';
 };
 
-// Listener for clicking Facebook sharing button.
-TOPPANO.onFBShareBtnClick = function(event) {
-    // Steps for sharing to Facebook:
-    // 1. Facebook Login and get publish permission.
-    // 2. Upload a snapshot to user's Facebook.
-    // 3. Generate a shorter URL for the uploaded snapshot.
-    // 4. Share to Facebook, use the uploaded snapshot as preview image.
-    // 5. Pop up message if users successfully shares to Facebook.
-
-    // 1. Login Facebook using API, we should get "publish_actions" permission
-    //    so we can upload a snapshot to user's Facebook.
-    FB.login(function(response) {
-        if(response['authResponse']) {
-            // Open loading page before uploading photo.
-            TOPPANO.ui.loader.open();
-
-            var accessToken = FB.getAuthResponse()['accessToken'];
-            var currentUrl = TOPPANO.gv.currentUrl;
-            var snapshot = TOPPANO.base64toBlob(TOPPANO.getSnapshot($(window).width(), $(window).height()));
-            var description = $('#menu .sidebar-content-info-message').val();
-            var data = new FormData();
-
-            data.append('access_token', accessToken);
-            data.append('source', snapshot);
-            data.append('privacy', JSON.stringify({ 'value': 'SELF' }));
-            // 2. Upload the snapshot to user's Facebook by using multipart/form-data post.
-            $.ajax({
-                url: 'https://graph.facebook.com/me/photos?access_token=' + accessToken,
-                type: 'POST',
-                contentType: false,
-                processData: false,
-                data: data
-            }).then(function(response) {
-                // 3. Generate a shorter URL by using Google URL Shortener API.
-                //    We use the shorter URL because the original URL of uploaded snapshot (fb.cdn)
-                //    is not allowed in Facebook previewe image.
-                return $.ajax({
-                    url : 'https://www.googleapis.com/urlshortener/v1/url?key=' + TOPPANO.ui.googleApiParams.shortUrlKey,
-                    type: 'POST',
-                    data: JSON.stringify({
-                        longUrl: 'https://graph.facebook.com/' + response['id'] + '/picture?access_token=' + accessToken
-                    }),
-                    contentType: 'application/json'
-                });
-            }).done(function(response) {
-                // Close loading page after uploading photo successfully.
-                TOPPANO.ui.loader.close();
-
-                var shortUrl = response['id'];
-
-                // 4. Share to Facebook by using Dialog API.
-                //    The shorter URL of uploaded snapshot is used a the preview image.
-                FB.ui({
-                    appId: TOPPANO.ui.fbSdkParams.appId,
-                    method: 'feed',
-                    display: 'iframe',
-                    link: currentUrl,
-                    name: description,
-                    picture: shortUrl,
-                }, function(response){
-                    // 5. TODO: Show message when posting is completed successfully.
-                });
-            });
-        } else {
-            // TODO: Hnadle response['authResponse'] is not defined.
-        }
-    }, { scope: 'publish_actions' });
-};
-
 TOPPANO.onTwitterShareBtnClick = function() {
     var position_left = screen.width/2-400;
     var position_top = screen.height/2-200;
@@ -178,7 +109,6 @@ TOPPANO.onTwitterShareBtnClick = function() {
     var url = "https://twitter.com/intent/tweet?url=" + encodeURIComponent(TOPPANO.gv.currentUrl);
     window.open(url,'name',spec);
 };
-
 
 // Listener for embedded link width or height field changes.
 TOPPANO.onEmbeddedLinkChange = function() {
