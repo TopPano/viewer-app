@@ -1,7 +1,7 @@
 // Create laytouts of all ui components.
 TOPPANO.createUILayout = function() {
     var ui = getUrlParam('ui');
-    if(ui !== 'off') {
+    if(ui !== 'off' && !TOPPANO.devices.isIFrame()) {
         $('#app-wrapper').append(' \
             <div id="logo-bar" class="logobar ui-hidden"> \
                 <img class="logobar-logo" src="./images/logo.png" alt="Verpix"></img> \
@@ -147,8 +147,10 @@ TOPPANO.fillUIContents = function(post) {
             }
         }
     }
-    // Show help menu.
-    $('#help-btn').trigger('click');
+    if(!TOPPANO.devices.isIFrame()) {
+        // Show help menu.
+        $('#help-btn').trigger('click');
+    }
 };
 
 // Create a sidebar menu.
