@@ -80,8 +80,10 @@ module.exports = function(grunt) {
             transform: {
                 options: {
                     processors: [
-                        require('postcss-cssnext')(),
-                        require('precss')()
+                        // Precss is incluced before post-cssnext because we should firstly transform SASS-like markup to normal css styles,
+                        // and then pass them to cssnext (such as autoprefixer).
+                        require('precss')(),
+                        require('postcss-cssnext')()
                     ]
                 },
                 src: 'css/style.css',
