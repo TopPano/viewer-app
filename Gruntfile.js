@@ -42,6 +42,7 @@ module.exports = function(grunt) {
                         'src/user.js',
                         'src/loader.js',
                         'src/gyrobtn.js',
+                        'src/likebtn.js',
                         'src/likelist.js',
                         'src/share.js',
                         'src/shareFacebook.js',

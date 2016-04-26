@@ -73,11 +73,7 @@ TOPPANO.createUILayout = function() {
                 <div class="sidebar-icon sidebar-icon-tag" data-target-content="sidebar-content-tag"></div> \
                 <div class="sidebar-icon sidebar-icon-share" data-target-content="sidebar-content-share"></div> \
             </div>';
-        var likebtn = ' \
-            <div id="like-btn" class="likebtn"> \
-                <div class="likebtn-icon"></div> \
-                <div class="likebtn-count-wrapper"><div class="likebtn-count"></div></div> \
-            </div>';
+        var likebtn = TOPPANO.ui.likebtn.getHtml();
         var helpbtn = ' \
             <div id="help-btn" class="helpbtn" data-mfp-src="./images/how_to_use.png"></div>';
 

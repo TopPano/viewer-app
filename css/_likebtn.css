@@ -1,24 +1,31 @@
 /* button to like the post, and show the number of total liked count. */
 .likebtn {
   position: absolute;
-  width: 40px;
-  height: 50px;
 
   /* desktop: belongs to logobar */
   &.ui-desktop {
     top: 60px;
     right: 10px;
+    width: 40px;
+    height: 50px;
   }
 
   /* mobile: belongs to sidebar */
   &.ui-mobile {
     &.ui-orient-landscape {
       right: 15px;
-      top: -60px;
+      top: -50px;
+      width: 65px;
+      height: 40px;
+      * {
+        float: left;
+      }
     }
     &.ui-orient-portrait {
-      bottom: 8px;
+      bottom: 18px;
       right: -50px;
+      width: 40px;
+      height: 50px;
     }
   }
 
@@ -35,14 +42,29 @@
   .likebtn-count-wrapper {
     position: relative;
     display: inline-block;
-    left: 50%;
     .likebtn-count {
-      height: 10px;
-      line-height: 10px;
       font-size: 0.813rem; /* 13px */
       white-space: nowrap;
-      margin-left: -50%;
       cursor: pointer;
+    }
+    &.ui-desktop,
+    &.ui-mobile.ui-orient-portrait {
+      left: 50%;
+      .likebtn-count {
+        height: 10px;
+        line-height: 10px;
+        margin-left: -50%;
+      }
+    }
+    &.ui-mobile.ui-orient-landscape {
+      .likebtn-count {
+        direction: rtl;
+        text-align: right;
+        height: 40px;
+        line-height: 40px;
+        width: 20px;
+        padding-right: 5px;
+      }
     }
   }
 }
