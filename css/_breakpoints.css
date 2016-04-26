@@ -1,0 +1,8 @@
+@custom-media --xs-portrait (width <= 320px);
+@custom-media --sm-portrait (width >= 321px) and (width <= 480px);
+@custom-media --md-portrait (width >= 481px) and (width <= 768px);
+@custom-media --lg-portrait (width >= 769px);
+@custom-media --xs-landscape (height <= 320px);
+@custom-media --sm-landscape (height >= 321px) and (height <= 480px);
+@custom-media --md-landscape (height >= 481px) and (height <= 768px);
+@custom-media --lg-landscape (height >= 769px);

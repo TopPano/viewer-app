@@ -48,7 +48,7 @@
 
     &.ui-desktop {
       top: 0;
-      right: 70px;
+      right: 60px;
     }
     &.ui-mobile.ui-orient-portrait {
       top: 0;
@@ -59,6 +59,25 @@
       left: 0;
       transform: rotate(-90deg) translateX(-100%);
       transform-origin: top left;
+    }
+
+    &.ui-desktop {
+      width: 140px;
+
+      @media (--sm-portrait) {
+        width: 100px;
+      }
+    }
+    &.ui-mobile {
+      width: 140px;
+
+      @media (--xs-portrait), (--xs-landscape) {
+        width: 60px;
+      }
+
+      @media (--sm-portrait), (--sm-landscape) {
+        width: 100px;
+      }
     }
   }
 }

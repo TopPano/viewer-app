@@ -32,9 +32,9 @@
   }
 }
 
-@media (max-height: 400px) {
+@media (--xs-landscape), (--sm-landscape) {
   .help-dialog {
-    height: 250px;
+    height: 240px;
     .help-item {
       width: 25%;
       height: 100%;
