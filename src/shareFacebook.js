@@ -28,14 +28,14 @@ TOPPANO.ui.share.facebook = TOPPANO.ui.share.facebook || {
                 this.share(accessToken);
             } else {
                 // Not connected: login, approve and get access token.
-                FB.login(function(response) {
+                FB.login($.proxy(function(response) {
                     if(response.authResponse) {
                         var accessToken = FB.getAuthResponse().accessToken;
                         this.share(accessToken);
                     } else {
                         // TODO: Hnadle response.authResponse is not defined.
                     }
-                }, { scope: 'publish_actions' });
+                }, this), { scope: 'publish_actions' });
             }
 
         }, this));
@@ -109,7 +109,7 @@ TOPPANO.ui.share.facebook = TOPPANO.ui.share.facebook || {
     post: function(title, linkUrl, imgUrl) {
         FB.ui({
             method: 'share_open_graph',
-            display: 'iframe',
+            display: 'popup',
             action_type: 'news.publishes',
             action_properties: JSON.stringify({
                 article: {
@@ -120,7 +120,7 @@ TOPPANO.ui.share.facebook = TOPPANO.ui.share.facebook || {
                 }
             })
         }, function(response) {
-            console.log(response);
+            // TODO: Show success message after posting.
         });
     },
 
