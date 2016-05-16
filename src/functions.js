@@ -3,9 +3,8 @@
  * Panorama Function
  */
 
-TOPPANO.modelInit = function() {
-    //var modelId = TOPPANO.gv.modelID = getUrlParam('post');
-    var modelId = 'qkiYwXxvYAA=';
+TOPPANO.modelInit = function(modelId) {
+    TOPPANO.gv.modelId = modelId;
     var model = {};
     var url = (TOPPANO.gv.apiUrl + '/posts/' + modelId);
 
@@ -20,8 +19,8 @@ TOPPANO.modelInit = function() {
 
             TOPPANO.gv.nodes_meta = $.extend({}, modelMeta.nodes);
             // load all imgs and build the first scene 
-            TOPPANO.loadAllImg(TOPPANO.gv.nodes_meta).pipe(function () {console.log("start build scene!!");}).
-                 pipe(function(){
+            TOPPANO.loadAllImg(TOPPANO.gv.nodes_meta)
+                 .pipe(function(){
                      var first_node_ID = Object.keys(TOPPANO.gv.nodes_meta)[0];
                      TOPPANO.gv.current_node_ID = first_node_ID;
                      TOPPANO.buildScene(first_node_ID);
@@ -80,18 +79,17 @@ function loadImg(node_ID, file_url){
     var _dfr = $.Deferred();
       
     var file_name = file_url.substr(file_url.lastIndexOf('/')+1);
-    var texture = THREE.ImageUtils.loadTexture(file_url, THREE.UVMapping, 
-                                               function(){
-                                                    texture.minFilter = THREE.LinearFilter;
-                                                    var file_obj = {"name":file_name, "texture":texture};
-                                                    if(!('textures' in TOPPANO.gv.nodes_meta[node_ID])){
-                                                        TOPPANO.gv.nodes_meta[node_ID]['textures'] = new Array();
-                                                    }
-                                                    TOPPANO.gv.nodes_meta[node_ID].textures.push(file_obj);
-                                                    return _dfr.resolve("success load "+file_name);
-                                               },
-                                               function(){return _dfr.reject("fail load "+LinearFilter_name);}
-                                              );
+    var texture = THREE.ImageUtils.loadTexture(file_url, THREE.UVMapping, function() {
+      texture.minFilter = THREE.LinearFilter;
+      var file_obj = {"name":file_name, "texture":texture};
+      if(!('textures' in TOPPANO.gv.nodes_meta[node_ID])){
+        TOPPANO.gv.nodes_meta[node_ID]['textures'] = new Array();
+      }
+      TOPPANO.gv.nodes_meta[node_ID].textures.push(file_obj);
+      return _dfr.resolve("success load "+file_name);
+    }, function() {
+      return _dfr.reject("fail load "+LinearFilter_name);
+    });
     return _dfr.promise();
 }
 
@@ -109,7 +107,6 @@ TOPPANO.loadAllImg = function(nodes_meta) {
                 deferreds.push(loadImg(node_ID, file_url)
                                .done(
                                    function(msg){
-                                       console.log(msg);
                                        /* increase progress bar */
                                        var current_progress = $('#progress-div progress').val();
                                        $('#progress-div progress').val(current_progress+10); 
@@ -120,8 +117,6 @@ TOPPANO.loadAllImg = function(nodes_meta) {
 
     $.when.apply($, deferreds).then(
             function(){
-                console.log("all imgs success load");
-                
                 // order all files of nodes in TOPPANO.gv.file_sets
                 for (node_ID in TOPPANO.gv.nodes_meta){
                     TOPPANO.gv.nodes_meta[node_ID].textures.sort(
@@ -134,8 +129,8 @@ TOPPANO.loadAllImg = function(nodes_meta) {
                 }
                 _dfr.resolve();              
              },
-             function(){console.log("imgs fail load");
-                         _dfr.reject();              
+             function() {
+               _dfr.reject();              
              }
             );
     return _dfr.promise();
@@ -148,12 +143,7 @@ TOPPANO.buildScene = function(node_ID){
     var opacity;
     
     TOPPANO.gv.headingOffset = 0;
-    if(TOPPANO.gv.isTransitioning){
-        opacity = 0;
-    }
-    else{
-        opacity = 1;
-    }
+    opacity = 1;
 
     for(i=0; i<8; i++){
         var j = parseInt(i/4);
@@ -203,9 +193,6 @@ TOPPANO.initGV = function(para){
     if (para.canvas) {
         TOPPANO.gv.canvasID = para.canvas;
     }
-    if (para.showObj === false) {
-        TOPPANO.gv.objects.showObj = para.showObj;
-    }
 };
 
 // renderer setting
@@ -220,7 +207,6 @@ TOPPANO.rendererSetting = function() {
 //    : new THREE.CanvasRenderer(); // with no WebGL supported
     TOPPANO.gv.renderer.setClearColor( 0x000000, 0 );
 
-    TOPPANO.gv.renderer.sortObjects = false;
     TOPPANO.gv.renderer.autoClear = false;
     TOPPANO.gv.renderer.setPixelRatio(window.devicePixelRatio);
     var container = document.getElementById(TOPPANO.gv.canvasID);
@@ -250,20 +236,6 @@ TOPPANO.rendererSetting = function() {
         TOPPANO.gv.container.bound.right = TOPPANO.gv.container.offsetLeft + TOPPANO.gv.container.Width;
 };
 
-// if hit the objects(and the objects are visible), return: (isHit, hitObj)
-TOPPANO.hitSphere = function(event) {
-    // event.clientY
-    var mouse2D = new THREE.Vector2((event.clientX / window.innerWidth) * 2 - 1, //x
-                                    -(event.clientY / window.innerHeight) * 2 + 1); // y
-
-                                    var raycaster = new THREE.Raycaster();
-                                    raycaster.setFromCamera(mouse2D, TOPPANO.gv.cam.camera);
-                                    var intersects = raycaster.intersectObjects(TOPPANO.gv.scene.children);
-                                    // console.log(intersects[0].point);
-                                    return intersects[0].point;
-};
-
-
 // snapshot function
 TOPPANO.getSnapshot = function(width, height) {
     var canvasMini = $('<canvas width="' + width + '" height="' + height + '"></canvas>')
@@ -279,37 +251,11 @@ TOPPANO.getSnapshot = function(width, height) {
 
 // render scene
 TOPPANO.renderScene = function() {
-    if (TOPPANO.gv.isTransitioning) {
-        var fadeInSpeed = 0.01;
-        // if second scene fully shows up
-        if (TOPPANO.gv.scene.children[12].material.opacity >= 1) {
-            TOPPANO.gv.isTransitioning = false;
-            for (var i = 7 ; i >= 0 ; i--) {
-                TOPPANO.gv.scene.remove(TOPPANO.gv.scene.children[i]);
-            }
-            TOPPANO.gv.objects.transitionObj = [];
-            //TOPPANO.addTransition();
-            requestAnimationFrame(TOPPANO.update);
-            return 0;
-        }
-
-        // fade in animation
-        for (var i = 15 ; i >= 8 ; i--) {
-            TOPPANO.gv.scene.children[i].material.opacity += fadeInSpeed;
-        }
-        requestAnimationFrame(TOPPANO.renderScene);
-        TOPPANO.gv.renderer.clear();
-        TOPPANO.gv.renderer.render(TOPPANO.gv.scene, TOPPANO.gv.cam.camera);
-        TOPPANO.gv.renderer.clearDepth();
-        TOPPANO.gv.renderer.render(TOPPANO.gv.objScene, TOPPANO.gv.cam.camera);
-    } else {
-        //first load
-        requestAnimationFrame(TOPPANO.update);
-        TOPPANO.gv.renderer.clear();
-        TOPPANO.gv.renderer.render(TOPPANO.gv.scene, TOPPANO.gv.cam.camera);
-        TOPPANO.gv.renderer.clearDepth();
-        TOPPANO.gv.renderer.render(TOPPANO.gv.objScene, TOPPANO.gv.cam.camera);
-    }
+  requestAnimationFrame(TOPPANO.update);
+  TOPPANO.gv.renderer.clear();
+  TOPPANO.gv.renderer.render(TOPPANO.gv.scene, TOPPANO.gv.cam.camera);
+  TOPPANO.gv.renderer.clearDepth();
+  TOPPANO.gv.renderer.render(TOPPANO.gv.objScene, TOPPANO.gv.cam.camera);
 };
 
 // threejs update
@@ -342,35 +288,13 @@ TOPPANO.update = function() {
     // mainly for changing TOPPANO.gv.cam.camera.fov
     TOPPANO.gv.cam.camera.updateProjectionMatrix();
 
-    // if the cursor is rotating rotating the sphere (actually is rotating the camera)
-    // update the waterdrop's style in its' html tag
-    // if TOPPANO.gv.cursor.state == "holding-swiper.. or waterdrop", do not update
-    
-    // whenever holding-waterdrop, the position of each waterdrop will be update.
-    // so do not modify the waterdrop css position
-    
-    if(TOPPANO.gv.cursor.state != "holding-waterdrop"){
-    TOPPANO.gv.objects.waterdropObj.forEach(
-                            function(element, index, array)
-                            {
-                                var position_3D = new THREE.Vector3(element.position_3D.x, element.position_3D.y, element.position_3D.z );
-                                position_3D.project(TOPPANO.gv.cam.camera);
-                                var x = (position_3D.x+1)*window.innerWidth/2;
-                                var y = -(position_3D.y-1)*window.innerHeight/2;
-                                if(position_3D.z<1){
-                                    element.obj.css({"left":x-35, "top":y-30, "display":"block"});
-                                }
-                                else{element.obj.css({"display":"none"});}
-                            });
-    }
-
     TOPPANO.renderScene();
     TOPPANO.updateCurrentUrl();
 };
 
 TOPPANO.updateCurrentUrl = function() {
     var queryStr = 
-        'post=' + TOPPANO.gv.modelID +
+        'post=' + TOPPANO.gv.modelId +
         '&fov=' + parseInt(TOPPANO.gv.cam.camera.fov) +
         '&lat=' + parseInt(TOPPANO.gv.cam.lat) +
         '&lng=' + parseInt(TOPPANO.gv.cam.lng);

@@ -1,12 +1,11 @@
 var params = {
-  modelID: 'qkiZgk1vYAA=',
+  modelId: 'qkiZgk1vYAA=',
   center: {
     lat: 0,
     lng: 30
   },
   zoom: 70,
-  canvas: 'container',
-  showObj: true
+  canvas: 'container'
 };
 
 startViewer(params);
@@ -23,7 +22,7 @@ function startViewer(params) {
     TOPPANO.threeInit(params);
 
     // request metadata, load all img files and build the first scene
-    TOPPANO.modelInit();
+    TOPPANO.modelInit(params.modelId);
 
     TOPPANO.update();
   };
@@ -31,7 +30,7 @@ function startViewer(params) {
 
 // global variables initialization
 TOPPANO.gv = {
-    modelID: '',
+    modelId: '',
     scene: null,
     objScene: null,
     renderer: null,
@@ -49,7 +48,6 @@ TOPPANO.gv = {
 
     nodes_meta: null,
     current_node_ID:'',
-    isTransitioning: false,
     
     // camera parameter
     cam: {
@@ -89,14 +87,6 @@ TOPPANO.gv = {
         mesh: null,
         panoID: '00000000',
         nextInfo: null
-    },
-
-    // objects in the scene
-    objects: {
-        showObj: true,
-        transitionObj: [],
-        waterdropObj: [], //TODO it needs  to be cleared when transition
-        objSphereRadius: 90
     },
 
     // container of canvas
