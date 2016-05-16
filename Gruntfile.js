@@ -12,16 +12,11 @@ module.exports = function(grunt) {
                 files: {
                     'dist/lib.min.js': [
                         'src/lib/three.min.js',
-                        'src/lib/detect.min.js',
                         'src/lib/CanvasRenderer.js',
                         'src/lib/Projector.js',
-                        'src/lib/stats.js',
                         'src/lib/jquery-1.11.3.min.js',
                         'src/lib/screenfull.min.js',
-                        'src/lib/clipboard.min.js',
-                        'src/lib/jquery.fullscreen-0.4.1.min.js',
-                        'src/lib/jquery.magnific-popup.min.js',
-                        'src/lib/js.cookie.min.js'
+                        'src/lib/jquery.fullscreen-0.4.1.min.js'
                     ]
                 }
             },
@@ -32,23 +27,8 @@ module.exports = function(grunt) {
                 files: {
                     'dist/app.min.js': [
                         'src/api.js',
-                        'src/class.js',
                         'src/functions.js',
-                        'src/listener.js',
-                        'src/view.js',
-                        'src/ui.js',
-                        'src/uiListener.js',
-                        'src/help.js',
-                        'src/user.js',
-                        'src/loader.js',
-                        'src/gyrobtn.js',
-                        'src/likebtn.js',
-                        'src/likelist.js',
-                        'src/share.js',
-                        'src/shareFacebook.js',
-                        'src/uiUtils.js',
-                        'src/devices.js',
-                        'src/application.js'
+                        'src/listener.js'
                     ]
                 }
             }

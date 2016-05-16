@@ -3,143 +3,6 @@
  * Listener Function
  */
 
-function set_WD_Listener(waterdrop_obj){
-    waterdrop_obj.obj.on('mousedown',
-                    function(event){
-                        // whenever the cursor select a waterdrop
-                        TOPPANO.gv.cursor.state = "holding-waterdrop";
-                        TOPPANO.gv.cursor.element = waterdrop_obj;
-                    });
-    
-  waterdrop_obj.obj.children('.ui-icon-delete').on('click', 
-                                             function(){
-                                                $(this).parent().remove();
-                                                //console.log($(this).parent()[0].id);
-                                                //TOPPANO.gv.objects.waterdropObj
-                                                // TODO: remove in  TOPPANO.gv.objects.waterdropObj (it's an array)
-                                             }); 
-}
-
-// 2dimension to 3 dimension (transform the onscreen (x,y) to (x,y,z) on paranorma sphere)
-function dimen2_to_dimen3(event){
-    var hitPos = TOPPANO.hitSphere(event);
-    var ObjLatLng = xyz2LatLng(hitPos.x, hitPos.y, hitPos.z);
-    var radiusObj = TOPPANO.gv.objects.objSphereRadius,
-        phiObj = THREE.Math.degToRad(90 - ObjLatLng.lat),
-        thetaObj = THREE.Math.degToRad(ObjLatLng.lng);
-    
-    radiusObj = 1000; 
-    var xObj = radiusObj * Math.sin(phiObj) * Math.cos(thetaObj),
-        yObj = radiusObj * Math.cos(phiObj),
-        zObj = radiusObj * Math.sin(phiObj) * Math.sin(thetaObj);
-    return {'x':xObj, 'y':yObj, 'z':zObj};
-}
-
-function set_on_holding_swiper_slide(){
-    // whenever the cursor holding-swiper-slide
-    $('#node-gallery div.swiper-slide ').on('mousedown', 
-                                            function(event){
-                                                if(TOPPANO.gv.cursor.state == "default"){
-                                                    TOPPANO.gv.cursor.state = "holding-swiper-slide";
-                                                    //var targetName = TOPPANO.ui.modelState.getObjProp(event.currentTarget.id)['tag'];
-                                                    var targetName = '';
-                                                    var waterdrop = $("#waterdrop-0").clone();
-                                                    $('input[type=text]', waterdrop).val(targetName);
-                                                    
-                                                    var swiper_slide_ID = $(event.currentTarget).attr('id');
-                                                    // generate waterdrop id
-                                                    var length = TOPPANO.gv.objects.waterdropObj.length;
-                                                    // TODO: id generating must be unique
-                                                    var current_node_ID = TOPPANO.gv.current_node_ID;
-                                                    var next_node_ID = swiper_slide_ID.replace('node-', '');
-                                                    
-                                                    var id = current_node_ID+'-to-'+next_node_ID+"-"+length.toString();
-                                                    waterdrop.id = id;
-                                                    $('#container').append(waterdrop);
-                                                    var waterdrop_obj = {'current_node_ID': current_node_ID,
-                                                                         'id': 'unsaved-'+id, 
-                                                                         'next_node_ID': next_node_ID,
-                                                                         'obj': waterdrop, 
-                                                                         'position_3D': null};
-                                                    TOPPANO.gv.cursor.element = waterdrop_obj;
-                                                }
-                                            });
-    $('#container').on('mousemove', 
-                       function(event){
-                           if(TOPPANO.gv.cursor.state == "holding-swiper-slide")
-                            {   
-                                var waterdrop = TOPPANO.gv.cursor.element.obj;                           
-                                waterdrop.css({top: event.clientY-30, left: event.clientX-35, position:'absolute', display:'block'});
-                                // TODO: "y-30" and "x-35" need to be adjust
-                            }
-                       });
-    
-    $('#node-gallery div.swiper-slide').on('mousemove', 
-                                            function(event){
-                                                if(TOPPANO.gv.cursor.state == "holding-swiper-slide")
-                                                {
-                                                    $('#'+TOPPANO.gv.cursor.element.node_ID).animate({ 
-                                                            opacity: 0.5               
-                                                    }, 5, function() { });
-                                                }
-                                            });
-    
-    $('#node-gallery').on('mouseup',function(){ 
-                                                $('#'+TOPPANO.gv.cursor.element.node_ID).animate({ 
-                                                            opacity: 1 
-                                                    }, 1, function() { });
-
-                                                TOPPANO.gv.cursor.state = "default";
-                                                TOPPANO.gv.cursor.element = null; // TODO:TOPPANO.gv.cursor.element must be free
-                                           });
-
-
-    $('#container').on('mouseup', function(event)
-                       {
-                            if(TOPPANO.gv.cursor.state == "holding-swiper-slide")
-                            {       
-                                 $('#'+TOPPANO.gv.cursor.element.node_ID).animate({ 
-                                            opacity: 1 
-                                    }, 1, function() { });
-                                // push the waterdrop element in waterdropObj[]
-                                var waterdrop_obj = TOPPANO.gv.cursor.element;
-                                var waterdrop = waterdrop_obj.obj;
-                                waterdrop.attr('id', waterdrop_obj.id);
-                                waterdrop_obj.position_3D = dimen2_to_dimen3(event);
-                                
-                                set_WD_Listener(waterdrop_obj);
-                                TOPPANO.gv.objects.waterdropObj.push(waterdrop_obj);
-                                TOPPANO.gv.cursor.state = "default";
-                                TOPPANO.gv.cursor.element = null;
-                            }
-                       });
-}
-
-
-function set_on_holding_waterdrop(){
-    // for holding-waterdrop
-    $('#container').on('mousemove', 
-                       function(event){
-                           if(TOPPANO.gv.cursor.state == "holding-waterdrop")
-                            {
-                                var waterdrop = TOPPANO.gv.cursor.element.obj;                           
-                                waterdrop.css({top: event.clientY-30, left: event.clientX-35, position:'absolute', display:'block'});
-                                // TODO: "y-30" and "x-35" need to be adjust
-                            }
-                       });
-    $('#container').on('mouseup', function(event)
-                       {
-                            if(TOPPANO.gv.cursor.state == "holding-waterdrop")
-                            {   
-                                var waterdrop_obj = TOPPANO.gv.cursor.element;
-                                waterdrop_obj.position_3D = dimen2_to_dimen3(event);
-                                TOPPANO.gv.cursor.state = "default";
-                                TOPPANO.gv.cursor.element = null;
-                            }
-                        });
-}
-
-
 function set_on_rotating_scene(){
     // rotating-scene
     // determine if on the mobile or PC web
@@ -243,50 +106,6 @@ function set_on_rotating_scene(){
                        }); 
 }
 
-
-function set_on_hovering_scene(){
-    // hovering-on-scene
-    $('#container').on('mousemove', 
-                       function(event){
-                            if(TOPPANO.gv.cursor.state == "default")
-                            {
-                                // check if hover something, change the icon color
-                                var hit = TOPPANO.hitSomething(event, TOPPANO.gv.objects.transitionObj),
-                                    isHit = hit[0],
-                                    hitObj = hit[1];
-                                if (isHit) {
-                                    hitObj.material.color.set('orange');
-                                } 
-                                else {
-                                    TOPPANO.gv.objects.transitionObj.forEach(function(item) {
-                                                                                item.material.color.set('white');
-                                                                             });
-                               }
-                            }
-    });
-}
-
-
-function set_on_changing_scene(){
-    // change scene
-    $('#container').on('mouseup', function(event)
-                       {
-                            if(TOPPANO.gv.cursor.state == "mouse-down-container")
-                            {
-                                var hit = TOPPANO.hitSomething(event, TOPPANO.gv.objects.transitionObj),
-                                    isHit = hit[0],
-                                    hitObj = hit[1];
-                                if (isHit) {
-                                    // TOPPANO.gv.scene1.nextInfo = hit[1].name; the code maybe useless
-                                    // TOPPANO.changeScene(hitObj);
-                                }
-                                TOPPANO.gv.cursor.state = "default";
-                                TOPPANO.gv.cursor.element = null;
-                            }
-                       });
-
-}
-
 function set_on_scrolling_scene(){
     function onMouseWheel(event) {
         // check FoV range
@@ -327,20 +146,8 @@ function set_on_scrolling_scene(){
 }
 
 TOPPANO.setCursorHandler = function(){
-    set_on_holding_swiper_slide();
-    set_on_holding_waterdrop();
     set_on_rotating_scene();
-    set_on_hovering_scene();
-    set_on_changing_scene();
     set_on_scrolling_scene();
-};
-
-TOPPANO.setGyro = function(isOn) {
-    if(isOn) {
-        window.ondeviceorientation = TOPPANO.onDeviceOrientation;
-    } else {
-        window.ondeviceorientation = null;
-    }
 };
 
 TOPPANO.onDeviceOrientation = function(event){
@@ -419,46 +226,67 @@ TOPPANO.onDeviceOrientation = function(event){
     TOPPANO.gyro.screen_rot_angle = angle + window.orientation;
 }
 
-function sleep(milliseconds) {
-      var start = new Date().getTime();
-        for (var i = 0; i < 1e7; i++) {
-                if ((new Date().getTime() - start) > milliseconds){
-                          break;
-                              }
-                                }
-}
+// Handle Click for showing/hiding UI (single), or fullscreen (double).
+TOPPANO.handleClick = function() {
+    var click = TOPPANO.gv.click;
+    var startEvent, endEvent;
 
+    if(TOPPANO.gv.mobile.isMobile) {
+        startEvent = 'touchstart';
+        endEvent = 'touchend';
+    } else {
+        startEvent = 'mousedown';
+        endEvent = 'mouseup';
+    }
 
-TOPPANO.onDocumentDragOver = function(event) {
-    preventDefaultBrowser(event);
-    event.dataTransfer.dropEffect = 'copy';
-};
-
-TOPPANO.onDocumentDragEnter = function() {
-   // document.body.style.opacity = 0.5;
-};
-
-TOPPANO.onDocumentDragLeave = function() {
-    document.body.style.opacity = 1;
-};
-
-TOPPANO.onDocumentDrop = function(event) {
-    preventDefaultBrowser(event);
-
-    var reader = new FileReader();
-    reader.addEventListener('load', function(event) {
-        var fileType = event.target.result.slice(5, 10);
-
-        if (fileType === 'image') {
-            TOPPANO.gv.scene1.material.map.image.src = event.target.result;
-            TOPPANO.gv.scene1.material.map.needsUpdate = true;
+    $('#container').on(startEvent, function(e) {
+        click.lastMouseDown = new Date().getTime();
+        if(TOPPANO.gv.mobile.isMobile) {
+            click.startPos.x = e.originalEvent.touches[0].pageX;
+            click.startPos.y = e.originalEvent.touches[0].pageY;
+        } else {
+            click.startPos.x = e.offsetX;
+            click.startPos.y = e.offsetY;
         }
-        // filetype === 'video'
-    }, false);
-    reader.readAsDataURL(event.dataTransfer.files[0]);
-    document.body.style.opacity = 1;
-};
+    }).on(endEvent, function(e) {
+        var deltaX, deltaY;
+        if(TOPPANO.gv.mobile.isMobile) {
+            click.endPos.x = e.originalEvent.changedTouches[0].pageX;
+            click.endPos.y = e.originalEvent.changedTouches[0].pageY;
+        } else {
+            click.endPos.x = e.offsetX;
+            click.endPos.y = e.offsetY;
+        }
+        deltaX = Math.abs(click.endPos.x - click.startPos.x);
+        deltaY = Math.abs(click.endPos.y - click.startPos.y);
 
+        // Check the click duration is small enough and no move occurs while clicking.
+        if((new Date().getTime() < (click.lastMouseDown + click.longClickDelay)) && (deltaX < 1) && (deltaY < 1)) {
+            click.count++;
+            if(click.count === 1) {
+                click.timer = setTimeout(function() {
+                    // Single click: show/hide all UI.
+                    //TOPPANO.ui.utils.toggleUI();
+                    click.count = 0;
+                }, click.dblclickDelay);
+            } else {
+                // Double click: turn on/off fullscreen.
+                // TODO: Fullscreen support for IOS Safari, Android Browser...
+                if(screenfull.enabled) {
+                    screenfull.toggle();
+                } else {
+                    if($.fullscreen.isFullScreen()) {
+                        $.fullscreen.exit();
+                    } else {
+                        $('body').fullscreen();
+                    }
+                }
+                clearTimeout(click.timer);
+                click.count = 0;
+            }
+        }
+    });
+};
 
 TOPPANO.onWindowResize = function() {
     if (TOPPANO.gv.isFullScreen) {

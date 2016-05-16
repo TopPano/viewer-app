@@ -4,11 +4,10 @@
  */
 
 TOPPANO.modelInit = function() {
-    var modelId = TOPPANO.gv.modelID = getUrlParam('post');
+    //var modelId = TOPPANO.gv.modelID = getUrlParam('post');
+    var modelId = 'qkiYwXxvYAA=';
     var model = {};
-    var url = TOPPANO.ui.user.isLogin() ?
-        (TOPPANO.gv.apiUrl + '/posts/' + modelId + '?access_token=' + Cookies.get('token')) :
-        (TOPPANO.gv.apiUrl + '/posts/' + modelId);
+    var url = (TOPPANO.gv.apiUrl + '/posts/' + modelId);
 
     $.get(url).then(
         function(modelMeta) {
@@ -18,24 +17,6 @@ TOPPANO.modelInit = function() {
                 'description': modelMeta['description'],
                 'address': modelMeta['address']
             };
-            model['snapshotList'] = {};
-            $.each(modelMeta['snapshotList'], function(index, prop) {
-                model['snapshotList']['snapshot-' + prop['sid']] = prop;
-            });
-            model['menu'] = {
-                'info': {
-                    'author': modelMeta['ownerInfo']['username'],
-                    'date': modelMeta['created'],
-                    'authorPicture': modelMeta['ownerInfo']['profilePhotoUrl'],
-                    'message': modelMeta['message']
-                }
-            };
-            model['user'] = {
-                'likes':{
-                    'count':  modelMeta['likes']['count'],
-                    'isLiked': modelMeta['likes']['isLiked']
-                }
-            };
 
             TOPPANO.gv.nodes_meta = $.extend({}, modelMeta.nodes);
             // load all imgs and build the first scene 
@@ -44,14 +25,9 @@ TOPPANO.modelInit = function() {
                      var first_node_ID = Object.keys(TOPPANO.gv.nodes_meta)[0];
                      TOPPANO.gv.current_node_ID = first_node_ID;
                      TOPPANO.buildScene(first_node_ID);
-                     if (TOPPANO.gv.objects.showObj) {
-                        TOPPANO.addWaterDrop(first_node_ID);
-                     }
                      TOPPANO.readInitCamParams();
                  });
     }).done(function() {
-        // Fill UI contents
-        TOPPANO.fillUIContents(model);
         // add listener
         TOPPANO.addListener();
     });
@@ -59,18 +35,7 @@ TOPPANO.modelInit = function() {
 }
 
 TOPPANO.threeInit = function(map) {
-    if (map) {
-        TOPPANO.initGV(map);
-        if (TOPPANO.gv.isState) {
-            TOPPANO.gv.stats = initStats();
-        }
-    } else {
-        // virtual cam init
-        var url = TOPPANO.readURL();
-        if (url) {
-            TOPPANO.initGV(url);
-        }
-    }
+    TOPPANO.initGV(map);
 
     TOPPANO.gv.cam.camera = new THREE.PerspectiveCamera(
         TOPPANO.gv.cam.defaultCamFOV, // field of view (vertical)
@@ -226,34 +191,8 @@ TOPPANO.readInitCamParams = function() {
 // add listeners
 TOPPANO.addListener = function() {
     TOPPANO.setCursorHandler();
-    document.addEventListener('dragover', function(event) {
-        TOPPANO.onDocumentDragOver(event);
-    }, false);
-    document.addEventListener('dragenter', TOPPANO.onDocumentDragEnter, false);
-    document.addEventListener('dragleave', TOPPANO.onDocumentDragLeave, false);
-    document.addEventListener('drop', function(event) {
-        TOPPANO.onDocumentDrop(event);
-    }, false);
+    TOPPANO.handleClick();
     window.addEventListener('resize', TOPPANO.onWindowResize, false);
-};
-
-// reading URL info
-TOPPANO.readURL = function() {
-    var url = TOPPANO.gv.urlHash;
-    if (url) {
-        var urlSlice = url.slice(1, url.length).split(',');
-        // console.log(urlSlice);
-        if (urlSlice.length === 4) {
-            return {
-                zoom: clamp(parseInt(urlSlice[0]), TOPPANO.gv.para.fov.min, TOPPANO.gv.para.fov.max),
-                center: {
-                    lat: parseInt(urlSlice[1]),
-                    lng: parseInt(urlSlice[2])
-                },
-                PanoID: urlSlice[3]
-            }
-        }
-    }
 };
 
 // setting global variables for initialization
@@ -264,215 +203,9 @@ TOPPANO.initGV = function(para){
     if (para.canvas) {
         TOPPANO.gv.canvasID = para.canvas;
     }
-    if (para.isfbShare) {
-        TOPPANO.gv.isFBShare = true;
-    }
-    if (para.isState) {
-        TOPPANO.gv.isState = true;
-    }
     if (para.showObj === false) {
         TOPPANO.gv.objects.showObj = para.showObj;
     }
-};
-
-// loading tiles images
-TOPPANO.loadTiles = function(isTrans, ID) {
-    var sphereSize = TOPPANO.gv.para.sphereSize;
-    THREE.ImageUtils.crossOrigin = '';
-
-    for (var i = 0 ; i < 4 ; i++) {
-        for (var j = 0 ; j < 8 ; j++) {
-            var geometry = new THREE.SphereGeometry(sphereSize, 20, 20, Math.PI/4 * j, Math.PI/4, Math.PI/4 * i, Math.PI/4);
-            if (isTrans) {
-                TOPPANO.gv.para.sphereSize -= 1;
-                geometry = new THREE.SphereGeometry(TOPPANO.gv.para.sphereSize, 4, 8, Math.PI/4 * j - TOPPANO.gv.headingOffset * Math.PI / 180, Math.PI/4, Math.PI/4 * i, Math.PI/4);
-            }
-            geometry.applyMatrix(new THREE.Matrix4().makeScale(-1, 1, 1));
-
-            var imagePath = TOPPANO.gv.tilePath + ID +'/' + i + '-' + j + '.jpeg',
-                texture = THREE.ImageUtils.loadTexture(imagePath);
-                texture.minFilter = THREE.LinearFilter;
-
-                var material = new THREE.MeshBasicMaterial({
-                    map: texture,
-                    overdraw: true,
-                    transparent: true
-                });
-                if (isTrans) {
-                    material.opacity = 0;
-                }
-                var mesh = new THREE.Mesh(geometry, material);
-                TOPPANO.gv.scene.add(mesh);
-        }
-    }
-    if (isTrans) {
-        sleep(500);
-    }
-    //console.log(TOPPANO.gv.scene.children.length);  // 32
-};
-
-// jump to another scene
-TOPPANO.change2Scene = function(panoID) {
-    TOPPANO.loadTiles(false, panoID);
-    for (var i = 31 ; i >= 0 ; i--) {
-        TOPPANO.gv.scene.remove(TOPPANO.gv.scene.children[i]);
-    }
-};
-
-// snapshot canvas drawing initialization
-TOPPANO.snapshotCanvasInit = function() {
-    TOPPANO.drawCanvas();
-    var canvas = document.getElementById('myCanvas');
-    hide(canvas);
-};
-
-// transfer to another scene
-TOPPANO.changeScene = function(next_node_ID) {
-    // delete all waterdrops html obj in current scene
-    TOPPANO.gv.objects.waterdropObj.forEach(
-        function(element, array, index){
-            $('#'+element.id).remove();
-        });
-    //clear TOPPANO.gv.objects.waterdropObj    
-    TOPPANO.gv.objects.waterdropObj.splice(0, TOPPANO.gv.objects.waterdropObj.length);
-    TOPPANO.gv.current_node_ID = next_node_ID;
-
-    TOPPANO.gv.isTransitioning = true;
-    TOPPANO.buildScene(next_node_ID);
-    TOPPANO.addWaterDrop(next_node_ID);
-};
-
-// it's a cooperation function for Su Jia-Kuan
-// it's a copy of TOPPANO.changeScene()
-TOPPANO.changeView = function(node_ID, lng, lat, fov) {
-    // delete all waterdrops html obj in current scene
-    if (node_ID != TOPPANO.gv.current_node_ID){
-        TOPPANO.gv.objects.waterdropObj.forEach(
-            function(element, array, index){
-                $('#'+element.id).remove();
-            });
-        //clear TOPPANO.gv.objects.waterdropObj    
-        TOPPANO.gv.objects.waterdropObj.splice(0, TOPPANO.gv.objects.waterdropObj.length);
-        TOPPANO.gv.current_node_ID = node_ID;
-    
-        TOPPANO.gv.isTransitioning = true;
-        TOPPANO.buildScene(node_ID);
-        TOPPANO.addWaterDrop(node_ID);
-    }
-    if(lng)
-    {TOPPANO.gv.cam.lng = lng;}
-
-    if(lat)
-    {TOPPANO.gv.cam.lat = lat;}
-    
-    if(fov)
-    {TOPPANO.gv.cam.camera.fov = fov;}
-    TOPPANO.update();
-};
-
-
-function latlng_to_dimen3(lat, lng){
-    var phi = THREE.Math.degToRad(90 - lat),
-        theta = THREE.Math.degToRad(lng);
-
-    var radius = 1000;
-    var x = radius * Math.sin(phi) * Math.cos(theta),
-        y = radius * Math.cos(phi),
-        z = radius * Math.sin(phi) * Math.sin(theta);
-    return {'x':x, 'y':y, 'z':z};
-}
-
-
-TOPPANO.addWaterDrop = function(node_ID){
-    var node_meta = TOPPANO.gv.nodes_meta[node_ID];
-    if(node_meta.transitions)
-    {   
-        node_meta.transitions.forEach(
-            function(transition, index, array)
-            {
-                // clone a waterdrop html obj                                                          
-                // push the waterdrop element in waterdropObj[]
-                var waterdrop = $("#waterdrop-0").clone();
-                var nextNodeTag = TOPPANO.gv.nodes_meta[transition.nextNodeId].tag;
-                $('input[type=text]', waterdrop).val(nextNodeTag);
-                waterdrop.css({position:'absolute', display:'block'});
-                var id = 'waterdrop-'+TOPPANO.gv.current_node_ID+'-to-'+transition.nextNodeId;
-                waterdrop.attr('id', id);
-
-                waterdrop.on('click', function(event){
-                    TOPPANO.changeScene(transition.nextNodeId);
-                })
-
-                $('#container').append(waterdrop);
-                var waterdrop_obj = {"id": id, "obj": waterdrop, 
-                                     "position_3D": latlng_to_dimen3(transition.lat, transition.lng), 
-                                     "next_node_ID":transition.nextNodeId, 
-                                     "current_node_ID":TOPPANO.gv.current_node_ID};  
-                TOPPANO.gv.objects.waterdropObj.push(waterdrop_obj);
-            });
-    }
-}
-
-
-// add plane for testing GLSL
-TOPPANO.addPlane = function() {
-    // console.log('Add transition objects here.');
-    var radiusObj = TOPPANO.gv.objects.objSphereRadius,
-        phiObj = THREE.Math.degToRad(90),
-            thetaObj = THREE.Math.degToRad(0);
-
-            var uniforms = {
-                "color1" : {
-                    type : "c",
-                    value : new THREE.Color(0xffffff)
-                },
-                "color2" : {
-                    type : "c",
-                    value : new THREE.Color(0x7CC5D7)
-                },
-                "radius1" : {
-                    type : "f",
-                    value : 0.3,
-                    min : 0, // only used for dat.gui, not needed for production
-                    max : 1 // only used for dat.gui, not needed for production
-                },
-                "radius2" : {
-                    type : "f",
-                    value : 0.32,
-                    min : 0, // only used for dat.gui, not needed for production
-                    max : 1 // only used for dat.gui, not needed for production
-                },
-                "amount" : {
-                    type : "f",
-                    value : 80,
-                    min : 1, // only used for dat.gui, not needed for production
-                    max : 100 // only used for dat.gui, not needed for production
-                },
-            }
-            var vertexShader = document.getElementById('vertexShader').text;
-            var fragmentShader = document.getElementById('fragmentShader').text;
-
-            var materialObj = new THREE.ShaderMaterial({
-                uniforms : uniforms,
-                vertexShader : vertexShader,
-                fragmentShader : fragmentShader
-            });
-
-            var geometryObj = new THREE.PlaneBufferGeometry(200, 140, 32),
-                // materialObj = new THREE.MeshBasicMaterial({
-                // 	color: 0x000000,
-                // 	side: THREE.DoubleSide,
-                // 	opacity: 0.7,
-                // 	transparent: true
-                // }),
-                transitionObj = new THREE.Mesh(geometryObj, materialObj);
-
-                var xObj = radiusObj * Math.sin(phiObj) * Math.cos(thetaObj),
-                    yObj = radiusObj * Math.cos(phiObj),
-                        zObj = radiusObj * Math.sin(phiObj) * Math.sin(thetaObj);
-                        transitionObj.position.set(xObj, yObj, zObj);
-                        transitionObj.lookAt(TOPPANO.gv.cam.camera.position);
-                        TOPPANO.gv.objScene.add(transitionObj);
 };
 
 // renderer setting
@@ -515,39 +248,6 @@ TOPPANO.rendererSetting = function() {
         TOPPANO.gv.container.bound.bottom = TOPPANO.gv.container.offsetTop + TOPPANO.gv.container.Height,
         TOPPANO.gv.container.bound.left = TOPPANO.gv.container.offsetLeft,
         TOPPANO.gv.container.bound.right = TOPPANO.gv.container.offsetLeft + TOPPANO.gv.container.Width;
-};
-
-// if hit the objects(and the objects are visible), return: (isHit, hitObj)
-TOPPANO.hitSomething = function(event, targetObjs) {
-    if (TOPPANO.gv.isFullScreen) {
-        var mouse3D = new THREE.Vector3(((event.clientX - TOPPANO.gv.container.offsetLeft) / window.innerWidth) * 2 - 1, //x
-                                        -((event.clientY - TOPPANO.gv.container.offsetTop) / window.innerHeight) * 2 + 1, //y
-                                        0.5); // z
-    }
-    else {
-        var canvasHeight = window.getComputedStyle(document.getElementById(TOPPANO.gv.canvasID), null).getPropertyValue('height'),
-            canvasWidth = window.getComputedStyle(document.getElementById(TOPPANO.gv.canvasID), null).getPropertyValue('width');
-            canvasHeight = parseInt(canvasHeight, 10),
-                canvasWidth = parseInt(canvasWidth, 10);
-                var mouse3D = new THREE.Vector3(((event.clientX - TOPPANO.gv.container.offsetLeft) / canvasWidth) * 2 - 1, //x
-                                                -((event.clientY - TOPPANO.gv.container.offsetTop) / canvasHeight) * 2 + 1, //y
-                                                0.5); // z
-    }
-
-    mouse3D.unproject(TOPPANO.gv.cam.camera);
-    mouse3D.sub(TOPPANO.gv.cam.camera.position);
-    mouse3D.normalize();
-    var raycaster = new THREE.Raycaster(TOPPANO.gv.cam.camera.position, mouse3D);
-    var intersects = raycaster.intersectObjects(targetObjs);
-    if (intersects.length > 0) {
-        // return which object is hit
-        for (var i = 0; i < targetObjs.length; i++) {
-            if (intersects[0].object.position.distanceTo(targetObjs[i].position) < 10) {
-                return [true, targetObjs[i]];
-            }
-        }
-    } else
-        return [false, null];
 };
 
 // if hit the objects(and the objects are visible), return: (isHit, hitObj)
@@ -639,10 +339,6 @@ TOPPANO.update = function() {
     TOPPANO.gv.cam.camera.up.y = vect_cam_up.y;
     TOPPANO.gv.cam.camera.up.z = vect_cam_up.z;
     
-    if (TOPPANO.gv.isState) {
-        TOPPANO.gv.stats.update();
-    }
-
     // mainly for changing TOPPANO.gv.cam.camera.fov
     TOPPANO.gv.cam.camera.updateProjectionMatrix();
 
@@ -679,65 +375,7 @@ TOPPANO.updateCurrentUrl = function() {
         '&lat=' + parseInt(TOPPANO.gv.cam.lat) +
         '&lng=' + parseInt(TOPPANO.gv.cam.lng);
     TOPPANO.gv.currentUrl = window.location.origin + '/?' + base64Convert(queryStr, 'encode');
-    TOPPANO.onEmbeddedLinkChange();
 };
-
-// print out ERROR messages
-TOPPANO.printError = function (errorMsg) {
-    console.log('Error: ' + errorMsg);
-};
-
-function preventDefaultBrowser(event) {
-    // Chrome / Opera / Firefox
-    if (event.preventDefault)
-        event.preventDefault();
-    // IE 9
-    event.returnValue = false;
-}
-
-// js performance monitor
-function initStats() {
-    var stats = new Stats();
-    stats.setMode(0);
-    stats.domElement.style.position = 'absolute';
-    stats.domElement.style.left = '0px';
-    stats.domElement.style.top = '0px';
-    document.body.appendChild(stats.domElement);
-    return stats;
-}
-
-// return: phi(lat:the angle between x-z plane, have to subtract 90) and theta(lng)
-function xyz2LatLng(x, y ,z) {
-    // y: up, phi: the angle between y axis, theta: the angle between x asix on x-z plane
-    var r = Math.sqrt(x*x + y*y + z*z),
-        theta = Math.atan(z / x),
-            phi = Math.acos(y / r);
-            var cosTheta = x / r / Math.sin(phi);
-            if (cosTheta < 0)
-                theta += Math.PI;
-            var thetaDegree = theta * 180 / Math.PI,
-                phiDegree = phi * 180 / Math.PI
-
-                var objLatLng = new TOPPANO.LatLng(90 - phiDegree, thetaDegree);
-                return objLatLng;
-}
-
-function between(num, min, max) {
-    return num >= min && num <= max;
-}
-
-function isEmpty(str) {
-    return (!str || 0 === str.length || /^\s*$/.test(str));
-}
-
-function sleep(ms) {
-    var start = new Date().getTime();
-    for (var i = 0; i < 1e7; i++) {
-        if ((new Date().getTime() - start) > ms) {
-            break;
-        }
-    }
-}
 
 function clamp(number, min, max) {
     return Math.min(Math.max(number, min), max);

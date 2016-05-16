@@ -1,33 +1,33 @@
-/**
- * Toppano Panorama Viewer API
- * @version 0.8
- * @since 0.8
- */
+var params = {
+  modelID: 'qkiZgk1vYAA=',
+  center: {
+    lat: 0,
+    lng: 30
+  },
+  zoom: 70,
+  canvas: 'container',
+  showObj: true
+};
+
+startViewer(params);
+
 var TOPPANO = TOPPANO || {};
 
-// TOPPANO Panorama Viewer Initialization
-TOPPANO.initMap = function(map) {
+// Start Viewer
+function startViewer(params) {
+  window.onload = function() {
+    // Optimization for mobile devices.
+    TOPPANO.optimizeMobile();
 
-    window.onload = function(){
-        // Optimization for mobile devices.
-        TOPPANO.optimizeMobile();
+    // init threejs scene and camera
+    TOPPANO.threeInit(params);
 
-        // Create UI Layout
-        TOPPANO.createUILayout();
+    // request metadata, load all img files and build the first scene
+    TOPPANO.modelInit();
 
-        // init threejs scene and camera
-        TOPPANO.threeInit(map);
-       
-        // request metadata, load all img files and build the first scene 
-        TOPPANO.modelInit();
-
-        TOPPANO.update();
-
-        /* increase progress bar */
-        setTimeout(function(){$('#progress-div progress').val(94);},500);
-        setTimeout(function(){$('#progress-div progress').val(100);},1000);
-    };
-};
+    TOPPANO.update();
+  };
+}
 
 // global variables initialization
 TOPPANO.gv = {
@@ -37,13 +37,11 @@ TOPPANO.gv = {
     renderer: null,
     stats: null,
     canvasID: 'pano-container',
-    isFBShare: false,
-    isState: false,
     isFullScreen: false,
     headingOffset: 0,
     
     cursor:{
-        state: "default",
+        state: 'default',
         element: null,
         position_array: [],
         slide_func_array:[]
@@ -141,6 +139,15 @@ TOPPANO.gv = {
         isMobile: false,
         orientation: 'none'
     },
+    click: {
+      dblclickDelay: 300, // Delay for differentiate between single and double click
+      count: 0,
+      timer: null,
+      longClickDelay: 150, // Delay for differentiate between short and long click
+      lastMouseDown: 0,
+      startPos: { x: 0, y: 0 },
+      endPos: { x: 0, y: 0 }
+    },
     currentLink: '',
     urlHash: window.location.hash,
     defaultMap: './image/tile/0-0.jpeg',
@@ -149,9 +156,9 @@ TOPPANO.gv = {
 
 
 TOPPANO.gyro = {
-    screen_rot_angle:0, 
+    screen_rot_angle:0,
     lat: 0,
     lng: 0,
     setup: false,
     isOn: false // Only used for iphone/ipad currently.
-}; 
+};
